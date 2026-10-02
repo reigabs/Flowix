@@ -1,59 +1,63 @@
-# Frontend
+# Flowix — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.4.
+Sistema de gestão escolar | Projeto Frontend Angular
 
-## Development server
+---
 
-To start a local development server, run:
+## Sumário
+- [Sobre o Projeto](#sobre-o-projeto)
+- [Fluxo de Navegação](#fluxo-de-navegação)
+- [Estrutura de Pastas](#estrutura-de-pastas)
+- [Instalação e Execução](#instalação-e-execução)
+- [Rotas](#rotas)
+- [Commits Semânticos](#commits-semânticos)
+- [Tecnologias](#tecnologias)
+- [Observações](#observações)
+
+---
+
+## Sobre o Projeto
+
+O **Flowix** é um sistema voltado para ambientes escolares, com três perfis de usuário:
+
+| Perfil         | Descrição                                      |
+|----------------|------------------------------------------------|
+| 🧑‍🎓 Aluno        | Acesso do aluno                                |
+| 🏫 Secretaria   | Gestão e proteção de dados dos alunos          |
+| 👨‍👩‍👧 Responsável | Acompanhamento das atividades do aluno         |
+
+---
+
+## Fluxo de Navegação
+
+
+> ⚠️ **Importante:** Acesse sempre por `http://localhost:4200`. Não entre diretamente em `/cadastro-perfil`, pois a rota raiz garante a passagem pela tela de carregamento.
+
+---
+
+## Estrutura de Pastas
+
+
+---
+
+## Instalação e Execução
 
 ```bash
+# Instalar dependências
+npm install
+
+# Executar servidor de desenvolvimento
 ng serve
-```
+# ou
+npm start
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+# Acessar no navegador
+http://localhost:4200
 
-## Code scaffolding
+Mensagem	Descrição
+feat: adicionar página inicial com tempo de espera e redirecionamento	Criada tela de abertura com redirecionamento automático após 3s
+refactor(routes): definir rota padrão para página inicial	Rota raiz apontando para a tela inicial
+style: remover borda branca da interface	Ajuste visual — sem alteração de lógica
+feat: estilizar página de cadastro de perfil	Estrutura e estilos da página de escolha de perfil
+refactor: ajustar estrutura do componente raiz	Organização do app.component e garantia do router-outlet
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
