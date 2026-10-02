@@ -1,0 +1,120 @@
+.cadastro {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #000;
+  padding: 30px 20px;
+}
+
+.cadastro-container {
+  width: 100%;
+  max-width: 420px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 2300px;
+  height: 230px;
+  object-fit: contain;
+
+  margin-bottom: 15px;
+}
+
+.cadastro-container h1 {
+  margin: 0;
+
+  color: #fff;
+  font-size: 26px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.descricao {
+  margin: 10px 0 30px;
+
+  color: #aaa;
+  font-size: 14px;
+  text-align: center;
+}
+
+.opcoes {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.opcao {
+  width: 100%;
+  min-height: 80px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 16px 18px;
+
+  border: 1px solid #2b2b2b;
+  border-radius: 14px;
+
+  background-color: #111;
+  color: #fff;
+
+  cursor: pointer;
+
+  text-align: left;
+  transition: 0.2s;
+}
+
+.opcao:hover {
+  background-color: #1b1b1b;
+  border-color: #444;
+  transform: translateY(-2px);
+}
+
+.icone {
+  width: 45px;
+  height: 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-right: 14px;
+
+  border-radius: 12px;
+  background-color: #222;
+
+  font-size: 22px;
+}
+
+.texto {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.texto strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.texto span {
+  color: #999;
+  font-size: 12px;
+}
+
+.seta {
+  color: #888;
+  font-size: 28px;
+  line-height: 1;
+}
