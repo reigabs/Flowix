@@ -1,54 +1,159 @@
-<main class="cadastro">
-  <div class="cadastro-container">
+<main class="cadastro-page">
 
-    <img
-      src="images/logo-flowix.png"
-      alt="Logo Flowix"
-      class="logo"
-    >
+  <!-- Painel lateral -->
+  <aside class="painel-lateral">
+    <div class="ondas onda-superior"></div>
+    <div class="ondas onda-inferior"></div>
 
-    <h1>Cadastro de perfil</h1>
+    <div class="marca">
+      <h1>Flowix</h1>
 
-    <p class="descricao">
-      Selecione o tipo de perfil que deseja cadastrar
-    </p>
-
-    <div class="opcoes">
-
-      <button class="opcao">
-        <span class="icone">🎓</span>
-
-        <div class="texto">
-          <strong>Aluno</strong>
-          <span>Acesse sua conta como aluno</span>
-        </div>
-
-        <span class="seta">›</span>
-      </button>
-
-      <button class="opcao">
-        <span class="icone">🏫</span>
-
-        <div class="texto">
-          <strong>Secretaria</strong>
-          <span>Gerencie as solicitações dos alunos</span>
-        </div>
-
-        <span class="seta">›</span>
-      </button>
-
-      <button class="opcao">
-        <span class="icone">👨‍👩‍👦</span>
-
-        <div class="texto">
-          <strong>Responsável</strong>
-          <span>Acompanhe as solicitações do aluno</span>
-        </div>
-
-        <span class="seta">›</span>
-      </button>
-
+      <img
+  src="logo-cadastro.png"
+  alt="Mascote do Flowix estudando"
+  class="mascote"
+>
     </div>
 
-  </div>
+    <div class="login-link">
+      <p>Já tem uma conta?</p>
+      <a routerLink="/login">Fazer login</a>
+    </div>
+  </aside>
+
+  <!-- Formulário de cadastro -->
+  <section class="painel-formulario">
+
+    <header class="formulario-header">
+      <button
+        type="button"
+        class="botao-voltar"
+        aria-label="Voltar"
+        (click)="voltar()"
+      >
+        ←
+      </button>
+
+      <div>
+        <h2>Criar conta</h2>
+        <p>Preencha os dados para começar</p>
+      </div>
+    </header>
+
+    <form class="formulario" (submit)="cadastrar($event)">
+
+      <div class="campo">
+        <label for="nome">Nome completo</label>
+        <input
+          id="nome"
+          name="nome"
+          type="text"
+          placeholder="Ex.: Ana Beatriz da Silva"
+          autocomplete="name"
+          required
+        >
+      </div>
+
+      <div class="campo">
+        <label for="instituicao">Nome da Instituição</label>
+        <input
+          id="instituicao"
+          name="instituicao"
+          type="text"
+          placeholder="Ex.: Escola Maria Neusa Carmo de Souza"
+          required
+        >
+      </div>
+
+      <div class="campos-duplos">
+        <div class="campo">
+          <label for="matricula">Matrícula</label>
+          <input
+            id="matricula"
+            name="matricula"
+            type="text"
+            placeholder="Ex.: 12345678"
+            required
+          >
+        </div>
+
+        <div class="campo">
+          <label for="telefone">Telefone</label>
+          <input
+            id="telefone"
+            name="telefone"
+            type="tel"
+            placeholder="Ex.: (11) 98645-8765"
+            autocomplete="tel"
+            required
+          >
+        </div>
+      </div>
+
+      <div class="campo">
+        <label for="email">E-mail ou CPF</label>
+        <input
+          id="email"
+          name="email"
+          type="text"
+          placeholder="Ex.: beatrizsilva10@gmail.com"
+          required
+        >
+      </div>
+
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input
+          id="senha"
+          name="senha"
+          type="password"
+          placeholder="Digite sua senha"
+          autocomplete="new-password"
+          required
+        >
+      </div>
+
+      <!-- Seleção de perfil -->
+      <fieldset class="selecao-perfil">
+        <legend>Selecione seu perfil</legend>
+
+        <label class="perfil-opcao">
+          <input
+            type="radio"
+            name="perfil"
+            value="estudante"
+            required
+          >
+          <span class="perfil-icone">♙</span>
+          <span>Estudante</span>
+        </label>
+
+        <label class="perfil-opcao">
+          <input
+            type="radio"
+            name="perfil"
+            value="secretaria"
+          >
+          <span class="perfil-icone">▤</span>
+          <span>Secretaria</span>
+        </label>
+
+        <label class="perfil-opcao">
+          <input
+            type="radio"
+            name="perfil"
+            value="responsavel"
+          >
+          <span class="perfil-icone">♙</span>
+          <span>Responsável</span>
+        </label>
+      </fieldset>
+
+      <button type="submit" class="botao-entrar">
+        Entrar
+      </button>
+
+    </form>
+  </section>
+
 </main>
