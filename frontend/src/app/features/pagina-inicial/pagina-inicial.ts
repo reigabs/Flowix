@@ -3,19 +3,17 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pagina-inicial',
-  standalone: true,
   imports: [],
   templateUrl: './pagina-inicial.html',
-  styleUrls: ['./pagina-inicial.css']
+  styleUrl: './pagina-inicial.css'
 })
 export class PaginaInicial implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // Redireciona após 3 segundos (3000ms) — altere se quiser mais tempo
     setTimeout(() => {
-      this.router.navigate(['/cadastro-perfil']);
-    }, 3000);
+      this.router.navigate(['/home-publica']);
+    }, 5000);
   }
 }
