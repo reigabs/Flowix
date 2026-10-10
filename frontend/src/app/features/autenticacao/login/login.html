@@ -1,1 +1,123 @@
-<p>login works!</p>
+<div class="pagina-login">
+  <div class="cartao-login">
+    
+    <div class="painel-esquerdo">
+      
+      <div class="onda-topo">
+        <svg viewBox="0 0 500 200" preserveAspectRatio="none">
+          <path d="M0,0 L500,0 L500,120 Q350,190 180,100 Q80,50 0,130 Z" fill="url(#gradienteOndaTopo)" opacity="0.9"></path>
+          <defs>
+            <linearGradient id="gradienteOndaTopo" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6200fb" />
+              <stop offset="100%" stop-color="#554d92" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="conteudo-esquerdo">
+        <h1 class="marca-flowix">Flowix</h1>
+        <p class="subtitulo-flowix">justificativas de faltas digitais</p>
+
+        <div class="container-ilustracao">
+          <img src="protótipo-FloWix.png" alt="Gatinho Flowix" class="imagem-gatinho" />
+        </div>
+      </div>
+
+      <div class="onda-base">
+        <svg viewBox="0 0 500 200" preserveAspectRatio="none">
+          <path d="M0,100 Q150,20 320,110 Q420,160 500,70 L500,200 L0,200 Z" fill="url(#gradienteOndaBase)" opacity="0.9"></path>
+          <defs>
+            <linearGradient id="gradienteOndaBase" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#554d92" />
+              <stop offset="100%" stop-color="#6200fb" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+    </div>
+
+    <div class="painel-direito">
+      <div class="cabecalho">
+        <h2 class="titulo-acesse">Acesse sua conta</h2>
+        <p class="subtitulo-boas-vindas">Olá! Bem-vindo de volta!</p>
+      </div>
+
+      @if (erroLogin()) {
+        <p class="mensagem-erro-global">Não foi possível realizar o Login</p>
+      }
+
+      <form [formGroup]="formulario" class="formulario-login">
+        
+        <div class="grupo-campo">
+          <label for="email" class="rotulo-campo">E-mail ou CPF</label>
+          <input 
+            type="text" 
+            id="email" 
+            formControlName="email" 
+            placeholder="Digite seu e-mail ou cpf" 
+            class="entrada-texto"
+          />
+
+          @if (formulario.get('email')?.touched && formulario.get('email')?.invalid) {
+            @if (formulario.get('email')?.errors?.['required']) {
+              <small class="texto-erro">ESTE CAMPO É OBRIGATÓRIO</small>
+            }
+            @if (formulario.get('email')?.errors?.['email']) {
+              <small class="texto-erro">E-MAIL INVÁLIDO</small>
+            }
+          }
+        </div>
+
+        <!-- Campo Senha -->
+        <div class="grupo-campo">
+          <label for="senha" class="rotulo-campo">Senha</label>
+          <input 
+            type="password" 
+            id="senha" 
+            formControlName="senha" 
+            placeholder="Digite sua senha" 
+            class="entrada-texto"
+          />
+
+          <div class="container-esqueceu-senha">
+            <a routerLink="/esqueci-senha" class="link-esqueceu-senha">Esqueceu sua senha?</a>
+          </div>
+
+          @if (formulario.get('senha')?.touched && formulario.get('senha')?.invalid) {
+            @if (formulario.get('senha')?.errors?.['required']) {
+              <small class="texto-erro">ESTE CAMPO É OBRIGATÓRIO</small>
+            }
+            @if (formulario.get('senha')?.errors?.['minlength']) {
+              <small class="texto-erro">DEVE CONTER NO MÍNIMO 6 CARACTERES</small>
+            }
+          }
+        </div>
+
+        <button 
+          type="button" 
+          (click)="entrar()" 
+          [disabled]="formulario.invalid" 
+          class="botao-entrar"
+        >
+          Entrar
+        </button>
+
+        <div class="divisor-ou">
+          <span>ou entre com</span>
+        </div>
+
+        <button type="button" class="botao-google">
+          Entrar com o Google
+        </button>
+      </form>
+
+      <div class="rodape-criar-conta">
+        <span>Não tem uma conta? </span>
+        <a routerLink="/cadastro" class="link-criar-conta">Criar conta</a>
+      </div>
+    </div>
+
+  </div>
+</div>

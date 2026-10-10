@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap');
+
+:host {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  font-family: 'Open Sans', sans-serif;
+  background-color: #d4d6ff;
+}
+
+.pagina-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.cartao-login {
+  display: flex;
+  width: 1050px;
+  height: 640px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+
+.painel-esquerdo {
+  position: relative;
+  width: 40%;
+  background-color: #180547;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.onda-topo, .onda-base {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.onda-topo {
+  top: 0;
+  height: 190px;
+}
+
+.onda-base {
+  bottom: 0;
+  height: 190px;
+}
+
+.onda-topo svg, .onda-base svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.conteudo-esquerdo {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 50px 30px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.marca-flowix {
+  font-size: 42px;
+  font-weight: 700;
+  margin: 10px 0 4px 0;
+  color: #ffffff;
+}
+
+.subtitulo-flowix {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 30px 0;
+  background: linear-gradient(90deg, #004aad 0%, #cb6ce6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.container-ilustracao {
+  margin-top: auto;
+  margin-bottom: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.imagem-gatinho {
+  width: 350px;
+  min-height: 150px;
+  object-fit: contain;
+  background: transparent;
+}
+
+.painel-direito {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 50px 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.cabecalho {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.titulo-acesse {
+  font-size: 26px;
+  font-weight: 700;
+  color: #222222;
+  margin: 0 0 6px 0;
+}
+
+.subtitulo-boas-vindas {
+  font-size: 14px;
+  color: #777777;
+  margin: 0;
+}
+
+.formulario-login {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grupo-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rotulo-campo {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.entrada-texto {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid #333333;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+  background-color: #ffffff;
+}
+
+.entrada-texto::placeholder {
+  color: #bbbbbb;
+}
+
+.container-esqueceu-senha {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2px;
+}
+
+.link-esqueceu-senha {
+  font-size: 13px;
+  color: #180547;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.link-esqueceu-senha:hover {
+  text-decoration: underline;
+}
+
+.botao-entrar {
+  width: 100%;
+  background-color: #180547;
+  color: #ffffff;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: opacity 0.2s;
+}
+
+.botao-entrar:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.botao-entrar:disabled {
+  background-color: #180547;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.divisor-ou {
+  text-align: center;
+  font-size: 13px;
+  color: #777777;
+  margin: 2px 0;
+}
+
+.botao-google {
+  width: 100%;
+  background-color: #ffffff;
+  color: #333333;
+  border: 1.5px solid #333333;
+  padding: 13px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.botao-google:hover {
+  background-color: #f7f7f7;
+}
+
+.rodape-criar-conta {
+  text-align: center;
+  font-size: 14px;
+  color: #555555;
+  margin-top: 24px;
+}
+
+.link-criar-conta {
+  color: #180547;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.link-criar-conta:hover {
+  text-decoration: underline;
+}
+
+.mensagem-erro-global {
+  color: #e53935;
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.texto-erro {
+  color: #e53935;
+  font-size: 12px;
+  font-weight: 600;
+}
