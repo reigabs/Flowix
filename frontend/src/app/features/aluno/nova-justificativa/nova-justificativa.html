@@ -1,1 +1,39 @@
-<p>nova-justificativa works!</p>
+<aside class="menu-lateral">
+  <div class="logo-menu">
+    <span>Flowix</span>
+  </div>
+  <nav class="links-menu">
+    <a routerLink="/aluno/inicio" routerLinkActive="ativo">Painel</a>
+    <a routerLink="/aluno/nova-justificativa" routerLinkActive="ativo">Nova justificativa</a>
+    <a routerLink="/aluno/historico" routerLinkActive="ativo">Meu histórico</a>
+    <a routerLink="/aluno/perfil" routerLinkActive="ativo">Meu perfil</a>
+    <a href="#" class="sair">Sair da conta</a>
+  </nav>
+</aside>
+
+<div class="conteudo-pagina">
+  <h2>Nova justificativa</h2>
+  <p>Preencha os dados abaixo para enviar sua justificativa</p>
+
+  <form>
+    <div class="campo">
+      <label>Motivo da falta</label>
+      <input type="text" placeholder="Descreva o motivo da falta">
+    </div>
+
+    <div class="campo">
+      <label>Data da falta</label>
+      <input type="date">
+    </div>
+
+    <div class="campo">
+      <label>Anexo de documento</label>
+      <input type="file">
+    </div>
+
+    <div class="botoes">
+      <button type="button">Cancelar</button>
+      <button type="submit">Enviar justificativa</button>
+    </div>
+  </form>
+</div>

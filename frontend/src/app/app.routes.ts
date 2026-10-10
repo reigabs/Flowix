@@ -28,6 +28,25 @@ export const routes: Routes = [
       import('./features/aluno/inicio/inicio')
         .then(m => m.Inicio)
   },
+
+     {
+        path: 'nova-justificativa',
+        loadComponent: () => import('./features/aluno/nova-justificativa/nova-justificativa')
+          .then(m => m.NovaJustificativa)
+      },
+      {
+        path: 'historico',
+        loadComponent: () => import('./features/aluno/historico/historico')
+          .then(m => m.Historico)
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => import('./features/aluno/perfil/perfil')
+          .then(m => m.Perfil)
+      },
+    
+  
+
   {
     path: 'secretaria',
     loadComponent: () =>

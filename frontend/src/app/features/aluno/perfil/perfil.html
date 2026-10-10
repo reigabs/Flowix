@@ -1,1 +1,45 @@
-<p>perfil works!</p>
+<aside class="menu-lateral">
+  <div class="logo-menu">
+    <span>Flowix</span>
+  </div>
+  <nav class="links-menu">
+    <a routerLink="/aluno/inicio" routerLinkActive="ativo">Painel</a>
+    <a routerLink="/aluno/nova-justificativa" routerLinkActive="ativo">Nova justificativa</a>
+    <a routerLink="/aluno/historico" routerLinkActive="ativo">Meu histórico</a>
+    <a routerLink="/aluno/perfil" routerLinkActive="ativo">Meu perfil</a>
+    <a href="#" class="sair">Sair da conta</a>
+  </nav>
+</aside>
+
+<div class="conteudo-pagina">
+  <h2>Meu perfil</h2>
+  <p>Veja e gerencie suas informações pessoais</p>
+
+  <div class="dados-pessoais">
+    <div class="campo">
+      <label>Nome completo</label>
+      <input type="text">
+    </div>
+    <div class="campo">
+      <label>Instituição</label>
+      <input type="text">
+    </div>
+    <div class="campo">
+      <label>Matrícula</label>
+      <input type="text">
+    </div>
+    <div class="campo">
+      <label>Telefone</label>
+      <input type="text">
+    </div>
+    <div class="campo">
+      <label>E-mail</label>
+      <input type="email">
+    </div>
+  </div>
+
+  <div class="botoes-perfil">
+    <button>Editar informações</button>
+    <button>Excluir conta</button>
+  </div>
+</div>

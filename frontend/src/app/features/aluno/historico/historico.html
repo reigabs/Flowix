@@ -1,1 +1,28 @@
-<p>historico works!</p>
+<aside class="menu-lateral">
+  <div class="logo-menu">
+    <span>Flowix</span>
+  </div>
+  <nav class="links-menu">
+    <a routerLink="/aluno/inicio" routerLinkActive="ativo">Painel</a>
+    <a routerLink="/aluno/nova-justificativa" routerLinkActive="ativo">Nova justificativa</a>
+    <a routerLink="/aluno/historico" routerLinkActive="ativo">Meu histórico</a>
+    <a routerLink="/aluno/perfil" routerLinkActive="ativo">Meu perfil</a>
+    <a href="#" class="sair">Sair da conta</a>
+  </nav>
+</aside>
+
+<div class="conteudo-pagina">
+  <h2>Meu histórico</h2>
+
+  <div class="filtros">
+    <button>Todas</button>
+    <button>Pendentes</button>
+    <button>Em análise</button>
+    <button>Aprovadas</button>
+    <button>Rejeitadas</button>
+  </div>
+
+  <div class="lista-registros">
+    <p>Nenhuma justificativa encontrada</p>
+  </div>
+</div>
