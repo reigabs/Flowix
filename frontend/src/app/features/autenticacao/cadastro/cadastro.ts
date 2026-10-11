@@ -1,36 +1,34 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cadastro',
-  imports: [RouterLink],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './cadastro.html',
   styleUrl: './cadastro.css'
 })
 export class Cadastro {
-  constructor(private router: Router) {}
+  
+  formulario = new FormGroup({
+    nome: new FormControl('', [Validators.required]),
+    instituicao: new FormControl('', [Validators.required]),
+    matricula: new FormControl('', [Validators.required]),
+    telefone: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    senha: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    perfil: new FormControl('', [Validators.required])
+  });
 
-  voltar(): void {
-    this.router.navigate(['/home-publica']);
-  }
-
-  cadastrar(event: SubmitEvent): void {
-    event.preventDefault();
-
-    const formulario = event.target as HTMLFormElement;
-
-    if (!formulario.reportValidity()) {
-      return;
+  cadastrar(): void {
+    // Marca todos os campos como tocados para exibir os erros caso o usuário tente enviar vazio
+    if (this.formulario.valid) {
+      console.log('Dados preenchidos:', this.formulario.value);
+      // integração com o backend aqui
+    } else {
+      this.formulario.markAllAsTouched();
     }
-
-    const dados = new FormData(formulario);
-    const perfil = dados.get('perfil');
-
-    // Por enquanto, apenas confirma o envio do formulário.
-    // A integração com o backend será feita depois.
-    console.log('Perfil selecionado:', perfil);
-    console.log('Dados preenchidos:', Object.fromEntries(dados.entries()));
-
-    alert('Formulário preenchido! O cadastro ainda precisa ser conectado ao backend.');
   }
 }
