@@ -11,7 +11,9 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './cadastro.css'
 })
 export class Cadastro {
-  
+
+  constructor(private router: Router) { } // ✅ Adicionei o Router
+
   formulario = new FormGroup({
     nome: new FormControl('', [Validators.required]),
     instituicao: new FormControl('', [Validators.required]),
@@ -23,12 +25,18 @@ export class Cadastro {
   });
 
   cadastrar(): void {
-    // Marca todos os campos como tocados para exibir os erros caso o usuário tente enviar vazio
     if (this.formulario.valid) {
-      console.log('Dados preenchidos:', this.formulario.value);
-      // integração com o backend aqui
-    } else {
-      this.formulario.markAllAsTouched();
+   if (this.formulario.valid) {
+  console.log('Dados preenchidos:', this.formulario.value);
+
+  if (typeof window !== 'undefined' && window.localStorage) {
+    window.localStorage.setItem('emailTemp', this.formulario.get('email')?.value || '');
+  }
+
+  this.router.navigate(['/cadastro-concluido']);
+} else {
+  this.formulario.markAllAsTouched();
+}
     }
   }
 }
