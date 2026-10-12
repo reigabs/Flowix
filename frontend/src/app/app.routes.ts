@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { CadastroConcluido } from './features/autenticacao/cadastro-concluido/cadastro-concluido';
 
 export const routes: Routes = [
 
@@ -21,6 +22,14 @@ export const routes: Routes = [
       import('./features/autenticacao/cadastro/cadastro')
         .then(m => m.Cadastro)
   },
+
+{
+  path: 'cadastro-concluido',
+  loadComponent: () =>
+    import('./features/autenticacao/cadastro-concluido/cadastro-concluido')
+      .then(m => m.CadastroConcluido)
+},
+
 
   {
     path: 'aluno',
