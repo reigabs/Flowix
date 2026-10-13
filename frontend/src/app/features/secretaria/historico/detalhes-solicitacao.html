@@ -1,0 +1,18 @@
+<div class="historico-container">
+  <div class="header-section">
+    <h2>Histórico</h2>
+    <p>Registro de todas as solicitações já aprovadas ou rejeitadas</p>
+  </div>
+
+  @if (listaHistorico.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">🕒</div>
+      <h3>Nenhum histórico encontrado</h3>
+      <p>As solicitações finalizadas aparecerão listadas aqui.</p>
+    </div>
+  } @else {
+    <div class="table-card">
+      <!-- Tabela de histórico real -->
+    </div>
+  }
+</div>
