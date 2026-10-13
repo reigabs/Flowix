@@ -12,7 +12,7 @@ import { Router, RouterLink } from '@angular/router';
 })
 export class Cadastro {
 
-  constructor(private router: Router) { } // ✅ Adicionei o Router
+  constructor(private router: Router) { } 
 
   formulario = new FormGroup({
     nome: new FormControl('', [Validators.required]),
@@ -23,20 +23,26 @@ export class Cadastro {
     senha: new FormControl('', [Validators.required, Validators.minLength(6)]),
     perfil: new FormControl('', [Validators.required])
   });
+  
 
   cadastrar(): void {
     if (this.formulario.valid) {
-   if (this.formulario.valid) {
-  console.log('Dados preenchidos:', this.formulario.value);
+      console.log('Dados preenchidos:', this.formulario.value);
 
-  if (typeof window !== 'undefined' && window.localStorage) {
-    window.localStorage.setItem('emailTemp', this.formulario.get('email')?.value || '');
-  }
+      if (typeof window !== 'undefined' && window.localStorage) {
+        // Salva os dados do usuário, incluindo o perfil selecionado 
+        const dadosUsuario = {
+          email: this.formulario.get('email')?.value || '',
+          perfil: this.formulario.get('perfil')?.value || ''
+        };
 
-  this.router.navigate(['/cadastro-concluido']);
-} else {
-  this.formulario.markAllAsTouched();
-}
+        window.localStorage.setItem('usuario_cadastrado', JSON.stringify(dadosUsuario));
+        window.localStorage.setItem('emailTemp', dadosUsuario.email);
+      }
+
+      this.router.navigate(['/cadastro-concluido']);
+    } else {
+      this.formulario.markAllAsTouched();
     }
   }
 }
