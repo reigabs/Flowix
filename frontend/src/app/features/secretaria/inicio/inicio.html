@@ -1,1 +1,90 @@
-<p>inicio works!</p>
+<div class="inicio-container">
+  <!-- Saudação -->
+  <div class="welcome-section">
+    <h2>Olá, {{ nomeUsuario }}! 👋</h2>
+    <p>Aqui está o resumo das solicitações gerais</p>
+  </div>
+
+  <!-- Cards de Resumo -->
+  <div class="status-cards-grid">
+    <div class="status-card">
+      <div class="card-icon pendente">⏳</div>
+      <div class="card-info">
+        <span class="card-title">Pendentes</span>
+        <h3 class="card-number">{{ resumoSolicitacoes.pendentes }}</h3>
+        <span class="card-subtitle warning">aguardando análise</span>
+      </div>
+    </div>
+
+    <div class="status-card">
+      <div class="card-icon analise">🕒</div>
+      <div class="card-info">
+        <span class="card-title">Em análise</span>
+        <h3 class="card-number">{{ resumoSolicitacoes.emAnalise }}</h3>
+        <span class="card-subtitle info">Em andamento</span>
+      </div>
+    </div>
+
+    <div class="status-card">
+      <div class="card-icon aprovada">✅</div>
+      <div class="card-info">
+        <span class="card-title">Aprovadas</span>
+        <h3 class="card-number">{{ resumoSolicitacoes.aprovadas }}</h3>
+        <span class="card-subtitle success">Aprovados</span>
+      </div>
+    </div>
+
+    <div class="status-card">
+      <div class="card-icon rejeitada">❌</div>
+      <div class="card-info">
+        <span class="card-title">Rejeitadas</span>
+        <h3 class="card-number">{{ resumoSolicitacoes.rejeitadas }}</h3>
+        <span class="card-subtitle danger">Rejeitados</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid Inferior: Calendário e Gráfico -->
+  <div class="dashboard-bottom-grid">
+    
+    <!-- Calendário Real -->
+    <div class="dashboard-box calendar-box">
+      <div class="calendar-header">
+        <h3>Calendário</h3>
+        <span class="month-selector">Fevereiro ▾</span>
+      </div>
+      <div class="calendar-grid">
+        <span class="cal-day-name">Su</span>
+        <span class="cal-day-name">Mo</span>
+        <span class="cal-day-name">Tu</span>
+        <span class="cal-day-name">We</span>
+        <span class="cal-day-name">Th</span>
+        <span class="cal-day-name">Fr</span>
+        <span class="cal-day-name">Sa</span>
+
+        @for (item of diasMes; track $index) {
+          @if (item.dia !== null) {
+            <span class="cal-day" [class.active]="item.ativo">
+              {{ item.dia }}
+            </span>
+          } @else {
+            <span class="cal-day empty"></span>
+          }
+        }
+      </div>
+    </div>
+
+    <!-- Resumo do Período -->
+    <div class="dashboard-box chart-box">
+      <h3>Resumo do período</h3>
+      <div class="chart-placeholder">
+        <div class="donut-chart"></div>
+      </div>
+      <div class="chart-footer">
+        <span>Total de solicitações</span>
+        <strong>{{ resumoSolicitacoes.total }}</strong>
+      </div>
+    </div>
+
+  </div>
+</div>
