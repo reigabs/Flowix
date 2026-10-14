@@ -1,55 +1,80 @@
-
 <div class="aluno-layout">
 
+  <!-- MENU LATERAL -->
   <aside class="sidebar">
 
-   <div class="logo">
-  <img src="protótipo-FloWix.png" alt="Logo do FloWix" class="logo-imagem">
-  <span>Flowix</span>
-</div>
+    <a class="logo" routerLink="/aluno/inicio">
+      <img
+        src="protótipo-FloWix.png"
+        alt="Logo do FloWix"
+        class="logo-imagem"
+      >
+      <span>Flowix</span><br>
+    </a>
 
     <nav class="menu">
-      <a routerLink="/aluno/inicio"
-         routerLinkActive="ativo"
-         class="menu-item">
-        <span>⌂</span> Painel
+
+      <a
+        routerLink="/aluno/inicio"
+        routerLinkActive="ativo"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="menu-item"
+      >
+        <span class="menu-icone">⌂</span>
+        Painel
       </a>
 
-      <a routerLink="/aluno/nova-justificativa"
-         routerLinkActive="ativo"
-         class="menu-item">
-        <span>▤</span> Nova justificativa
+      <a
+        routerLink="/aluno/nova-justificativa"
+        routerLinkActive="ativo"
+        class="menu-item"
+      >
+        <span class="menu-icone">▤</span>
+        Nova justificativa
       </a>
 
-      <a routerLink="/aluno/historico"
-         routerLinkActive="ativo"
-         class="menu-item">
-        <span>▣</span> Meu histórico
+      <a
+        routerLink="/aluno/historico"
+        routerLinkActive="ativo"
+        class="menu-item"
+      >
+        <span class="menu-icone">▧</span>
+        Meu histórico
       </a>
 
-      <a routerLink="/aluno/notificacoes"
-         routerLinkActive="ativo"
-         class="menu-item">
-        <span>♟</span> Notificações
+      <a
+        routerLink="/aluno/notificacoes"
+        routerLinkActive="ativo"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="menu-item"
+      >
+        <span class="menu-icone">♟</span>
+        Notificações
       </a>
 
-      <a routerLink="/aluno/perfil"
-         routerLinkActive="ativo"
-         class="menu-item">
-        <span>●</span> Meu perfil
+      <a
+        routerLink="/aluno/perfil"
+        routerLinkActive="ativo"
+        class="menu-item"
+      >
+        <span class="menu-icone">●</span>
+        Meu perfil
       </a>
+
     </nav>
 
-    <button class="sair" (click)="sair()">
-      <span>⇥</span> Sair da conta
+    <button class="sair" type="button" (click)="sair()">
+      <span>⇥</span>
+      Sair da conta
     </button>
 
   </aside>
 
+  <!-- CONTEÚDO PRINCIPAL -->
   <main class="conteudo">
 
     <header class="cabecalho">
-      <h1>Olá, {{ nomeAluno }}! 👋</h1>
+      <h1>Olá, Bia Santos! 👋</h1>
       <p>Acompanhe suas justificativas e solicitações</p>
     </header>
 
@@ -105,9 +130,9 @@
             Envie agora mesmo.
           </p>
 
-         <div class="ilustracao">
+          <div class="ilustracao">
             <img src="e555cf82-85a7-43fb-a5f9-ae1d56631ced.png" alt="Gatinho usando um notebook" class="gato-justificativa">
-        </div>
+          </div>
 
           <a routerLink="/aluno/nova-justificativa"
              class="botao-enviar">
@@ -120,15 +145,10 @@
 
           <div class="lista-solicitacoes">
 
-            <div class="solicitacao"
-                 *ngFor="let item of solicitacoes">
-
+            <div class="solicitacao" *ngFor="let item of solicitacoes">
               <strong>#{{ item.numero }}</strong>
-
               <span class="data">{{ item.data }}</span>
-
               <span class="motivo">{{ item.motivo }}</span>
-
               <span class="status"
                     [ngClass]="{
                       'em-andamento': item.status === 'Em andamento',
@@ -137,7 +157,6 @@
                     }">
                 {{ item.status }}
               </span>
-
             </div>
 
           </div>

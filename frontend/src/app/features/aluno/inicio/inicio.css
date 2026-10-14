@@ -1,13 +1,13 @@
 
-* {
-  box-sizing: border-box;
-}
-
 :host {
   display: block;
   min-height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
   color: #111;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 .aluno-layout {
@@ -19,17 +19,29 @@
 /* MENU LATERAL */
 
 .sidebar {
-  width: 254px;
-  min-width: 254px;
+  width: 250px;
+  min-width: 250px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: 20px;
+  padding-top: 18px;
   background: #190544;
-  color: white;
+  color: #fff;
 }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 30px 42px;
+  color: #fff;
+  font-size: 27px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
 .logo-imagem {
-  width: 60px;
+  width: 55px;
   height: 65px;
   object-fit: contain;
 }
@@ -43,19 +55,21 @@
 .menu-item {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 13px;
   min-height: 55px;
-  margin-left: 10px;
-  padding: 0 25px;
+  margin-left: 8px;
+  padding: 0 28px;
   border-radius: 10px 0 0 10px;
-  color: white;
+  color: #fff;
   font-size: 15px;
   font-weight: bold;
   text-decoration: none;
 }
 
-.menu-item span {
+.menu-icone {
+  width: 25px;
   font-size: 27px;
+  text-align: center;
 }
 
 .menu-item:hover,
@@ -66,17 +80,21 @@
 .sair {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin: auto 20px 25px 35px;
+  gap: 12px;
+  margin: auto 20px 25px 40px;
   border: none;
   background: transparent;
-  color: white;
+  color: #fff;
   font-size: 15px;
   cursor: pointer;
 }
 
 .sair span {
-  font-size: 28px;
+  font-size: 27px;
+}
+
+.sair:hover {
+  color: #fff;
 }
 
 /* CABEÇALHO */
@@ -108,7 +126,7 @@
   font-weight: bold;
 }
 
-/* CARTÕES */
+/* CARTÕES E CONTEÚDO DO PAINEL */
 
 .painel {
   padding: 32px 38px;
@@ -224,12 +242,13 @@
   line-height: 1.5;
 }
 
+/* ILUSTRAÇÃO DO GATINHO (Aumentado suavemente) */
 .ilustracao {
   position: absolute;
-  right: 12px;
-  bottom: 65px;
-  width: 175px;
-  height: 110px;
+  right: 10px;
+  bottom: 60px;
+  width: 200px;  /* Aumentado de 175px para 200px */
+  height: 130px; /* Aumentado de 110px para 130px */
 }
 
 .gato-justificativa {
@@ -344,161 +363,4 @@
 
 .calendario {
   font-size: 45px;
-}
-
-/* TELAS MENORES */
-
-@media (max-width: 1200px) {
-  .painel {
-    padding: 25px 20px;
-  }
-
-  .cards-resumo {
-    gap: 15px;
-  }
-
-  .card-resumo {
-    gap: 8px;
-    padding: 10px;
-  }
-
-  .areas-painel {
-    grid-template-columns: minmax(240px, 0.8fr) minmax(360px, 1.5fr);
-    gap: 18px;
-  }
-
-  .solicitacao {
-    grid-template-columns: 55px 90px minmax(100px, 1fr) 95px;
-    gap: 6px;
-    font-size: 11px;
-  }
-}
-
-@media (max-width: 950px) {
-  .cards-resumo {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .areas-painel {
-    grid-template-columns: 1fr;
-  }
-
-  .aviso {
-    width: 100%;
-    margin-top: 40px;
-  }
-}
-
-@media (max-width: 600px) {
-  .aluno-layout {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    min-width: 0;
-    min-height: auto;
-    padding: 10px;
-  }
-
-  .logo {
-    padding: 5px 10px 15px;
-    font-size: 23px;
-  }
-
-  .menu {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 5px;
-  }
-
-  .menu-item {
-    min-height: 43px;
-    margin: 0;
-    padding: 0 8px;
-    border-radius: 8px;
-    gap: 7px;
-    font-size: 12px;
-  }
-
-  .menu-item span {
-    font-size: 21px;
-  }
-
-  .sair {
-    margin: 15px 10px 5px;
-  }
-
-  .cabecalho {
-    min-height: 85px;
-    padding: 15px;
-  }
-
-  .cabecalho h1 {
-    font-size: 19px;
-  }
-
-  .cabecalho p {
-    font-size: 12px;
-  }
-
-  .painel {
-    padding: 18px 12px;
-  }
-
-  .cards-resumo {
-    gap: 10px;
-  }
-
-  .card-resumo {
-    gap: 6px;
-    min-height: 90px;
-    padding: 8px 6px;
-  }
-
-  .icone {
-    width: 29px;
-    height: 29px;
-    font-size: 21px;
-  }
-
-  .card-resumo h3 {
-    font-size: 12px;
-  }
-
-  .card-resumo strong {
-    font-size: 18px;
-  }
-
-  .card-resumo p {
-    font-size: 10px;
-  }
-
-  .card-recentes {
-    overflow-x: auto;
-  }
-
-  .lista-solicitacoes {
-    min-width: 450px;
-  }
-
-  .aviso {
-    padding: 15px;
-    gap: 10px;
-  }
-
-  .aviso h2 {
-    font-size: 16px;
-    margin-bottom: 8px;
-  }
-
-  .aviso p {
-    font-size: 12px;
-    text-align: left;
-    line-height: 1.4;
-  }
-
-  .calendario {
-    font-size: 32px;
-  }
 }
