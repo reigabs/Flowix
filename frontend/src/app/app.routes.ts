@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { SecretariaLayoutComponent } from './features/secretaria/secretaria-layout';
-
+import { Inicio } from './features/aluno/inicio/inicio';
 export const routes: Routes = [
   {
     path: '',
@@ -88,7 +88,13 @@ export const routes: Routes = [
     .then(m => m.NovaJustificativa)
 },
 
-
+{
+  path: 'aluno/notificacoes',
+  canActivate: [authGuard],
+ loadComponent: () => 
+    import('./features/aluno/notificacoes/notificacoes')
+    .then(m => m.Notificacoes)
+},
 {
   path: 'aluno/historico',
     canActivate: [authGuard],

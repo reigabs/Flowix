@@ -1,39 +1,291 @@
-<aside class="menu-lateral">
-  <div class="logo-menu">
-    <span>Flowix</span>
-  </div>
-  <nav class="links-menu">
-    <a routerLink="/aluno/inicio" routerLinkActive="ativo">Painel</a>
-    <a routerLink="/aluno/nova-justificativa" routerLinkActive="ativo">Nova justificativa</a>
-    <a routerLink="/aluno/historico" routerLinkActive="ativo">Meu histórico</a>
-    <a routerLink="/aluno/perfil" routerLinkActive="ativo">Meu perfil</a>
-    <a href="#" class="sair">Sair da conta</a>
-  </nav>
-</aside>
+<div class="aluno-layout">
 
-<div class="conteudo-pagina">
-  <h2>Nova justificativa</h2>
-  <p>Preencha os dados abaixo para enviar sua justificativa</p>
+  <!-- MENU LATERAL -->
+  <aside class="sidebar">
 
-  <form>
-    <div class="campo">
-      <label>Motivo da falta</label>
-      <input type="text" placeholder="Descreva o motivo da falta">
-    </div>
+    <a class="logo" routerLink="/aluno/inicio">
+      <img
+        src="protótipo-FloWix.png"
+        alt="Gato com livros, logo do FloWix"
+        class="logo-imagem"
+      >
+      <span>Flowix</span>
+    </a>
 
-    <div class="campo">
-      <label>Data da falta</label>
-      <input type="date">
-    </div>
+    <nav class="menu">
 
-    <div class="campo">
-      <label>Anexo de documento</label>
-      <input type="file">
-    </div>
+      <a
+        routerLink="/aluno/inicio"
+        routerLinkActive="ativo"
+        class="menu-item"
+      >
+        <span class="menu-icone">⌂</span>
+        Painel
+      </a>
 
-    <div class="botoes">
-      <button type="button">Cancelar</button>
-      <button type="submit">Enviar justificativa</button>
-    </div>
-  </form>
+      <a
+        routerLink="/aluno/nova-justificativa"
+        routerLinkActive="ativo"
+        class="menu-item"
+      >
+        <span class="menu-icone">▤</span>
+        Nova justificativa
+      </a>
+
+      <a
+        routerLink="/aluno/historico"
+        routerLinkActive="ativo"
+        class="menu-item"
+      >
+        <span class="menu-icone">▧</span>
+        Meu histórico
+      </a>
+
+      <a
+        routerLink="/aluno/notificacoes"
+        routerLinkActive="ativo"
+        class="menu-item"
+      >
+        <span class="menu-icone">♟</span>
+        Notificações
+      </a>
+
+      <a
+        routerLink="/aluno/perfil"
+        routerLinkActive="ativo"
+        class="menu-item"
+      >
+        <span class="menu-icone">●</span>
+        Meu perfil
+      </a>
+
+    </nav>
+
+    <button class="sair" type="button" (click)="cancelar()">
+      <span>⇥</span>
+      Sair da conta
+    </button>
+
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="conteudo">
+
+    <!-- FORMULÁRIO -->
+    <section class="pagina-formulario" *ngIf="!enviando">
+
+      <header class="cabecalho-pagina">
+
+        <button
+          class="botao-voltar"
+          type="button"
+          aria-label="Voltar ao painel"
+          (click)="cancelar()"
+        >
+          <span>⬅</span>
+        </button>
+
+        <div>
+          <h1>Nova justificativa</h1>
+          <p>Preencha os dados abaixo para enviar sua justificativa</p>
+        </div>
+
+      </header>
+
+      <form class="formulario" (ngSubmit)="enviar()">
+
+        <!-- MOTIVO E DATA -->
+        <div class="campos-principais">
+
+          <div class="campo">
+            <label for="motivo">Motivo da falta</label>
+
+            <textarea
+              id="motivo"
+              name="motivo"
+              [(ngModel)]="motivo"
+              placeholder="Descreva o motivo da falta"
+              rows="2"
+              maxlength="500"
+              required
+            ></textarea>
+          </div>
+
+          <div class="campo">
+            <label for="dataFalta">Data da falta</label>
+
+            <input
+              id="dataFalta"
+              name="dataFalta"
+              type="date"
+              [(ngModel)]="dataFalta"
+              required
+            >
+          </div>
+
+        </div>
+
+        <!-- ANEXO -->
+        <div class="secao-anexo">
+
+          <label class="titulo-anexo" for="arquivo">
+            Anexo do documento
+            <span>(PDF, JPG, PNG - até 5 MB)</span>
+          </label>
+
+          <input
+            #entradaArquivo
+            id="arquivo"
+            class="input-arquivo"
+            type="file"
+            accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+            (change)="selecionarArquivo($event)"
+          >
+
+          <div
+            class="area-upload"
+            [class.arrastando]="arrastando"
+            [class.com-arquivo]="arquivo"
+            role="button"
+            tabindex="0"
+            aria-label="Selecionar ou arrastar documento"
+            (click)="entradaArquivo.click()"
+            (keydown.enter)="entradaArquivo.click()"
+            (keydown.space)="$event.preventDefault(); entradaArquivo.click()"
+            (dragover)="aoArrastar($event)"
+            (dragleave)="aoSairDaArea($event)"
+            (drop)="aoSoltar($event)"
+          >
+
+            <ng-container *ngIf="!arquivo">
+
+              <svg
+                class="icone-upload"
+                viewBox="0 0 100 100"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M25 67H20C8 67 3 58 7 47C10 38 18 34 28 35C31 17 45 9 59 13C72 17 78 27 79 39C91 40 97 49 94 59C92 65 86 68 78 68H75"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M50 83V44M34 60L50 43L66 60"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              <h2>Clique para anexar</h2>
+
+              <p>
+                ou <strong>arraste o arquivo aqui</strong>
+              </p>
+
+            </ng-container>
+
+            <div class="arquivo-selecionado" *ngIf="arquivo">
+
+              <span class="icone-documento">▤</span>
+
+              <div class="informacoes-arquivo">
+                <strong>{{ arquivo.name }}</strong>
+                <span>
+                  {{ (arquivo.size / 1024 / 1024).toFixed(2) }} MB
+                </span>
+              </div>
+
+              <button
+                type="button"
+                class="remover-arquivo"
+                aria-label="Remover documento"
+                (click)="$event.stopPropagation(); removerArquivo()"
+              >
+                ×
+              </button>
+
+            </div>
+
+          </div>
+
+          <p class="mensagem-erro" *ngIf="mensagemErro">
+            {{ mensagemErro }}
+          </p>
+
+        </div>
+
+        <!-- BOTÕES -->
+        <div class="acoes">
+
+          <button
+            type="button"
+            class="botao-cancelar"
+            (click)="cancelar()"
+          >
+            Cancelar
+          </button>
+
+          <button type="submit" class="botao-enviar">
+            Enviar justificativa
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+    <!-- TELA DE CARREGAMENTO -->
+    <section class="tela-envio" *ngIf="enviando">
+
+      <button
+        type="button"
+        class="botao-voltar voltar-envio"
+        aria-label="Voltar ao painel"
+        disabled
+      >
+        ⬅
+      </button>
+
+      <div class="cartao-envio">
+
+        <h1>Enviando justificativa</h1>
+
+        <img
+          src="/imagens/gato-enviando.png"
+          alt="Gatinho enviando uma mensagem em um avião de papel"
+          class="gato-enviando"
+        >
+
+        <p class="texto-carregamento">
+          Não feche a página
+          <br>
+          Aguarde alguns segundos
+        </p>
+
+        <div
+          class="barra-progresso"
+          role="progressbar"
+          [attr.aria-valuenow]="progresso"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <div
+            class="progresso-preenchido"
+            [style.width.%]="progresso"
+          ></div>
+        </div>
+
+        <strong class="porcentagem">{{ progresso }}%</strong>
+
+      </div>
+
+    </section>
+
+  </main>
+
 </div>

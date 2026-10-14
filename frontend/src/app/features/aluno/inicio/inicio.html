@@ -1,41 +1,164 @@
-<aside class="menu-lateral">
-  <div class="logo-menu">
-    <span>Flowix</span>
-  </div>
-  <nav class="links-menu">
-    <a routerLink="/aluno/inicio" routerLinkActive="ativo">Painel</a>
-    <a routerLink="/aluno/nova-justificativa" routerLinkActive="ativo">Nova justificativa</a>
-    <a routerLink="/aluno/historico" routerLinkActive="ativo">Meu histórico</a>
-    <a routerLink="/aluno/perfil" routerLinkActive="ativo">Meu perfil</a>
-    <a href="#" class="sair">Sair da conta</a>
-  </nav>
-</aside>
 
-<div class="conteudo-pagina">
-  <h2>Olá! 👋</h2>
-  <p>Acompanhe suas justificativas e solicitações</p>
+<div class="aluno-layout">
 
-  <div class="cards-status">
-    <div class="card">
-      <h3>Pendentes</h3>
-      <p>aguardando análise</p>
-    </div>
-    <div class="card">
-      <h3>Em análise</h3>
-      <p>em andamento</p>
-    </div>
-    <div class="card">
-      <h3>Aprovadas</h3>
-      <p>aprovadas</p>
-    </div>
-    <div class="card">
-      <h3>Rejeitadas</h3>
-      <p>rejeitadas</p>
-    </div>
-  </div>
+  <aside class="sidebar">
 
-  <div class="solicitacoes-recorrentes">
-    <h3>Solicitações recentes</h3>
-    <p>Nenhuma solicitação encontrada</p>
-  </div>
+   <div class="logo">
+  <img src="protótipo-FloWix.png" alt="Logo do FloWix" class="logo-imagem">
+  <span>Flowix</span>
+</div>
+
+    <nav class="menu">
+      <a routerLink="/aluno/inicio"
+         routerLinkActive="ativo"
+         class="menu-item">
+        <span>⌂</span> Painel
+      </a>
+
+      <a routerLink="/aluno/nova-justificativa"
+         routerLinkActive="ativo"
+         class="menu-item">
+        <span>▤</span> Nova justificativa
+      </a>
+
+      <a routerLink="/aluno/historico"
+         routerLinkActive="ativo"
+         class="menu-item">
+        <span>▣</span> Meu histórico
+      </a>
+
+      <a routerLink="/aluno/notificacoes"
+         routerLinkActive="ativo"
+         class="menu-item">
+        <span>♟</span> Notificações
+      </a>
+
+      <a routerLink="/aluno/perfil"
+         routerLinkActive="ativo"
+         class="menu-item">
+        <span>●</span> Meu perfil
+      </a>
+    </nav>
+
+    <button class="sair" (click)="sair()">
+      <span>⇥</span> Sair da conta
+    </button>
+
+  </aside>
+
+  <main class="conteudo">
+
+    <header class="cabecalho">
+      <h1>Olá, {{ nomeAluno }}! 👋</h1>
+      <p>Acompanhe suas justificativas e solicitações</p>
+    </header>
+
+    <section class="painel">
+
+      <div class="cards-resumo">
+
+        <article class="card-resumo">
+          <div class="icone roxo">⌛</div>
+          <div>
+            <h3>Pendentes</h3>
+            <strong>2</strong>
+            <p class="texto-roxo">aguardando análise</p>
+          </div>
+        </article>
+
+        <article class="card-resumo">
+          <div class="icone laranja">◷</div>
+          <div>
+            <h3>Em análise</h3>
+            <strong>1</strong>
+            <p class="texto-laranja">Em andamento</p>
+          </div>
+        </article>
+
+        <article class="card-resumo">
+          <div class="icone verde">✓</div>
+          <div>
+            <h3>Aprovadas</h3>
+            <strong>2</strong>
+            <p class="texto-verde">Aprovadas</p>
+          </div>
+        </article>
+
+        <article class="card-resumo">
+          <div class="icone vermelho">×</div>
+          <div>
+            <h3>Rejeitadas</h3>
+            <strong>1</strong>
+            <p class="texto-vermelho">Rejeitadas</p>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="areas-painel">
+
+        <section class="card-nova">
+          <h2>Nova justificativa</h2>
+
+          <p>
+            Precisou justificar uma falta?<br>
+            Envie agora mesmo.
+          </p>
+
+         <div class="ilustracao">
+            <img src="e555cf82-85a7-43fb-a5f9-ae1d56631ced.png" alt="Gatinho usando um notebook" class="gato-justificativa">
+        </div>
+
+          <a routerLink="/aluno/nova-justificativa"
+             class="botao-enviar">
+            Enviar justificativa
+          </a>
+        </section>
+
+        <section class="card-recentes">
+          <h2>Solicitações recentes</h2>
+
+          <div class="lista-solicitacoes">
+
+            <div class="solicitacao"
+                 *ngFor="let item of solicitacoes">
+
+              <strong>#{{ item.numero }}</strong>
+
+              <span class="data">{{ item.data }}</span>
+
+              <span class="motivo">{{ item.motivo }}</span>
+
+              <span class="status"
+                    [ngClass]="{
+                      'em-andamento': item.status === 'Em andamento',
+                      'aprovada': item.status === 'Aprovada',
+                      'rejeitada': item.status === 'Rejeitada'
+                    }">
+                {{ item.status }}
+              </span>
+
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <section class="aviso">
+        <div>
+          <h2>Importante!</h2>
+          <p>
+            As justificativas devem ser enviadas em até 2 dias
+            após a volta do aluno às aulas.
+          </p>
+        </div>
+
+        <span class="calendario">▦</span>
+      </section>
+
+    </section>
+
+  </main>
+
 </div>
