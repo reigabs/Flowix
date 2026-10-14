@@ -1,1 +1,189 @@
-<p>historico works!</p>
+<div class="conteudo">
+
+  <header class="cabecalho-pagina">
+    <a
+      routerLink="/responsavel/inicio"
+      class="botao-voltar"
+      aria-label="Voltar ao painel"
+    >
+      ←
+    </a>
+
+    <h1>Histórico</h1>
+  </header>
+
+  <section class="historico-conteudo">
+
+    <!-- ABAS DE FILTRO -->
+    <nav class="abas" aria-label="Filtrar justificativas">
+      <button
+        *ngFor="let aba of abas"
+        type="button"
+        class="aba"
+        [class.selecionada]="abaSelecionada === aba"
+        [attr.aria-pressed]="abaSelecionada === aba"
+        (click)="selecionarAba(aba)"
+      >
+        {{ aba }}
+      </button>
+    </nav>
+
+    <!-- LISTA -->
+    <section class="lista-historico">
+
+      <article
+        class="linha-historico"
+        *ngFor="let item of justificativasVisiveis"
+      >
+        <!-- Nome do Aluno (Exclusivo do Responsável) -->
+        <span class="aluno-nome"><strong>{{ item.aluno }}</strong></span>
+
+        <strong class="numero">{{ item.numero }}</strong>
+
+        <span class="data">{{ item.data }}</span>
+
+        <span class="motivo">{{ item.motivo }}</span>
+
+        <span
+          class="status"
+          [ngClass]="{
+            'status-analise': item.status === 'Em análise',
+            'status-pendente': item.status === 'Pendente',
+            'status-aprovado': item.status === 'Aprovado',
+            'status-rejeitado': item.status === 'Rejeitado'
+          }"
+        >
+          {{ item.status }}
+        </span>
+
+        <button
+          type="button"
+          class="botao-detalhes"
+          [attr.aria-label]="'Ver detalhes da justificativa ' + item.numero"
+          (click)="verDetalhes(item)"
+        >
+          <svg
+            viewBox="0 0 32 24"
+            class="icone-olho"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M2 12S7 3 16 3s14 9 14 9-5 9-14 9S2 12 2 12Z"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <circle
+              cx="16"
+              cy="12"
+              r="4"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </svg>
+        </button>
+
+      </article>
+
+      <div
+        class="lista-vazia"
+        *ngIf="justificativasVisiveis.length === 0"
+      >
+        <p>Nenhuma justificativa encontrada nesta categoria.</p>
+      </div>
+
+    </section>
+
+    <!-- PAGINAÇÃO -->
+    <nav class="paginacao" aria-label="Paginação do histórico">
+      <button
+        *ngFor="let pagina of paginas"
+        type="button"
+        class="botao-pagina"
+        [class.pagina-ativa]="paginaAtual === pagina"
+        [attr.aria-current]="paginaAtual === pagina ? 'page' : null"
+        (click)="mudarPagina(pagina)"
+      >
+        {{ pagina }}
+      </button>
+
+      <button
+        type="button"
+        class="botao-proxima"
+        aria-label="Próxima página"
+        [disabled]="paginaAtual >= totalPaginas"
+        (click)="mudarPagina(paginaAtual + 1)"
+      >
+        ›
+      </button>
+    </nav>
+
+  </section>
+
+</div>
+
+<!-- MODAL DE DETALHES -->
+<div
+  class="fundo-modal"
+  *ngIf="justificativaSelecionada as item"
+  (click)="fecharDetalhes()"
+>
+  <section
+    class="modal-detalhes"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titulo-detalhes"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      type="button"
+      class="fechar-modal"
+      aria-label="Fechar detalhes"
+      (click)="fecharDetalhes()"
+    >
+      ×
+    </button>
+
+    <h2 id="titulo-detalhes">Detalhes da justificativa</h2>
+
+    <p class="detalhe-numero">Aluno: {{ item.aluno }} | Solicitação {{ item.numero }}</p>
+
+    <div class="detalhe-campo">
+      <strong>Data da falta</strong>
+      <span>{{ item.data }}</span>
+    </div>
+
+    <div class="detalhe-campo">
+      <strong>Motivo</strong>
+      <span>{{ item.motivo }}</span>
+    </div>
+
+    <div class="detalhe-campo">
+      <strong>Status</strong>
+      <span
+        class="status"
+        [ngClass]="{
+          'status-analise': item.status === 'Em análise',
+          'status-pendente': item.status === 'Pendente',
+          'status-aprovado': item.status === 'Aprovado',
+          'status-rejeitado': item.status === 'Rejeitado'
+        }"
+      >
+        {{ item.status }}
+      </span>
+    </div>
+
+    <div class="detalhe-campo">
+      <strong>Observação</strong>
+      <p>{{ item.descricao }}</p>
+    </div>
+
+    <button
+      type="button"
+      class="botao-fechar"
+      (click)="fecharDetalhes()"
+    >
+      Fechar
+    </button>
+  </section>
+</div>

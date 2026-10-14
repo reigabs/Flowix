@@ -1,1 +1,100 @@
-<p>perfil-filhos works!</p>
+<div class="conteudo">
+
+  <header class="cabecalho-pagina">
+    <div class="titulo-com-voltar">
+      <a
+        routerLink="/responsavel/inicio"
+        class="botao-voltar"
+        aria-label="Voltar ao painel"
+      >
+        ←
+      </a>
+      <h1>Gerenciar perfis</h1>
+    </div>
+  </header>
+
+  <section class="filhos-conteudo">
+    
+    <div class="cards-filhos-grid">
+      
+      <!-- Card de Cada Filho -->
+      <article class="card-filho" *ngFor="let filho of filhos">
+        
+        <h2>Dados Pessoais</h2>
+
+        <!-- Avatar Vazio -->
+        <div class="avatar-container">
+          <div class="avatar-vazio">
+            👤
+          </div>
+        </div>
+
+        <button type="button" class="botao-editar-perfil" (click)="editarPerfil(filho)">
+          {{ filho.editando ? 'Salvar perfil' : 'editar perfil' }}
+        </button>
+
+        <form class="formulario-filho">
+          
+          <div class="campo">
+            <label>Nome completo</label>
+            <input
+              type="text"
+              [(ngModel)]="filho.nome"
+              [name]="'nome_' + filho.id"
+              [disabled]="!filho.editando"
+              required
+            />
+          </div>
+
+          <div class="campo">
+            <label>Nome da instituição</label>
+            <input
+              type="text"
+              [(ngModel)]="filho.instituicao"
+              [name]="'instituicao_' + filho.id"
+              [disabled]="!filho.editando"
+              required
+            />
+          </div>
+
+          <div class="campo">
+            <label>Matrícula</label>
+            <input
+              type="text"
+              [(ngModel)]="filho.matricula"
+              [name]="'matricula_' + filho.id"
+              [disabled]="!filho.editando"
+              required
+            />
+          </div>
+
+          <div class="campo">
+            <label>Turma</label>
+            <input
+              type="text"
+              [(ngModel)]="filho.turma"
+              [name]="'turma_' + filho.id"
+              [disabled]="!filho.editando"
+              required
+            />
+          </div>
+
+          <div class="acoes-card">
+            <button
+              type="button"
+              class="botao-excluir"
+              (click)="excluirFilho(filho)"
+            >
+              excluir conta
+            </button>
+          </div>
+
+        </form>
+
+      </article>
+
+    </div>
+
+  </section>
+
+</div>

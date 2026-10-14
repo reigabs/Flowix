@@ -1,1 +1,122 @@
-<p>perfil works!</p>
+<div class="conteudo">
+
+  <header class="cabecalho-pagina">
+    <div class="titulo-com-voltar">
+      <a
+        routerLink="/responsavel/inicio"
+        class="botao-voltar"
+        aria-label="Voltar ao painel"
+      >
+        ←
+      </a>
+      <div>
+        <h1>Meu perfil</h1>
+        <p>Veja e gerencie sua informações pessoais</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="perfil-conteudo">
+    <h2>Dados pessoais</h2>
+
+    <div class="perfil-grid-layout">
+      <!-- Seção do Avatar -->
+      <div class="avatar-secao">
+        <div class="avatar-container">
+          <!-- Ilustração ou ícone simulando o avatar do protótipo -->
+          <div class="avatar-placeholder">
+            <span>👩🏽</span>
+          </div>
+        </div>
+        <button type="button" class="botao-alterar-foto" (click)="alterarFoto()">
+          Alterar foto
+        </button>
+      </div>
+
+      <!-- Formulário de Dados -->
+      <form class="formulario-perfil" (ngSubmit)="salvarInformacoes()">
+        
+        <div class="campo">
+          <label for="nome">Nome completo</label>
+          <input
+            id="nome"
+            type="text"
+            [(ngModel)]="usuario.nome"
+            name="nome"
+            [disabled]="!editando"
+            required
+          />
+        </div>
+
+        <div class="campo">
+          <label for="emailCpf">e-mail ou cpf</label>
+          <input
+            id="emailCpf"
+            type="text"
+            [(ngModel)]="usuario.emailCpf"
+            name="emailCpf"
+            [disabled]="!editando"
+            required
+          />
+        </div>
+
+        <div class="linha-dupla">
+          <div class="campo">
+            <label for="telefone">telefone</label>
+            <input
+              id="telefone"
+              type="text"
+              [(ngModel)]="usuario.telefone"
+              name="telefone"
+              [disabled]="!editando"
+              required
+            />
+          </div>
+
+          <div class="campo campo-senha">
+            <label for="senha">senha</label>
+            <div class="input-senha-wrapper">
+              <input
+                id="senha"
+                [type]="mostrarSenha ? 'text' : 'password'"
+                [(ngModel)]="usuario.senha"
+                name="senha"
+                [disabled]="!editando"
+                required
+              />
+              <button
+                type="button"
+                class="botao-olho"
+                (click)="toggleSenha()"
+                aria-label="Mostrar ou esconder senha"
+              >
+                👁
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões de Ação Inferiores -->
+        <div class="acoes-perfil">
+          <button
+            type="button"
+            class="botao-excluir"
+            (click)="excluirConta()"
+          >
+            Excluir conta
+          </button>
+
+          <button
+            type="button"
+            class="botao-editar"
+            (click)="alternarEdicao()"
+          >
+            {{ editando ? 'Salvar alterações' : 'editar informações' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </section>
+
+</div>

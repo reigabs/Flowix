@@ -1,0 +1,268 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.conteudo {
+  flex: 1;
+  padding: 32px 40px;
+  background: #fff;
+  min-height: 100vh;
+}
+
+.cabecalho-pagina {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.titulo-com-voltar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.botao-voltar {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: #111;
+  color: #fff;
+  font-size: 18px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.botao-voltar:hover {
+  background: #333;
+}
+
+.cabecalho-pagina h1 {
+  margin: 0 0 4px 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a0b2e;
+}
+
+.cabecalho-pagina p {
+  margin: 0;
+  font-size: 15px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.perfil-conteudo {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.perfil-conteudo > h2 {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 10px 0;
+}
+
+.perfil-grid-layout {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+}
+
+.avatar-secao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  min-width: 160px;
+}
+
+.avatar-container {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: #fed7aa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.avatar-placeholder {
+  font-size: 70px;
+}
+
+.botao-alterar-foto {
+  background: transparent;
+  border: 2px solid #581c87;
+  color: #581c87;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.botao-alterar-foto:hover {
+  background: #581c87;
+  color: #ffffff;
+}
+
+.formulario-perfil {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.campo label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  text-transform: lowercase;
+}
+
+.campo input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #1f2937;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.campo input:focus {
+  border-color: #581c87;
+  box-shadow: 0 0 0 3px rgba(88, 28, 135, 0.1);
+}
+
+.campo input:disabled {
+  background-color: #f9fafb;
+  color: #374151;
+  cursor: default;
+}
+
+.linha-dupla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.input-senha-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-senha-wrapper input {
+  padding-right: 45px;
+}
+
+.botao-olho {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.acoes-perfil {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.botao-excluir {
+  background: transparent;
+  border: 2px solid #ef4444;
+  color: #ef4444;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.botao-excluir:hover {
+  background: #fee2e2;
+}
+
+.botao-editar {
+  background: transparent;
+  border: 2px solid #581c87;
+  color: #581c87;
+  padding: 12px 28px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.botao-editar:hover {
+  background: #581c87;
+  color: #ffffff;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .conteudo {
+    padding: 16px;
+  }
+
+  .perfil-grid-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .formulario-perfil {
+    width: 100%;
+  }
+
+  .linha-dupla {
+    grid-template-columns: 1fr;
+  }
+
+  .acoes-perfil {
+    flex-direction: column-reverse;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .botao-excluir,
+  .botao-editar {
+    width: 100%;
+    text-align: center;
+  }
+}

@@ -1,1 +1,98 @@
-<p>inicio works!</p>
+<div class="inicio-container">
+  <!-- Saudação -->
+  <header class="header-section">
+    <h1>Olá, {{ nomeUsuario }}! 👋</h1>
+    <p>Acompanhe a justificativa dos seus filhos</p>
+  </header>
+
+  <!-- Seção de Cartões dos Filhos -->
+  <section class="cards-grid">
+    <!-- Cards dos Filhos -->
+    <div class="card filho-card" *ngFor="let filho of filhos">
+      <div class="filho-info">
+        <div class="avatar-vazio">👤</div>
+        <div>
+          <h3>{{ filho.nome }}</h3>
+          <span>{{ filho.turma }}</span>
+        </div>
+      </div>
+      <button class="btn-primary" (click)="verPerfil(filho)">ver perfil</button>
+    </div>
+
+    <!-- Card Adicionar Filho (Interativo) -->
+    <div class="card add-filho-card" (click)="abrirModalAdicionar()">
+      <div class="add-icon">+</div>
+      <h3>Adicionar filho</h3>
+      <p>Vincular um novo filho</p>
+    </div>
+  </section>
+
+  <!-- Tabela de Solicitações Recentes -->
+  <section class="card table-card">
+    <div class="table-header">
+      <h2>Solicitações recentes</h2>
+      <a routerLink="/responsavel/historico" class="link-ver-todas">Ver todas</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="solicitacoes-table">
+        <tbody>
+          <tr *ngFor="let sol of solicitacoes">
+            <td class="col-aluno"><strong>{{ sol.aluno }}</strong></td>
+            <td class="col-id">{{ sol.id }}</td>
+            <td class="col-data">{{ sol.data }}</td>
+            <td class="col-motivo">{{ sol.motivo }}</td>
+            <td class="col-status">
+              <span class="badge" [ngClass]="getStatusClass(sol.status)">
+                {{ sol.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Banner de Alerta Importante -->
+  <section class="banner-alerta">
+    <div class="banner-content">
+      <strong>Importante!</strong>
+      <p>As justificativas devem ser enviadas em até 2 dias após a volta do aluno as aulas</p>
+    </div>
+    <div class="banner-icon">
+      📅
+    </div>
+  </section>
+</div>
+
+<!-- MODAL PARA ADICIONAR FILHO -->
+<div class="fundo-modal" *ngIf="modalAdicionarAberto" (click)="fecharModalAdicionar()">
+  <section class="modal-detalhes" (click)="$event.stopPropagation()">
+    <button type="button" class="fechar-modal" (click)="fecharModalAdicionar()">×</button>
+    <h2>Vincular novo filho</h2>
+    
+    <form (ngSubmit)="salvarNovoFilho()" class="form-modal">
+      <div class="campo-modal">
+        <label>Nome completo</label>
+        <input type="text" [(ngModel)]="novoFilho.nome" name="nome" placeholder="Ex: Lucas Santos" required />
+      </div>
+
+      <div class="campo-modal">
+        <label>Nome da instituição</label>
+        <input type="text" [(ngModel)]="novoFilho.instituicao" name="instituicao" placeholder="Ex: Colégio InterGenius" required />
+      </div>
+
+      <div class="campo-modal">
+        <label>Matrícula</label>
+        <input type="text" [(ngModel)]="novoFilho.matricula" name="matricula" placeholder="Ex: 12345678" required />
+      </div>
+
+      <div class="campo-modal">
+        <label>Turma</label>
+        <input type="text" [(ngModel)]="novoFilho.turma" name="turma" placeholder="Ex: 8º ano A" required />
+      </div>
+
+      <button type="submit" class="btn-primary" style="margin-top: 10px;">Vincular aluno</button>
+    </form>
+  </section>
+</div>

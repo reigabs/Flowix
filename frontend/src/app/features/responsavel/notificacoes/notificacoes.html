@@ -1,0 +1,90 @@
+<div class="conteudo">
+
+  <header class="cabecalho-pagina">
+    <div class="titulo-com-voltar">
+      <a
+        routerLink="/responsavel/inicio"
+        class="botao-voltar"
+        aria-label="Voltar ao painel"
+      >
+        ←
+      </a>
+      <h1>Notificações</h1>
+    </div>
+
+    <button
+      type="button"
+      class="botao-marcar-todas"
+      (click)="marcarTodasComoLidas()"
+    >
+      Marcar todas como lidas
+    </button>
+  </header>
+
+  <section class="notificacoes-conteudo">
+
+    <!-- ABAS DE FILTRO -->
+    <nav class="abas" aria-label="Filtrar notificações">
+      <button
+        *ngFor="let aba of abas"
+        type="button"
+        class="aba"
+        [class.selecionada]="abaSelecionada === aba"
+        [attr.aria-pressed]="abaSelecionada === aba"
+        (click)="selecionarAba(aba)"
+      >
+        {{ aba }}
+      </button>
+    </nav>
+
+    <!-- LISTA DE NOTIFICAÇÕES -->
+    <section class="lista-notificacoes">
+
+      <article
+        class="linha-notificacao"
+        *ngFor="let item of notificacoesVisiveis"
+        [class.nao-lida]="!item.lida"
+      >
+        <div class="notificacao-info">
+          <!-- Ícone Dinâmico -->
+          <div
+            class="icone-status"
+            [ngClass]="{
+              'icone-analise': item.tipo === 'analise',
+              'icone-aprovado': item.tipo === 'aprovado',
+              'icone-rejeitado': item.tipo === 'rejeitado'
+            }"
+          >
+            <span *ngIf="item.tipo === 'analise'">⏳</span>
+            <span *ngIf="item.tipo === 'aprovado'">✔</span>
+            <span *ngIf="item.tipo === 'rejeitado'">✕</span>
+          </div>
+
+          <span class="mensagem">{{ item.mensagem }}</span>
+        </div>
+
+        <div class="notificacao-acao">
+          <span class="tempo">{{ item.tempo }}</span>
+          <button
+            type="button"
+            class="botao-seta"
+            aria-label="Ver detalhes"
+            (click)="abrirNotificacao(item)"
+          >
+            ›
+          </button>
+        </div>
+      </article>
+
+      <div
+        class="lista-vazia"
+        *ngIf="notificacoesVisiveis.length === 0"
+      >
+        <p>Nenhuma notificação encontrada nesta categoria.</p>
+      </div>
+
+    </section>
+
+  </section>
+
+</div>
