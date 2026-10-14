@@ -34,7 +34,7 @@ export class Login {
       if (emailDigitado === 'secretaria@gmail.com' && senhaDigitada === '123456') {
         if (isPlatformBrowser(this.platformId)) {
           const dadosSecretaria = {
-            nome: 'Secretaria',
+            nome: '',
             email: emailDigitado,
             perfil: 'secretaria',
             instituicao: 'Escola Central'
@@ -46,7 +46,7 @@ export class Login {
       }
 
       // Acesso fixo do Aluno
-      if (emailDigitado === 'aluno@gmail.com' && senhaDigitada === '123456') {
+      if (emailDigitado === 'aluno@gmail.com' && senhaDigitada === '654321') {
         if (isPlatformBrowser(this.platformId)) {
           const dadosAluno = {
             nome: 'João',
@@ -57,6 +57,21 @@ export class Login {
           localStorage.setItem('usuario_cadastrado', JSON.stringify(dadosAluno));
         }
         this.router.navigate(['/aluno']);
+        return;
+      }
+
+      // Acesso de responsável
+       if (emailDigitado === 'responsavel@gmail.com' && senhaDigitada === '123456') {
+        if (isPlatformBrowser(this.platformId)) {
+          const dadosResponsavel = {
+            nome: 'Carla',
+            email: emailDigitado,
+            perfil: 'responsavel',
+            instituicao: 'Escola Central'
+          };
+          localStorage.setItem('usuario_cadastrado', JSON.stringify(dadosResponsavel));
+        }
+        this.router.navigate(['/responsavel']);
         return;
       }
 
