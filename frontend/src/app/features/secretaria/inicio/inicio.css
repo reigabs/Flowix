@@ -34,6 +34,21 @@
   gap: 16px;
 }
 
+.card-icon {
+  font-size: 24px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-icon.pendente { background-color: #f3e8ff; }
+.card-icon.analise { background-color: #ffedd5; }
+.card-icon.aprovada { background-color: #dcfce7; }
+.card-icon.rejeitada { background-color: #fee2e2; }
+
 .card-info .card-title {
   font-size: 14px;
   color: #555;
@@ -82,6 +97,37 @@
   margin-bottom: 16px;
 }
 
+.calendar-nav-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cal-nav-btn {
+  background: #581c87;
+  color: white;
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cal-nav-btn:hover {
+  background: #4c1d95;
+}
+
+.month-selector {
+  font-weight: 600;
+  color: #374151;
+  font-size: 15px;
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -105,6 +151,7 @@
   height: 32px;
   width: 32px;
   margin: 0 auto;
+  color: #374151;
 }
 
 .cal-day.empty {
@@ -115,6 +162,7 @@
   background-color: #7c3aed;
   color: white;
   font-weight: bold;
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.4);
 }
 
 .chart-box {
@@ -127,32 +175,54 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 180px;
+  height: 200px;
+  position: relative;
 }
 
+
 .donut-chart {
-  width: 130px;
-  height: 130px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   background: conic-gradient(
-    #7c3aed 0% 14%, 
-    #f97316 14% 24%, 
-    #10b981 24% 78%, 
-    #ef4444 78% 100%
+    #7c3aed 0% 13.9%,     
+    #f97316 13.9% 23.8%,  
+    #10b981 23.8% 77.3%,  
+    #ef4444 77.3% 100%   
   );
   position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .donut-chart::after {
   content: "";
   position: absolute;
-  top: 30px;
-  left: 30px;
-  width: 70px;
-  height: 70px;
+  top: 35px;
+  left: 35px;
+  width: 80px;
+  height: 80px;
   background: white;
   border-radius: 50%;
 }
+
+.label-stat {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  color: #374151;
+}
+
+.label-stat small {
+  font-size: 9px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.stat-pendentes { top: 10px; right: 15px; }
+.stat-analise { top: 75px; right: -15px; }
+.stat-aprovadas { bottom: 10px; left: 60px; }
+.stat-rejeitadas { top: 20px; left: 10px; }
 
 .chart-footer {
   display: flex;
@@ -161,4 +231,10 @@
   padding-top: 12px;
   font-size: 14px;
   color: #444;
+}
+
+@media (max-width: 900px) {
+  .dashboard-bottom-grid {
+    grid-template-columns: 1fr;
+  }
 }

@@ -11,20 +11,21 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 export class InicioComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   
-  nomeUsuario = 'Usuário'; 
+  nomeUsuario = 'Marcia Oliveira'; 
   
   resumoSolicitacoes = {
-    pendentes: 0,
-    emAnalise: 0,
-    aprovadas: 0,
-    rejeitadas: 0,
-    total: 0
+    pendentes: 14,
+    emAnalise: 10,
+    aprovadas: 54,
+    rejeitadas: 23,
+    total: 101
   };
 
   anoAtual = 2026;
   mesAtual = 1; 
   diasMes: { dia: number | null, ativo: boolean }[] = [];
-  diasDestaque: number[] = [];
+  diasDestaque: number[] = [10, 21];
+
   constructor() {
     this.gerarCalendarioReal();
   }
@@ -58,7 +59,7 @@ export class InicioComponent implements OnInit {
     for (let i = 1; i <= ultimoDia; i++) {
       listaDias.push({
         dia: i,
-        ativo: false
+        ativo: this.diasDestaque.includes(i)
       });
     }
 

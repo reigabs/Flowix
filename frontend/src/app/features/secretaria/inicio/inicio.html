@@ -46,12 +46,14 @@
 
   <!-- Grid Inferior: Calendário e Gráfico -->
   <div class="dashboard-bottom-grid">
-    
-    <!-- Calendário Real -->
     <div class="dashboard-box calendar-box">
       <div class="calendar-header">
         <h3>Calendário</h3>
-        <span class="month-selector">Fevereiro ▾</span>
+        <div class="calendar-nav-container">
+          <button class="cal-nav-btn" aria-label="Mês anterior">❮</button>
+          <span class="month-selector">Fevereiro</span>
+          <button class="cal-nav-btn" aria-label="Próximo mês">❯</button>
+        </div>
       </div>
       <div class="calendar-grid">
         <span class="cal-day-name">Su</span>
@@ -78,7 +80,13 @@
     <div class="dashboard-box chart-box">
       <h3>Resumo do período</h3>
       <div class="chart-placeholder">
-        <div class="donut-chart"></div>
+       
+        <div class="donut-chart">
+          <span class="label-stat stat-pendentes">14<br><small>13.9%</small></span>
+          <span class="label-stat stat-analise">10<br><small>9.9%</small></span>
+          <span class="label-stat stat-aprovadas">54<br><small>53.5%</small></span>
+          <span class="label-stat stat-rejeitadas">23<br><small>22.8%</small></span>
+        </div>
       </div>
       <div class="chart-footer">
         <span>Total de solicitações</span>
