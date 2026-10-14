@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { SecretariaLayoutComponent } from './features/secretaria/secretaria-layout';
-import { Inicio } from './features/aluno/inicio/inicio';
+import { ResponsavelLayoutComponent } from './features/responsavel/responsavel-layout'; // Assegure-se de verificar o caminho correto do seu arquivo de layout
+
 export const routes: Routes = [
   {
     path: '',
@@ -28,7 +29,7 @@ export const routes: Routes = [
         .then(m => m.CadastroConcluido)
   },
 
-  // Grupo de Rotas da Secretaria protegidas pelo Layout e Guard
+  // Grupo de Rotas da Secretaria
   {
     path: 'secretaria',
     canActivate: [authGuard],
@@ -61,108 +62,100 @@ export const routes: Routes = [
     ]
   },
 
-  // Grupo de rotas do Aluno
+  // Grupo de Rotas do Aluno
   {
     path: 'aluno',
     canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/aluno/inicio/inicio')
-        .then(m => m.Inicio)
+    children: [
+      {
+        path: '',
+        redirectTo: 'inicio',
+        pathMatch: 'full'
+      },
+      {
+        path: 'inicio',
+        loadComponent: () => 
+          import('./features/aluno/inicio/inicio')
+            .then(m => m.Inicio)
+      },
+      {
+        path: 'nova-justificativa',
+        loadComponent: () => 
+          import('./features/aluno/nova-justificativa/nova-justificativa')
+            .then(m => m.NovaJustificativa)
+      },
+      {
+        path: 'notificacoes',
+        loadComponent: () => 
+          import('./features/aluno/notificacoes/notificacoes')
+            .then(m => m.Notificacoes)
+      },
+      {
+        path: 'historico',
+        loadComponent: () => 
+          import('./features/aluno/historico/historico')
+            .then(m => m.Historico)
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => 
+          import('./features/aluno/perfil/perfil')
+            .then(m => m.Perfil)
+      }
+    ]
   },
 
-
-{
-  path: 'aluno/inicio',
-    canActivate: [authGuard],
-  loadComponent: () => 
-    import('./features/aluno/inicio/inicio')
-    .then(m => m.Inicio)
-},
-
-
-{
-  path: 'aluno/nova-justificativa',
-    canActivate: [authGuard],
-  loadComponent: () => 
-    import('./features/aluno/nova-justificativa/nova-justificativa')
-    .then(m => m.NovaJustificativa)
-},
-
-{
-  path: 'aluno/notificacoes',
-  canActivate: [authGuard],
- loadComponent: () => 
-    import('./features/aluno/notificacoes/notificacoes')
-    .then(m => m.Notificacoes)
-},
-{
-  path: 'aluno/historico',
-    canActivate: [authGuard],
-  loadComponent: () => 
-    import('./features/aluno/historico/historico')
-    .then(m => m.Historico)
-},
-
-
-{
-  path: 'aluno/perfil',
-    canActivate: [authGuard],
-  loadComponent: () => 
-    import('./features/aluno/perfil/perfil')
-    .then(m => m.Perfil)
-},
-
-  
-   //Grupo de rotas do Responsavel
-
+  // Grupo de Rotas do Responsável
   {
     path: 'responsavel',
     canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/responsavel/inicio/inicio')
-        .then(m => m.Inicio)
+    component: ResponsavelLayoutComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'inicio',
+        pathMatch: 'full'
+      },
+      {
+        path: 'inicio',
+        loadComponent: () =>
+          import('./features/responsavel/inicio/inicio')
+            .then(m => m.InicioResponsavel)
+      },
+      {
+        path: 'nova-justificativa',
+        loadComponent: () => 
+          import('./features/responsavel/nova-justificativa/nova-justificativa')
+            .then(m => m.NovaJustificativa)
+      },
+      {
+        path: 'historico',
+        loadComponent: () => 
+          import('./features/responsavel/historico/historico')
+            .then(m => m.HistoricoResponsavel)
+      },
+      {
+        path: 'notificacoes',
+        loadComponent: () => 
+          import('./features/responsavel/notificacoes/notificacoes')
+            .then(m => m.NotificacoesResponsavel)
+      },
+      {
+        path: 'perfil',
+        loadComponent: () => 
+          import('./features/responsavel/perfil/perfil')
+            .then(m => m.PerfilResponsavel)
+      },
+      {
+        path: 'perfil-filhos',
+        loadComponent: () => 
+          import('./features/responsavel/perfil-filhos/perfil-filhos')
+            .then(m => m.PerfilFilhosResponsavel)
+      }
+    ]
   },
 
-  {
-  path: 'responsavel/inicio',
-  canActivate: [authGuard],
-  loadComponent: () => 
-    import('./features/responsavel/inicio/inicio')
-    .then(m => m.Inicio)
-},
-
-    {
-  path: 'responsavel/nova-justificativa',
-  canActivate: [authGuard],
-  loadComponent: () => 
-    import('./features/responsavel/nova-justificativa/nova-justificativa')
-    .then(m => m.NovaJustificativa)
-},
-    {
-  path: 'responsavel/historico',
-  canActivate: [authGuard],
-  loadComponent: () => 
-    import('./features/responsavel/historico/historico')
-    .then(m => m.Historico)
-},
-
-  {
-  path: 'responsavel/perfil',
-  canActivate: [authGuard],
-  loadComponent: () => 
-    import('./features/responsavel/perfil/perfil')
-    .then(m => m.Perfil)
-},
-
-   {
-  path: 'responsavel/perfil-filhos',
-  canActivate: [authGuard],
-  loadComponent: () => 
-    import('./features/responsavel/perfil-filhos/perfil-filhos')
-    .then(m => m.PerfilFilhos)
-},
-
-
+  // Rota curinga para redirecionamento
   {
     path: '**',
     redirectTo: ''
