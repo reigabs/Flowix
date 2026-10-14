@@ -61,7 +61,7 @@ export const routes: Routes = [
     ]
   },
 
-  // Aluno e Responsável...
+  // Grupo de rotas do Aluno
   {
     path: 'aluno',
     canActivate: [authGuard],
@@ -69,6 +69,46 @@ export const routes: Routes = [
       import('./features/aluno/inicio/inicio')
         .then(m => m.Inicio)
   },
+
+
+{
+  path: 'aluno/inicio',
+    canActivate: [authGuard],
+  loadComponent: () => 
+    import('./features/aluno/inicio/inicio')
+    .then(m => m.Inicio)
+},
+
+
+{
+  path: 'aluno/nova-justificativa',
+    canActivate: [authGuard],
+  loadComponent: () => 
+    import('./features/aluno/nova-justificativa/nova-justificativa')
+    .then(m => m.NovaJustificativa)
+},
+
+
+{
+  path: 'aluno/historico',
+    canActivate: [authGuard],
+  loadComponent: () => 
+    import('./features/aluno/historico/historico')
+    .then(m => m.Historico)
+},
+
+
+{
+  path: 'aluno/perfil',
+    canActivate: [authGuard],
+  loadComponent: () => 
+    import('./features/aluno/perfil/perfil')
+    .then(m => m.Perfil)
+},
+
+  
+   //Grupo de rotas do Responsavel
+
   {
     path: 'responsavel',
     canActivate: [authGuard],
@@ -76,6 +116,46 @@ export const routes: Routes = [
       import('./features/responsavel/inicio/inicio')
         .then(m => m.Inicio)
   },
+
+  {
+  path: 'responsavel/inicio',
+  canActivate: [authGuard],
+  loadComponent: () => 
+    import('./features/responsavel/inicio/inicio')
+    .then(m => m.Inicio)
+},
+
+    {
+  path: 'responsavel/nova-justificativa',
+  canActivate: [authGuard],
+  loadComponent: () => 
+    import('./features/responsavel/nova-justificativa/nova-justificativa')
+    .then(m => m.NovaJustificativa)
+},
+    {
+  path: 'responsavel/historico',
+  canActivate: [authGuard],
+  loadComponent: () => 
+    import('./features/responsavel/historico/historico')
+    .then(m => m.Historico)
+},
+
+  {
+  path: 'responsavel/perfil',
+  canActivate: [authGuard],
+  loadComponent: () => 
+    import('./features/responsavel/perfil/perfil')
+    .then(m => m.Perfil)
+},
+
+   {
+  path: 'responsavel/perfil-filhos',
+  canActivate: [authGuard],
+  loadComponent: () => 
+    import('./features/responsavel/perfil-filhos/perfil-filhos')
+    .then(m => m.PerfilFilhos)
+},
+
 
   {
     path: '**',
