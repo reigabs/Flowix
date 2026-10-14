@@ -1,17 +1,123 @@
 <div class="solicitacoes-container">
-  <div class="header-section">
-    <h2>Solicitações pendentes</h2>
-    <p>Acompanhe e analise as justificativas de faltas enviadas</p>
-  </div>
+  
+  <!-- VISÃO 1: LISTAGEM E ABAS -->
+  @if (!itemSelecionado) {
+    <div class="header-section">
+      <h2>Solicitações</h2>
+      <p>Acompanhe e analise as justificativas de faltas enviadas</p>
+    </div>
 
-  @if (listaSolicitacoes.length === 0) {
-    <div class="empty-state">
-      <div class="empty-icon">📂</div>
-      <h3>Nenhuma solicitação pendente</h3>
-      <p>Todas as solicitações foram avaliadas ou não há novos envios no momento.</p>
+    <!-- Abas de navegação (Todas, Pendentes, Em análise)[cite: 1] -->
+    <div class="tabs-nav">
+      <button [class.active]="abaAtiva === 'Todas'" (click)="mudarAba('Todas')">Todas</button>
+      <button [class.active]="abaAtiva === 'Pendente'" (click)="mudarAba('Pendente')">Pendentes</button>
+      <button [class.active]="abaAtiva === 'Em análise'" (click)="mudarAba('Em análise')">Em análise</button>
     </div>
-  } @else {
-    <div class="table-card">
+
+    @if (solicitacoesFiltradas.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">📂</div>
+        <h3>Nenhuma solicitação encontrada</h3>
+        <p>Não há itens para exibir nesta categoria no momento.</p>
+      </div>
+    } @else {
+      <div class="table-card">
+        <div class="table-header">
+          <span>Protocolo</span>
+          <span>Aluno</span>
+          <span>Turma</span>
+          <span>Enviado em</span>
+          <span>Status</span>
+          <span>Ação</span>
+        </div>
+
+        @for (item of solicitacoesFiltradas; track item.protocolo) {
+          <div class="table-row">
+            <span class="protocolo"><strong>{{ item.protocolo }}</strong></span>
+            <span class="aluno">{{ item.aluno }}</span>
+            <span class="turma">{{ item.turma }}</span>
+            <span class="data">{{ item.enviadoEm }}</span>
+            <span>
+              <span class="badge" [class.pendente]="item.status === 'Pendente'" [class.em-analise]="item.status === 'Em análise'">
+                {{ item.status }}
+              </span>
+            </span>
+            <span>
+              <button class="btn-analisar" (click)="verDetalhes(item)">analisar</button>
+            </span>
+          </div>
+        }
+      </div>
+    }
+  } 
+  
+  <!-- VISÃO 2: DETALHES DA SOLICITAÇÃO (Baseado nas telas 2, 3 e 4) -->
+  @else {
+    <div class="detalhes-header">
+      <button class="btn-voltar" (click)="voltarParaLista()">←</button>
+      <h2>Solicitações / Protocolo {{ itemSelecionado.protocolo }}</h2>
     </div>
+
+    <div class="detalhes-card">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Aluno</label>
+          <input type="text" [value]="itemSelecionado.aluno" disabled />
+        </div>
+        <div class="form-group">
+          <label>Turma</label>
+          <input type="text" [value]="itemSelecionado.turma" disabled />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Motivo da falta</label>
+        <textarea disabled>{{ itemSelecionado.motivo }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Documento em anexo</label>
+        <div class="anexo-box">
+          <span>📄</span>
+          <span>{{ itemSelecionado.documento }}</span>
+        </div>
+      </div>
+
+      <div class="detalhes-footer">
+        <button class="btn-cancelar" (click)="voltarParaLista()">cancelar</button>
+        <div class="acoes-principais">
+          <button class="btn-aprovar" (click)="abrirModal('aprovar')">aprovar</button>
+          <button class="btn-rejeitar" (click)="abrirModal('rejeitar')">rejeitar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE APROVAR / REJEITAR (Imagens 2 e 3) -->
+    @if (modalAcao) {
+      <div class="modal-overlay">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3>{{ modalAcao === 'aprovar' ? 'Aprovar solicitação?' : 'Rejeitar solicitação?' }}</h3>
+          </div>
+          
+          <div class="modal-icon-cat">
+            <span class="cat-sticker">🐈‍⬛❓</span>
+          </div>
+
+          <div class="form-group">
+            <label>Observação (opcional)</label>
+            <textarea [(ngModel)]="observacao" placeholder="Adicione uma observação se necessário..."></textarea>
+          </div>
+
+          <div class="modal-footer">
+            @if (modalAcao === 'aprovar') {
+              <button class="btn-modal-confirmar-aprovar" (click)="confirmarAprovacao()">Aprovar</button>
+            } @else {
+              <button class="btn-modal-confirmar-rejeitar" (click)="confirmarRejeicao()">Rejeitar</button>
+            }
+          </div>
+        </div>
+      </div>
+    }
   }
 </div>
