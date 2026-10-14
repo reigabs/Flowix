@@ -1,18 +1,101 @@
 <div class="historico-container">
-  <div class="header-section">
-    <h2>Histórico</h2>
-    <p>Registro de todas as solicitações já aprovadas ou rejeitadas</p>
-  </div>
-
-  @if (listaHistorico.length === 0) {
-    <div class="empty-state">
-      <div class="empty-icon">🕒</div>
-      <h3>Nenhum histórico encontrado</h3>
-      <p>As solicitações finalizadas aparecerão listadas aqui.</p>
+  
+  @if (!itemSelecionado) {
+    <div class="header-section">
+      <h2>Histórico</h2>
+      <p>Registro de todas as solicitações já aprovadas ou rejeitadas</p>
     </div>
+
+    @if (listaHistorico.length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">🕒</div>
+        <h3>Nenhum histórico encontrado</h3>
+        <p>As solicitações finalizadas aparecerão listadas aqui.</p>
+      </div>
+    } @else {
+      <div class="table-card">
+        <div class="table-header">
+          <span>Protocolo</span>
+          <span>Aluno</span>
+          <span>Turma</span>
+          <span>Enviado em</span>
+          <span>Status</span>
+          <span>Ação</span>
+        </div>
+
+        @for (item of listaHistorico; track item.protocolo) {
+          <div class="table-row">
+            <span class="protocolo"><strong>{{ item.protocolo }}</strong></span>
+            <span class="aluno">{{ item.aluno }}</span>
+            <span class="turma">{{ item.turma }}</span>
+            <span class="data">{{ item.enviadoEm }}</span>
+            <span>
+              <span class="badge" [class.aprovado]="item.status === 'Aprovado'" [class.rejeitado]="item.status === 'Rejeitado'">
+                {{ item.status }}
+              </span>
+            </span>
+            <span>
+              <button class="btn-ver" (click)="verDetalhes(item)">ver</button>
+            </span>
+          </div>
+        }
+
+        <!-- Paginação baseada no protótipo[cite: 6] -->
+        <div class="pagination-container">
+          <div class="pagination">
+            <button [class.active]="paginaAtual === 1" (click)="mudarPagina(1)">1</button>
+            <button [class.active]="paginaAtual === 2" (click)="mudarPagina(2)">2</button>
+            <button [class.active]="paginaAtual === 3" (click)="mudarPagina(3)">3</button>
+            <button class="btn-next" (click)="mudarPagina(paginaAtual + 1)">›</button>
+          </div>
+        </div>
+      </div>
+    }
   } @else {
-    <div class="table-card">
-      <!-- Tabela de histórico real -->
+    <!-- Tela de Detalhes do Histórico -->
+    <div class="detalhes-header">
+      <button class="btn-voltar" (click)="voltarParaLista()">←</button>
+      <h2>Histórico / Protocolo {{ itemSelecionado.protocolo }}</h2>
+    </div>
+
+    <div class="detalhes-card">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Aluno</label>
+          <input type="text" [value]="itemSelecionado.aluno" disabled />
+        </div>
+        <div class="form-group">
+          <label>Turma</label>
+          <input type="text" [value]="itemSelecionado.turma" disabled />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Motivo da falta</label>
+        <textarea disabled>{{ itemSelecionado.motivo }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Documento em anexo</label>
+        <div class="anexo-box">
+          <span>📄</span>
+          <span>{{ itemSelecionado.documento }}</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Observação da Análise</label>
+        <input type="text" [value]="itemSelecionado.observacaoAnalise" disabled />
+      </div>
+
+      <div class="detalhes-footer">
+        <button class="btn-voltar-lista" (click)="voltarParaLista()">Voltar para a lista</button>
+        <div class="status-final">
+          <span class="badge-grande" [class.aprovado]="itemSelecionado.status === 'Aprovado'" [class.rejeitado]="itemSelecionado.status === 'Rejeitado'">
+            {{ itemSelecionado.status }}
+          </span>
+        </div>
+      </div>
     </div>
   }
 </div>
