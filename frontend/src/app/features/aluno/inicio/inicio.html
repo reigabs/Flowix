@@ -1,183 +1,87 @@
-<div class="aluno-layout">
+<div class="painel-container">
+  <!-- Cabeçalho de Boas-vindas -->
+  <header class="welcome-header">
+    <h1>Olá, {{ nomeAluno }}! 👋</h1>
+    <p>Acompanhe suas justificativas e solicitações</p>
+  </header>
 
-  <!-- MENU LATERAL -->
-  <aside class="sidebar">
-
-    <a class="logo" routerLink="/aluno/inicio">
-      <img
-        src="protótipo-FloWix.png"
-        alt="Logo do FloWix"
-        class="logo-imagem"
-      >
-      <span>Flowix</span><br>
-    </a>
-
-    <nav class="menu">
-
-      <a
-        routerLink="/aluno/inicio"
-        routerLinkActive="ativo"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="menu-item"
-      >
-        <span class="menu-icone">⌂</span>
-        Painel
-      </a>
-
-      <a
-        routerLink="/aluno/nova-justificativa"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">▤</span>
-        Nova justificativa
-      </a>
-
-      <a
-        routerLink="/aluno/historico"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">▧</span>
-        Meu histórico
-      </a>
-
-      <a
-        routerLink="/aluno/notificacoes"
-        routerLinkActive="ativo"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="menu-item"
-      >
-        <span class="menu-icone">♟</span>
-        Notificações
-      </a>
-
-      <a
-        routerLink="/aluno/perfil"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">●</span>
-        Meu perfil
-      </a>
-
-    </nav>
-
-    <button class="sair" type="button" (click)="sair()">
-      <span>⇥</span>
-      Sair da conta
-    </button>
-
-  </aside>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="conteudo">
-
-    <header class="cabecalho">
-      <h1>Olá, Bia Santos! 👋</h1>
-      <p>Acompanhe suas justificativas e solicitações</p>
-    </header>
-
-    <section class="painel">
-
-      <div class="cards-resumo">
-
-        <article class="card-resumo">
-          <div class="icone roxo">⌛</div>
-          <div>
-            <h3>Pendentes</h3>
-            <strong>2</strong>
-            <p class="texto-roxo">aguardando análise</p>
-          </div>
-        </article>
-
-        <article class="card-resumo">
-          <div class="icone laranja">◷</div>
-          <div>
-            <h3>Em análise</h3>
-            <strong>1</strong>
-            <p class="texto-laranja">Em andamento</p>
-          </div>
-        </article>
-
-        <article class="card-resumo">
-          <div class="icone verde">✓</div>
-          <div>
-            <h3>Aprovadas</h3>
-            <strong>2</strong>
-            <p class="texto-verde">Aprovadas</p>
-          </div>
-        </article>
-
-        <article class="card-resumo">
-          <div class="icone vermelho">×</div>
-          <div>
-            <h3>Rejeitadas</h3>
-            <strong>1</strong>
-            <p class="texto-vermelho">Rejeitadas</p>
-          </div>
-        </article>
-
+  <!-- Cards de Resumo (Pendentes, Em análise, Aprovadas, Rejeitadas) -->
+  <section class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-info">
+        <span class="stat-title">Pendentes</span>
+        <span class="stat-number">{{ resumo.pendentes }}</span>
+        <span class="stat-subtitle aguardando">aguardando análise</span>
       </div>
+      <div class="stat-icon purple">⏳</div>
+    </div>
 
-      <div class="areas-painel">
-
-        <section class="card-nova">
-          <h2>Nova justificativa</h2>
-
-          <p>
-            Precisou justificar uma falta?<br>
-            Envie agora mesmo.
-          </p>
-
-          <div class="ilustracao">
-            <img src="e555cf82-85a7-43fb-a5f9-ae1d56631ced.png" alt="Gatinho usando um notebook" class="gato-justificativa">
-          </div>
-
-          <a routerLink="/aluno/nova-justificativa"
-             class="botao-enviar">
-            Enviar justificativa
-          </a>
-        </section>
-
-        <section class="card-recentes">
-          <h2>Solicitações recentes</h2>
-
-          <div class="lista-solicitacoes">
-
-            <div class="solicitacao" *ngFor="let item of solicitacoes">
-              <strong>#{{ item.numero }}</strong>
-              <span class="data">{{ item.data }}</span>
-              <span class="motivo">{{ item.motivo }}</span>
-              <span class="status"
-                    [ngClass]="{
-                      'em-andamento': item.status === 'Em andamento',
-                      'aprovada': item.status === 'Aprovada',
-                      'rejeitada': item.status === 'Rejeitada'
-                    }">
-                {{ item.status }}
-              </span>
-            </div>
-
-          </div>
-        </section>
-
+    <div class="stat-card">
+      <div class="stat-info">
+        <span class="stat-title">Em análise</span>
+        <span class="stat-number">{{ resumo.emAnalise }}</span>
+        <span class="stat-subtitle andamento">Em andamento</span>
       </div>
+      <div class="stat-icon orange">🕒</div>
+    </div>
 
-      <section class="aviso">
-        <div>
-          <h2>Importante!</h2>
-          <p>
-            As justificativas devem ser enviadas em até 2 dias
-            após a volta do aluno às aulas.
-          </p>
+    <div class="stat-card">
+      <div class="stat-info">
+        <span class="stat-title">Aprovadas</span>
+        <span class="stat-number">{{ resumo.aprovadas }}</span>
+        <span class="stat-subtitle aprovados">Aprovados</span>
+      </div>
+      <div class="stat-icon green">✅</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-info">
+        <span class="stat-title">Rejeitadas</span>
+        <span class="stat-number">{{ resumo.rejeitadas }}</span>
+        <span class="stat-subtitle rejeitados">Rejeitados</span>
+      </div>
+      <div class="stat-icon red">❌</div>
+    </div>
+  </section>
+
+  <!-- Seção Central: Ação Rápida e Histórico Recente -->
+  <div class="content-grid">
+    <!-- Card de Nova Justificativa -->
+    <div class="action-card">
+      <div class="action-text">
+        <h3>Nova justificativa</h3>
+        <p>Precisou justificar uma falta?<br>Envie agora mesmo.</p>
+      </div>
+      <div class="cat-illustration">
+        <img src="e555cf82-85a7-43fb-a5f9-ae1d56631ced.png" alt="Gato no computador" /> 
+      </div>
+      <a routerLink="/aluno/nova-justificativa" class="btn-enviar">
+        Enviar justificativa
+      </a>
+    </div>
+
+    <!-- Solicitações Recentes -->
+    <div class="recent-card">
+      <h3>Solicitações recentes</h3>
+      <div class="table-list">
+        <div class="table-row" *ngFor="let item of solicitacoesRecentes">
+          <span class="col-id">{{ item.id }}</span>
+          <span class="col-date">{{ item.data }}</span>
+          <span class="col-type">{{ item.tipo }}</span>
+          <span class="badge" [ngClass]="item.statusClass">{{ item.status }}</span>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <span class="calendario">▦</span>
-      </section>
-
-    </section>
-
-  </main>
-
+  <!-- Alerta / Aviso Importante -->
+  <div class="alert-banner">
+    <div class="alert-text">
+      <strong>Importante!</strong>
+      <p>As justificativas devem ser enviadas em até 2 dias após a volta do aluno às aulas</p>
+    </div>
+    <div class="alert-icon">
+      📅
+    </div>
+  </div>
 </div>

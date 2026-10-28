@@ -1,152 +1,117 @@
-import { Component, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nova-justificativa',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterLink,
-    RouterLinkActive
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './nova-justificativa.html',
   styleUrl: './nova-justificativa.css'
 })
-export class NovaJustificativa implements OnDestroy {
-  motivo = '';
-  dataFalta = '';
+export class NovaJustificativa implements OnInit {
+  private platformId = inject(PLATFORM_ID);
+
+  alunoSelecionado: string = '';
+  motivo: string = '';
+  dataFalta: string = '';
   arquivo: File | null = null;
-
-  arrastando = false;
-  enviando = false;
-  progresso = 0;
-  mensagemErro = '';
-
-  private intervalo: ReturnType<typeof setInterval> | undefined;
+  
+  arrastando: boolean = false;
+  enviando: boolean = false;
+  progresso: number = 0;
+  mensagemErro: string = '';
+  filhos: any[] = [];
 
   constructor(private router: Router) {}
 
-  selecionarArquivo(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const arquivo = input.files?.[0];
-
-    if (arquivo) {
-      this.validarArquivo(arquivo);
+  ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      const filhosSalvos = localStorage.getItem('meus_filhos');
+      if (filhosSalvos) {
+        try {
+          this.filhos = JSON.parse(filhosSalvos);
+        } catch (e) {
+          console.error('Erro ao carregar filhos salvos', e);
+        }
+      }
     }
-
-    input.value = '';
   }
 
-  validarArquivo(arquivo: File): void {
-    this.mensagemErro = '';
-
-    const tiposPermitidos = [
-      'application/pdf',
-      'image/jpeg',
-      'image/png'
-    ];
-
-    if (!tiposPermitidos.includes(arquivo.type)) {
-      this.mensagemErro =
-        'Formato inválido. Selecione um PDF, JPG ou PNG.';
-      return;
-    }
-
-    if (arquivo.size > 5 * 1024 * 1024) {
-      this.mensagemErro =
-        'O arquivo deve ter no máximo 5 MB.';
-      return;
-    }
-
-    this.arquivo = arquivo;
+  selecionarArquivo(event: any) {
+    const file = event.target.files[0];
+    this.validarEAtribuirArquivo(file);
   }
 
-  aoArrastar(event: DragEvent): void {
+  aoArrastar(event: DragEvent) {
     event.preventDefault();
+    event.stopPropagation();
     this.arrastando = true;
   }
 
-  aoSairDaArea(event: DragEvent): void {
+  aoSairDaArea(event: DragEvent) {
     event.preventDefault();
+    event.stopPropagation();
     this.arrastando = false;
   }
 
-  aoSoltar(event: DragEvent): void {
+  aoSoltar(event: DragEvent) {
     event.preventDefault();
+    event.stopPropagation();
     this.arrastando = false;
 
-    const arquivo = event.dataTransfer?.files?.[0];
-
-    if (arquivo) {
-      this.validarArquivo(arquivo);
+    const file = event.dataTransfer?.files[0];
+    if (file) {
+      this.validarEAtribuirArquivo(file);
     }
   }
 
-  removerArquivo(): void {
+  validarEAtribuirArquivo(file: File) {
+    this.mensagemErro = '';
+    const tamanhoMaximo = 5 * 1024 * 1024; // 5 MB
+    const tiposPermitidos = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+
+    if (!tiposPermitidos.includes(file.type)) {
+      this.mensagemErro = 'Formato inválido. Apenas PDF, JPG e PNG são permitidos.';
+      return;
+    }
+
+    if (file.size > tamanhoMaximo) {
+      this.mensagemErro = 'O arquivo é muito grande. O tamanho máximo permitido é 5 MB.';
+      return;
+    }
+
+    this.arquivo = file;
+  }
+
+  removerArquivo() {
     this.arquivo = null;
     this.mensagemErro = '';
   }
 
-  cancelar(): void {
-    if (!this.enviando) {
-      this.router.navigate(['/aluno/inicio']);
-    }
-  }
-
-  enviar(): void {
-    this.mensagemErro = '';
-
-    if (!this.motivo.trim()) {
-      this.mensagemErro = 'Descreva o motivo da falta.';
-      return;
-    }
-
-    if (!this.dataFalta) {
-      this.mensagemErro = 'Selecione a data da falta.';
-      return;
-    }
-
-    if (!this.arquivo) {
-      this.mensagemErro = 'Anexe o documento da justificativa.';
+  enviar() {
+    if (!this.alunoSelecionado || !this.motivo || !this.dataFalta) {
+      this.mensagemErro = 'Por favor, preencha todos os campos obrigatórios.';
       return;
     }
 
     this.enviando = true;
     this.progresso = 0;
 
-    this.intervalo = setInterval(() => {
-      this.progresso += 5;
-
-      if (this.progresso >= 100) {
+    const intervalo = setInterval(() => {
+      this.progresso += 10;
+      if (this.progresso > 100) {
         this.progresso = 100;
-
-        if (this.intervalo) {
-          clearInterval(this.intervalo);
-          this.intervalo = undefined;
-        }
-
-        // Demonstração visual:
-        // ainda não envia os dados para um servidor.
+        clearInterval(intervalo);
         setTimeout(() => {
-          this.enviando = false;
-
-          window.alert(
-            'Demonstração concluída! Para registrar a justificativa, ' +
-            'é necessário conectar o formulário a um backend.'
-          );
-
-          this.router.navigate(['/aluno/inicio']);
-        }, 700);
+          this.router.navigate(['/responsavel/inicio']);
+        }, 500);
       }
-    }, 150);
+    }, 200);
   }
 
-  ngOnDestroy(): void {
-    if (this.intervalo) {
-      clearInterval(this.intervalo);
-    }
+  cancelar() {
+    this.router.navigate(['/responsavel/inicio']);
   }
 }

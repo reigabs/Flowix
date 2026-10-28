@@ -1,306 +1,89 @@
+<div class="conteudo">
+  <main class="conteudo-principal">
 
-<div class="aluno-layout">
+    <section class="pagina-notificacoes">
 
-  <!-- MENU LATERAL -->
-  <aside class="sidebar">
-
-    <a class="logo" routerLink="/aluno/inicio">
-      <img
-        src="protótipo-FloWix.png"
-        alt="Logo do FloWix"
-        class="logo-imagem"
-      >
-      <span>Flowix</span>
-    </a>
-
-    <nav class="menu">
-
-      <a
-        routerLink="/aluno/inicio"
-        routerLinkActive="ativo"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="menu-item"
-      >
-        <span class="menu-icone">⌂</span>
-        Painel
-      </a>
-
-      <a
-        routerLink="/aluno/nova-justificativa"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">▤</span>
-        Nova justificativa
-      </a>
-
-      <a
-        routerLink="/aluno/historico"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">▧</span>
-        Meu histórico
-      </a>
-
-      <a
-        routerLink="/aluno/notificacoes"
-        routerLinkActive="ativo"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="menu-item"
-      >
-        <span class="menu-icone icone-sino">
-          ♟
-          <span
-            class="contador"
-            *ngIf="quantidadeNaoLidas > 0"
-          >
-            {{ quantidadeNaoLidas }}
-          </span>
-        </span>
-        Notificações
-      </a>
-
-      <a
-        routerLink="/aluno/perfil"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">●</span>
-        Meu perfil
-      </a>
-
-    </nav>
-
-    <button class="sair" type="button" (click)="sair()">
-      <span>⇥</span>
-      Sair da conta
-    </button>
-
-  </aside>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="conteudo">
-
-    <header class="cabecalho-pagina">
-
-      <div class="titulo-grupo">
-        <a
-          routerLink="/aluno/inicio"
-          class="botao-voltar"
-          aria-label="Voltar ao painel"
-        >
-          ←
-        </a>
-
-        <h1>Notificações</h1>
-      </div>
-
-      <button
-        type="button"
-        class="marcar-todas"
-        (click)="marcarTodasComoLidas()"
-        [disabled]="quantidadeNaoLidas === 0"
-      >
-        Marcar todas como lidas
-      </button>
-
-    </header>
-
-    <section class="notificacoes-conteudo">
-
-      <!-- FILTROS -->
-      <nav class="filtros" aria-label="Filtrar notificações">
-
-        <button
-          *ngFor="let filtro of filtros"
-          type="button"
-          class="botao-filtro"
-          [class.filtro-ativo]="filtroSelecionado === filtro"
-          [attr.aria-pressed]="filtroSelecionado === filtro"
-          (click)="selecionarFiltro(filtro)"
-        >
-          {{ filtro }}
-        </button>
-
-      </nav>
-
-      <!-- LISTA DE NOTIFICAÇÕES -->
-      <section class="lista-notificacoes">
-
-        <article
-          *ngFor="let item of notificacoesFiltradas"
-          class="notificacao"
-          [class.notificacao-nao-lida]="!item.lida"
-        >
-
-          <!-- ÍCONE -->
-          <div
-            class="icone-status"
-            [ngClass]="{
-              'icone-analise': item.tipo === 'analise',
-              'icone-aprovada': item.tipo === 'aprovada',
-              'icone-rejeitada': item.tipo === 'rejeitada'
-            }"
-            aria-hidden="true"
-          >
-
-            <svg
-              *ngIf="item.tipo === 'analise'"
-              viewBox="0 0 40 40"
-              class="desenho-icone"
-              fill="none"
-            >
-              <circle
-                cx="20"
-                cy="20"
-                r="14"
-                stroke="currentColor"
-                stroke-width="2.5"
-              />
-              <path
-                d="M20 11V20L26 24"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-              />
-            </svg>
-
-            <svg
-              *ngIf="item.tipo === 'aprovada'"
-              viewBox="0 0 40 40"
-              class="desenho-icone"
-              fill="none"
-            >
-              <circle
-                cx="20"
-                cy="20"
-                r="14"
-                stroke="currentColor"
-                stroke-width="2.5"
-              />
-              <path
-                d="M12 20L18 26L29 14"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-
-            <svg
-              *ngIf="item.tipo === 'rejeitada'"
-              viewBox="0 0 40 40"
-              class="desenho-icone"
-              fill="none"
-            >
-              <circle
-                cx="20"
-                cy="20"
-                r="14"
-                stroke="currentColor"
-                stroke-width="2.5"
-              />
-              <path
-                d="M14 14L26 26M26 14L14 26"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="round"
-              />
-            </svg>
-
-          </div>
-
-          <!-- MENSAGEM -->
-          <p class="mensagem">
-            {{ item.mensagem }}
-          </p>
-
-          <!-- TEMPO -->
-          <span class="tempo">
-            {{ item.tempo }}
-          </span>
-
-          <!-- ABRIR DETALHES -->
+      <!-- Cabeçalho -->
+      <header class="cabecalho-pagina">
+        <div class="titulo-area">
           <button
+            class="botao-voltar"
             type="button"
-            class="botao-abrir"
-            [attr.aria-label]="'Abrir notificação: ' + item.mensagem"
-            (click)="abrirNotificacao(item)"
+            aria-label="Voltar ao painel"
+            routerLink="/aluno"
           >
-            ›
+            <span>⬅</span>
           </button>
-
-        </article>
-
-        <div
-          class="lista-vazia"
-          *ngIf="notificacoesFiltradas.length === 0"
-        >
-          <p>Não há notificações nesta categoria.</p>
+          <h1>Notificações</h1>
         </div>
 
-      </section>
+        <button 
+          type="button" 
+          class="botao-marcar-lidas" 
+          (click)="marcarTodasComoLidas()"
+        >
+          Marcar todas como lidas
+        </button>
+      </header>
+
+      <!-- Abas de Filtro -->
+      <nav class="abas-filtro" aria-label="Filtrar notificações">
+        <button 
+          type="button" 
+          [class.ativo]="filtroAtual === 'Todos'" 
+          (click)="filtrar('Todos')"
+        >
+          Todos
+        </button>
+        <button 
+          type="button" 
+          [class.ativo]="filtroAtual === 'Não lidas'" 
+          (click)="filtrar('Não lidas')"
+        >
+          Não lidas
+        </button>
+        <button 
+          type="button" 
+          [class.ativo]="filtroAtual === 'Lidas'" 
+          (click)="filtrar('Lidas')"
+        >
+          Lidas
+        </button>
+      </nav>
+
+      <!-- Lista de Notificações -->
+      <div class="lista-notificacoes">
+        <div 
+          class="linha-notificacao" 
+          *ngFor="let item of notificacoesFiltradas"
+          [class.nao-lida]="!item.lida"
+          (click)="abrirNotificacao(item)"
+        >
+          <div class="notif-info-principal">
+            <span class="icone-status" [ngClass]="item.tipo">
+              {{ item.icone }}
+            </span>
+            <span class="mensagem">{{ item.mensagem }}</span>
+          </div>
+
+          <div class="notif-info-secundaria">
+            <span class="tempo">{{ item.tempo }}</span>
+            <button 
+              type="button" 
+              class="botao-seta" 
+              title="Ver detalhes"
+            >
+              ❯
+            </button>
+          </div>
+        </div>
+
+        <div class="sem-registros" *ngIf="notificacoesFiltradas.length === 0">
+          <p>Nenhuma notificação encontrada.</p>
+        </div>
+      </div>
 
     </section>
 
   </main>
-
-  <!-- DETALHES DA NOTIFICAÇÃO -->
-  <div
-    class="fundo-modal"
-    *ngIf="notificacaoSelecionada as item"
-    (click)="fecharDetalhes()"
-  >
-
-    <section
-      class="modal-detalhes"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="titulo-detalhes"
-      (click)="$event.stopPropagation()"
-    >
-
-      <button
-        type="button"
-        class="fechar-modal"
-        aria-label="Fechar"
-        (click)="fecharDetalhes()"
-      >
-        ×
-      </button>
-
-      <div
-        class="icone-status modal-icone"
-        [ngClass]="{
-          'icone-analise': item.tipo === 'analise',
-          'icone-aprovada': item.tipo === 'aprovada',
-          'icone-rejeitada': item.tipo === 'rejeitada'
-        }"
-      >
-        <span *ngIf="item.tipo === 'analise'">◷</span>
-        <span *ngIf="item.tipo === 'aprovada'">✓</span>
-        <span *ngIf="item.tipo === 'rejeitada'">×</span>
-      </div>
-
-      <h2 id="titulo-detalhes">Notificação</h2>
-
-      <p class="modal-mensagem">{{ item.mensagem }}</p>
-
-      <p class="modal-detalhes-texto">{{ item.detalhes }}</p>
-
-      <span class="modal-tempo">{{ item.tempo }}</span>
-
-      <button
-        type="button"
-        class="botao-confirmar"
-        (click)="fecharDetalhes()"
-      >
-        Entendi
-      </button>
-
-    </section>
-
-  </div>
-
 </div>

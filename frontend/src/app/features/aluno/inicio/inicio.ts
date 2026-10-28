@@ -1,45 +1,30 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-inicio',
+  selector: 'app-aluno-inicio',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink],
   templateUrl: './inicio.html',
-  styleUrl: './inicio.css'
+  styleUrls: ['./inicio.css']
 })
 export class Inicio {
-  nomeAluno = 'Bia Santos';
+  nomeAluno: string = 'Bia Santos';
 
-  solicitacoes = [
-    {
-      numero: '3458',
-      data: '17/05/2026',
-      motivo: 'Consulta médica',
-      status: 'Em andamento'
-    },
-    {
-      numero: '3457',
-      data: '10/05/2026',
-      motivo: 'Atestado médico',
-      status: 'Aprovada'
-    },
-    {
-      numero: '3456',
-      data: '16/04/2026',
-      motivo: 'Consulta odontológica',
-      status: 'Aprovada'
-    },
-    {
-      numero: '3455',
-      data: '02/04/2026',
-      motivo: 'Declaração',
-      status: 'Rejeitada'
-    }
+  // Dados dos cards de resumo
+  resumo = {
+    pendentes: 2,
+    emAnalise: 1,
+    aprovadas: 2,
+    rejeitadas: 1
+  };
+
+  // Lista de solicitações recentes baseada na imagem
+  solicitacoesRecentes = [
+    { id: '#3458', data: '17/05/2026', tipo: 'Consulta médica', status: 'Em andamento', statusClass: 'em-andamento' },
+    { id: '#3457', data: '10/05/2026', tipo: 'Atestado médico', status: 'Aprovada', statusClass: 'aprovada' },
+    { id: '#3456', data: '16/04/2026', tipo: 'Consulta odontológica', status: 'Aprovada', statusClass: 'aprovada' },
+    { id: '#3455', data: '02/04/2026', tipo: 'Declaração', status: 'Rejeitada', statusClass: 'rejeitada' }
   ];
-
-  sair(): void {
-    alert('A função de sair será implementada posteriormente.');
-  }
 }

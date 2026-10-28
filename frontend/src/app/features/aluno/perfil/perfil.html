@@ -1,261 +1,142 @@
+<div class="conteudo">
+  <main class="conteudo-principal">
 
-<div class="aluno-layout">
+    <section class="pagina-perfil">
 
-  <!-- MENU LATERAL -->
-  <aside class="sidebar">
-
-    <a class="logo" routerLink="/aluno/inicio">
-      <img
-        src="protótipo-FloWix.png"
-        alt="Logo do FloWix"
-        class="logo-imagem"
-      >
-      <span>Flowix</span>
-    </a>
-
-    <nav class="menu">
-
-      <a
-        routerLink="/aluno/inicio"
-        routerLinkActive="ativo"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="menu-item"
-      >
-        <span class="menu-icone">⌂</span>
-        Painel
-      </a>
-
-      <a
-        routerLink="/aluno/nova-justificativa"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">▤</span>
-        Nova justificativa
-      </a>
-
-      <a
-        routerLink="/aluno/historico"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">▧</span>
-        Meu histórico
-      </a>
-
-      <a
-        routerLink="/aluno/notificacoes"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone icone-sino">
-          ♟
-          <span class="contador">1</span>
-        </span>
-        Notificações
-      </a>
-
-      <a
-        routerLink="/aluno/perfil"
-        routerLinkActive="ativo"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="menu-item"
-      >
-        <span class="menu-icone">●</span>
-        Perfil
-      </a>
-
-    </nav>
-
-    <button type="button" class="sair" (click)="sair()">
-      <span>⇥</span>
-      Sair da conta
-    </button>
-
-  </aside>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="conteudo">
-
-    <header class="cabecalho">
-
-      <a
-        routerLink="/aluno/inicio"
-        class="botao-voltar"
-        aria-label="Voltar ao painel"
-      >
-        ←
-      </a>
-
-      <div class="titulo-pagina">
-        <h1>Meu perfil</h1>
-        <p>Veja e gerencie suas informações pessoais</p>
-      </div>
-
-    </header>
-
-    <section class="perfil-conteudo">
-
-      <!-- FOTO DO ALUNO -->
-      <div class="area-foto">
-
-        <img
-          [src]="fotoPerfil"
-          alt="Foto de perfil da aluna"
-          class="foto-perfil"
+      <!-- Cabeçalho -->
+      <header class="cabecalho-pagina">
+        <button
+          class="botao-voltar"
+          type="button"
+          aria-label="Voltar ao painel"
+          routerLink="/aluno"
         >
+          <span>⬅</span>
+        </button>
 
-        <label for="fotoArquivo" class="botao-foto">
-          Alterar foto
-        </label>
+        <div class="titulo-area">
+          <h1>Meu perfil</h1>
+          <p>Veja e gerencie suas informações pessoais</p>
+        </div>
+      </header>
 
-        <input
-          id="fotoArquivo"
-          type="file"
-          accept="image/*"
-          class="input-foto"
-          (change)="alterarFoto($event)"
-        >
+      <!-- Cartão Principal de Perfil -->
+      <div class="perfil-card">
 
-        <p class="ajuda-foto">Imagem de até 5 MB</p>
-
-      </div>
-
-      <!-- DADOS PESSOAIS -->
-      <section class="dados-pessoais">
-
-        <h2>Dados pessoais</h2>
-
-        <form #formulario="ngForm" (ngSubmit)="salvarInformacoes()">
-
-          <div class="campo campo-largo">
-            <label for="nome">Nome completo</label>
-            <input
-              id="nome"
-              name="nome"
-              type="text"
-              [(ngModel)]="dados.nome"
-              [readonly]="!editando"
-              required
-            >
+        <!-- Lado Esquerdo: Foto e Input de Arquivo Oculto -->
+        <div class="perfil-foto-secao">
+          <div class="avatar-container">
+            <img 
+              [src]="aluno.fotoUrl" 
+              alt="Foto de perfil do aluno" 
+              class="avatar-img"
+            />
           </div>
 
-          <div class="campo campo-largo">
-            <label for="instituicao">Nome da instituição</label>
-            <input
-              id="instituicao"
-              name="instituicao"
-              type="text"
-              [(ngModel)]="dados.instituicao"
-              [readonly]="!editando"
-              required
-            >
-          </div>
+          <!-- Input de arquivo invisível acionado pelo botão -->
+          <input 
+            #inputFoto 
+            type="file" 
+            accept="image/*" 
+            style="display: none;" 
+            (change)="onFotoSelecionada($event)"
+          />
 
-          <div class="linha-campos">
+          <button type="button" class="botao-alterar-foto" (click)="inputFoto.click()">
+            Alterar foto
+          </button>
+        </div>
+
+        <!-- Lado Direito: Formulário de Dados Pessoais -->
+        <div class="perfil-dados-secao">
+          <h2>Dados pessoais</h2>
+
+          <form class="form-grid">
+
+            <div class="campo span-2">
+              <label for="nome">Nome completo</label>
+              <input 
+                type="text" 
+                id="nome" 
+                [(ngModel)]="aluno.nome" 
+                name="nome" 
+                [disabled]="!editando"
+              />
+            </div>
+
+            <div class="campo span-2">
+              <label for="instituicao">Nome da instituição</label>
+              <input 
+                type="text" 
+                id="instituicao" 
+                [(ngModel)]="aluno.instituicao" 
+                name="instituicao" 
+                [disabled]="!editando"
+              />
+            </div>
 
             <div class="campo">
               <label for="matricula">Matrícula</label>
-              <input
-                id="matricula"
-                name="matricula"
-                type="text"
-                [(ngModel)]="dados.matricula"
-                [readonly]="!editando"
-                required
-              >
+              <input 
+                type="text" 
+                id="matricula" 
+                [(ngModel)]="aluno.matricula" 
+                name="matricula" 
+                [disabled]="!editando"
+              />
             </div>
 
             <div class="campo">
               <label for="telefone">Telefone</label>
-              <input
-                id="telefone"
-                name="telefone"
-                type="tel"
-                [(ngModel)]="dados.telefone"
-                [readonly]="!editando"
-                required
-              >
+              <input 
+                type="text" 
+                id="telefone" 
+                [(ngModel)]="aluno.telefone" 
+                name="telefone" 
+                [disabled]="!editando"
+              />
             </div>
 
-          </div>
-
-          <div class="linha-campos linha-final">
-
-            <div class="campo campo-email">
-              <label for="emailCpf">E-mail ou CPF</label>
-              <input
-                id="emailCpf"
-                name="emailCpf"
-                type="text"
-                [(ngModel)]="dados.emailCpf"
-                [readonly]="!editando"
-                required
-              >
+            <div class="campo">
+              <label for="email">E-mail ou CPF</label>
+              <input 
+                type="text" 
+                id="email" 
+                [(ngModel)]="aluno.email" 
+                name="email" 
+                [disabled]="!editando"
+              />
             </div>
 
-            <div class="campo campo-turma">
+            <div class="campo">
               <label for="turma">Turma</label>
-              <input
-                id="turma"
-                name="turma"
-                type="text"
-                [(ngModel)]="dados.turma"
-                [readonly]="!editando"
-                required
-              >
+              <input 
+                type="text" 
+                id="turma" 
+                [(ngModel)]="aluno.turma" 
+                name="turma" 
+                [disabled]="!editando"
+              />
             </div>
 
-          </div>
+          </form>
 
-          <p
-            class="mensagem"
-            *ngIf="mensagem"
-            aria-live="polite"
-          >
-            {{ mensagem }}
-          </p>
-
-          <!-- BOTÕES -->
-          <div class="acoes">
-
-            <button
-              type="button"
-              class="botao-excluir"
-              (click)="excluirConta()"
-            >
+          <!-- Rodapé do Card com Ações -->
+          <div class="perfil-acoes">
+            <button type="button" class="botao-excluir" (click)="excluirConta()">
               Excluir conta
             </button>
 
-            <div class="acoes-edicao">
-
-              <button
-                *ngIf="editando"
-                type="button"
-                class="botao-cancelar"
-                (click)="cancelarEdicao()"
-              >
-                Cancelar
-              </button>
-
-              <button
-                type="button"
-                class="botao-editar"
-                (click)="alternarEdicao()"
-              >
-                {{ editando ? 'Salvar informações' : 'Editar informações' }}
-              </button>
-
-            </div>
-
+            <button type="button" class="botao-editar" (click)="alternarEdicao()">
+              {{ editando ? 'Salvar informações' : 'Editar informações' }}
+            </button>
           </div>
 
-        </form>
+        </div>
 
-      </section>
+      </div>
 
     </section>
 
   </main>
-
 </div>

@@ -1,75 +1,7 @@
-<div class="aluno-layout">
-
-  <!-- MENU LATERAL -->
-  <aside class="sidebar">
-
-    <a class="logo" routerLink="/aluno/inicio">
-      <img
-        src="protótipo-FloWix.png"
-        alt="Gato com livros, logo do FloWix"
-        class="logo-imagem"
-      >
-      <span>Flowix</span>
-    </a>
-
-    <nav class="menu">
-
-      <a
-        routerLink="/aluno/inicio"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">⌂</span>
-        Painel
-      </a>
-
-      <a
-        routerLink="/aluno/nova-justificativa"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">▤</span>
-        Nova justificativa
-      </a>
-
-      <a
-        routerLink="/aluno/historico"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">▧</span>
-        Meu histórico
-      </a>
-
-      <a
-        routerLink="/aluno/notificacoes"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">♟</span>
-        Notificações
-      </a>
-
-      <a
-        routerLink="/aluno/perfil"
-        routerLinkActive="ativo"
-        class="menu-item"
-      >
-        <span class="menu-icone">●</span>
-        Meu perfil
-      </a>
-
-    </nav>
-
-    <button class="sair" type="button" (click)="cancelar()">
-      <span>⇥</span>
-      Sair da conta
-    </button>
-
-  </aside>
+<div class="conteudo">
 
   <!-- CONTEÚDO PRINCIPAL -->
-  <main class="conteudo">
+  <main class="conteudo-principal">
 
     <!-- FORMULÁRIO -->
     <section class="pagina-formulario" *ngIf="!enviando">
@@ -94,12 +26,28 @@
 
       <form class="formulario" (ngSubmit)="enviar()">
 
+        <!-- SELEÇÃO DO FILHO (Exclusivo do Responsável) -->
+        <div class="campo">
+          <label for="alunoSelecionado">Nome completo do aluno</label>
+          <select
+            id="alunoSelecionado"
+            name="alunoSelecionado"
+            [(ngModel)]="alunoSelecionado"
+            required
+            class="select-aluno"
+          >
+            <option value="" disabled selected>Selecione o perfil do aluno</option>
+            <option *ngFor="let filho of filhos" [value]="filho.nome">
+              {{ filho.nome }} ({{ filho.turma }})
+            </option>
+          </select>
+        </div>
+
         <!-- MOTIVO E DATA -->
         <div class="campos-principais">
 
           <div class="campo">
             <label for="motivo">Motivo da falta</label>
-
             <textarea
               id="motivo"
               name="motivo"
