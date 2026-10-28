@@ -89,28 +89,6 @@
   box-sizing: border-box;
 }
 
-.campo-select {
-  margin-bottom: 30px;
-}
-
-.select-aluno {
-  width: 100%;
-  min-height: 65px;
-  padding: 16px 20px;
-  border: 2px solid #d1d5db;
-  border-radius: 14px;
-  outline: none;
-  background: #fff;
-  color: #222;
-  font-family: inherit;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.select-aluno:focus {
-  border-color: #5920c4;
-  box-shadow: 0 0 0 3px #5920c420;
-}
 
 .campos-principais {
   display: grid;

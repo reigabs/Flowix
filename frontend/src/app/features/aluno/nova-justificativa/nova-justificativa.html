@@ -28,19 +28,6 @@
 
         <!-- SELEÇÃO DO FILHO (Exclusivo do Responsável) -->
         <div class="campo">
-          <label for="alunoSelecionado">Nome completo do aluno</label>
-          <select
-            id="alunoSelecionado"
-            name="alunoSelecionado"
-            [(ngModel)]="alunoSelecionado"
-            required
-            class="select-aluno"
-          >
-            <option value="" disabled selected>Selecione o perfil do aluno</option>
-            <option *ngFor="let filho of filhos" [value]="filho.nome">
-              {{ filho.nome }} ({{ filho.turma }})
-            </option>
-          </select>
         </div>
 
         <!-- MOTIVO E DATA -->
