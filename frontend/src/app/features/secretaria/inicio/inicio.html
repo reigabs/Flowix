@@ -50,9 +50,12 @@
       <div class="calendar-header">
         <h3>Calendário</h3>
         <div class="calendar-nav-container">
-          <button class="cal-nav-btn" aria-label="Mês anterior">❮</button>
-          <span class="month-selector">Fevereiro</span>
-          <button class="cal-nav-btn" aria-label="Próximo mês">❯</button>
+          <!-- Botão para voltar o mês -->
+          <button class="cal-nav-btn" (click)="mudarMes(-1)" aria-label="Mês anterior">❮</button>
+          <!-- Nome do mês dinâmico -->
+          <span class="month-selector">{{ mesNome }}</span>
+          <!-- Botão para avançar o mês -->
+          <button class="cal-nav-btn" (click)="mudarMes(1)" aria-label="Próximo mês">❯</button>
         </div>
       </div>
       <div class="calendar-grid">
@@ -80,7 +83,6 @@
     <div class="dashboard-box chart-box">
       <h3>Resumo do período</h3>
       <div class="chart-placeholder">
-       
         <div class="donut-chart">
           <span class="label-stat stat-pendentes">14<br><small>13.9%</small></span>
           <span class="label-stat stat-analise">10<br><small>9.9%</small></span>

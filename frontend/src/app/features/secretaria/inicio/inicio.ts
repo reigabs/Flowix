@@ -21,13 +21,13 @@ export class InicioComponent implements OnInit {
     total: 101
   };
 
-  anoAtual = 2026;
-  mesAtual = 1; 
+  dataAtual: Date = new Date(2026, 1, 1); 
+  mesNome: string = '';
   diasMes: { dia: number | null, ativo: boolean }[] = [];
-  diasDestaque: number[] = [10, 21];
+  diasDestaque: number[] = [10, 21]; 
 
   constructor() {
-    this.gerarCalendarioReal();
+    this.atualizarCalendario();
   }
 
   ngOnInit() {
@@ -46,17 +46,28 @@ export class InicioComponent implements OnInit {
     }
   }
 
-  gerarCalendarioReal() {
-    const primeiroDia = new Date(this.anoAtual, this.mesAtual, 1).getDay(); 
-    const ultimoDia = new Date(this.anoAtual, this.mesAtual + 1, 0).getDate();
+  mudarMes(direcao: number) {
+    this.dataAtual.setMonth(this.dataAtual.getMonth() + direcao);
+    this.dataAtual = new Date(this.dataAtual); 
+    this.atualizarCalendario();
+  }
+
+  atualizarCalendario() {
+    const ano = this.dataAtual.getFullYear();
+    const mes = this.dataAtual.getMonth();
+
+    this.mesNome = this.dataAtual.toLocaleString('pt-BR', { month: 'long' });
+    this.mesNome = this.mesNome.charAt(0).toUpperCase() + this.mesNome.slice(1);
+
+    const primeiroDiaSemana = new Date(ano, mes, 1).getDay(); 
+    const ultimoDiaMes = new Date(ano, mes + 1, 0).getDate();
 
     let listaDias: { dia: number | null, ativo: boolean }[] = [];
 
-    for (let i = 0; i < primeiroDia; i++) {
+    for (let i = 0; i < primeiroDiaSemana; i++) {
       listaDias.push({ dia: null, ativo: false });
     }
-
-    for (let i = 1; i <= ultimoDia; i++) {
+    for (let i = 1; i <= ultimoDiaMes; i++) {
       listaDias.push({
         dia: i,
         ativo: this.diasDestaque.includes(i)

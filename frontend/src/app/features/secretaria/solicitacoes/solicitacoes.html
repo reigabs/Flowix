@@ -1,13 +1,12 @@
 <div class="solicitacoes-container">
   
-  <!-- VISÃO 1: LISTAGEM E ABAS -->
+  <!-- LISTAGEM E ABAS -->
   @if (!itemSelecionado) {
     <div class="header-section">
       <h2>Solicitações</h2>
       <p>Acompanhe e analise as justificativas de faltas enviadas</p>
     </div>
 
-    <!-- Abas de navegação (Todas, Pendentes, Em análise)[cite: 1] -->
     <div class="tabs-nav">
       <button [class.active]="abaAtiva === 'Todas'" (click)="mudarAba('Todas')">Todas</button>
       <button [class.active]="abaAtiva === 'Pendente'" (click)="mudarAba('Pendente')">Pendentes</button>
@@ -51,7 +50,7 @@
     }
   } 
   
-  <!-- VISÃO 2: DETALHES DA SOLICITAÇÃO (Baseado nas telas 2, 3 e 4) -->
+  <!-- DETALHES DA SOLICITAÇÃO -->
   @else {
     <div class="detalhes-header">
       <button class="btn-voltar" (click)="voltarParaLista()">←</button>
@@ -92,7 +91,7 @@
       </div>
     </div>
 
-    <!-- MODAL DE APROVAR / REJEITAR (Imagens 2 e 3) -->
+    <!--  APROVAR / REJEITAR -->
     @if (modalAcao) {
       <div class="modal-overlay">
         <div class="modal-card">
@@ -101,7 +100,7 @@
           </div>
           
           <div class="modal-icon-cat">
-            <span class="cat-sticker">🐈‍⬛❓</span>
+            <img src="gatinho-dúvida.jpeg" alt="Ícone de dúvida do gatinho" class="cat-sticker" />
           </div>
 
           <div class="form-group">
@@ -110,6 +109,7 @@
           </div>
 
           <div class="modal-footer">
+            <button class="btn-modal-voltar" (click)="fecharModal()">Voltar</button>
             @if (modalAcao === 'aprovar') {
               <button class="btn-modal-confirmar-aprovar" (click)="confirmarAprovacao()">Aprovar</button>
             } @else {

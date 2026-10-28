@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -9,11 +9,12 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './solicitacoes.html',
   styleUrl: './solicitacoes.css'
 })
-export class SolicitacoesComponent {
+export class SolicitacoesComponent implements OnInit {
+  private platformId = inject(PLATFORM_ID);
+
   abaAtiva: string = 'Todas';
 
-  // Dados baseados no protótipo
-  listaSolicitacoes: any[] = [
+  listaSolicitacoesBase: any[] = [
     {
       protocolo: '#6739',
       aluno: 'Gabriel Queiroz',
@@ -31,51 +32,40 @@ export class SolicitacoesComponent {
       status: 'Pendente',
       motivo: 'Problemas de saúde estomacal.',
       documento: 'atestado_ana.pdf (850KB)'
-    },
-    {
-      protocolo: '#6733',
-      aluno: 'Bruno Santos',
-      turma: '8º ano A',
-      enviadoEm: '17/05/2026 17:01',
-      status: 'Em análise',
-      motivo: 'Atraso devido a transporte escolar quebrado.',
-      documento: 'declaracao.pdf (500KB)'
-    },
-    {
-      protocolo: '#6732',
-      aluno: 'Carla Mendes',
-      turma: '5º ano D',
-      enviadoEm: '17/05/2026 16:22',
-      status: 'Em análise',
-      motivo: 'Consulta oftalmológica.',
-      documento: 'receita.pdf (2.1MB)'
-    },
-    {
-      protocolo: '#6730',
-      aluno: 'Eduardo Alves',
-      turma: '9º ano A',
-      enviadoEm: '16/05/2026 14:12',
-      status: 'Pendente',
-      motivo: 'Febre alta e repouso indicado.',
-      documento: 'atestado_eduardo.pdf (1.1MB)'
-    },
-    {
-      protocolo: '#6728',
-      aluno: 'Maria Clara',
-      turma: '7º ano C',
-      enviadoEm: '16/05/2026 08:43',
-      status: 'Pendente',
-      motivo: 'Exames laboratoriais.',
-      documento: 'comprovante.pdf (900KB)'
     }
   ];
 
+  listaSolicitacoes: any[] = [];
   itemSelecionado: any | null = null;
-
   modalAcao: 'aprovar' | 'rejeitar' | null = null;
   observacao: string = '';
 
-  // Filtra as solicitações de acordo com a aba selecionada
+  ngOnInit() {
+    this.carregarSolicitacoes();
+  }
+
+  carregarSolicitacoes() {
+    if (isPlatformBrowser(this.platformId)) {
+      const salvo = localStorage.getItem('flowix_solicitacoes_ativas');
+      if (salvo) {
+        try {
+          this.listaSolicitacoes = JSON.parse(salvo);
+        } catch (e) {
+          this.listaSolicitacoes = [...this.listaSolicitacoesBase];
+        }
+      } else {
+        this.listaSolicitacoes = [...this.listaSolicitacoesBase];
+        this.salvarSolicitacoesAtivas();
+      }
+    }
+  }
+
+  private salvarSolicitacoesAtivas() {
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('flowix_solicitacoes_ativas', JSON.stringify(this.listaSolicitacoes));
+    }
+  }
+
   get solicitacoesFiltradas() {
     if (this.abaAtiva === 'Todas') {
       return this.listaSolicitacoes;
@@ -110,7 +100,16 @@ export class SolicitacoesComponent {
 
   confirmarAprovacao() {
     if (this.itemSelecionado) {
+      const itemHistorico = {
+        ...this.itemSelecionado,
+        status: 'Aprovado',
+        observacaoAnalise: this.observacao || 'Aprovado sem observações.'
+      };
+
+      this.salvarNoHistorico(itemHistorico);
+
       this.listaSolicitacoes = this.listaSolicitacoes.filter(i => i.protocolo !== this.itemSelecionado.protocolo);
+      this.salvarSolicitacoesAtivas();
     }
     this.fecharModal();
     this.voltarParaLista();
@@ -118,9 +117,29 @@ export class SolicitacoesComponent {
 
   confirmarRejeicao() {
     if (this.itemSelecionado) {
+      const itemHistorico = {
+        ...this.itemSelecionado,
+        status: 'Rejeitado',
+        observacaoAnalise: this.observacao || 'Rejeitado sem observações.'
+      };
+
+      this.salvarNoHistorico(itemHistorico);
+
       this.listaSolicitacoes = this.listaSolicitacoes.filter(i => i.protocolo !== this.itemSelecionado.protocolo);
+      this.salvarSolicitacoesAtivas();
     }
     this.fecharModal();
     this.voltarParaLista();
+  }
+
+  private salvarNoHistorico(novoItem: any) {
+    if (isPlatformBrowser(this.platformId)) {
+      const historicoSalvo = localStorage.getItem('flowix_historico');
+      let listaHistorico = historicoSalvo ? JSON.parse(historicoSalvo) : [];
+      
+      listaHistorico.unshift(novoItem);
+      
+      localStorage.setItem('flowix_historico', JSON.stringify(listaHistorico));
+    }
   }
 }

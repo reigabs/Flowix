@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,12 +8,11 @@ import { CommonModule } from '@angular/common';
   templateUrl: './detalhes-solicitacao.html',
   styleUrl: './detalhes-solicitacao.css'
 })
-export class HistoricoComponent {
+export class HistoricoComponent implements OnInit {
   itemSelecionado: any | null = null;
   paginaAtual: number = 1;
 
-  // Dados extraídos diretamente do protótipo de Histórico
-  listaHistorico: any[] = [
+  listaHistoricoBase: any[] = [
     {
       protocolo: '#6737',
       aluno: 'João Guimarães Rosa',
@@ -85,6 +84,22 @@ export class HistoricoComponent {
       observacaoAnalise: 'Validado.'
     }
   ];
+
+  listaHistorico: any[] = [];
+
+  ngOnInit() {
+    this.carregarHistorico();
+  }
+
+  carregarHistorico() {
+    const historicoSalvo = localStorage.getItem('flowix_historico');
+    const itensNovos = historicoSalvo ? JSON.parse(historicoSalvo) : [];
+    const listaCompleta = [...itensNovos, ...this.listaHistoricoBase];
+
+    this.listaHistorico = listaCompleta.filter((item, index, self) =>
+      index === self.findIndex((t) => t.protocolo === item.protocolo)
+    );
+  }
 
   verDetalhes(item: any) {
     this.itemSelecionado = item;
