@@ -6,9 +6,7 @@
         routerLink="/responsavel/inicio"
         class="botao-voltar"
         aria-label="Voltar ao painel"
-      >
-        ←
-      </a>
+      >←</a>
       <h1>Gerenciar perfis</h1>
     </div>
   </header>
@@ -33,7 +31,7 @@
           {{ filho.editando ? 'Salvar perfil' : 'editar perfil' }}
         </button>
 
-        <form class="formulario-filho">
+        <form class="formulario-filho" (submit)="$event.preventDefault()">
           
           <div class="campo">
             <label>Nome completo</label>
@@ -83,7 +81,7 @@
             <button
               type="button"
               class="botao-excluir"
-              (click)="excluirFilho(filho)"
+              (click)="confirmarExclusao(filho)"
             >
               excluir conta
             </button>
@@ -97,4 +95,19 @@
 
   </section>
 
+</div>
+
+<div class="fundo-modal" *ngIf="modalExcluirAberto">
+  <div class="modal-confirmacao" (click)="$event.stopPropagation()">
+    <div class="modal-confirmacao-header">
+      <h3>Confirmação de exclusão</h3>
+    </div>
+    <div class="modal-confirmacao-body">
+      <p>Tem certeza de que deseja excluir o perfil de <strong>{{ filhoParaExcluir?.nome }}</strong>?</p>
+    </div>
+    <div class="modal-confirmacao-footer">
+      <button type="button" class="btn-modal-cancelar" (click)="cancelarExclusao()">Cancelar</button>
+      <button type="button" class="btn-modal-ok" (click)="executarExclusao()">OK</button>
+    </div>
+  </div>
 </div>

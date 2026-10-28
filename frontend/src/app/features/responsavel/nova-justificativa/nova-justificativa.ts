@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -10,7 +10,9 @@ import { Router } from '@angular/router';
   templateUrl: './nova-justificativa.html',
   styleUrl: './nova-justificativa.css'
 })
-export class NovaJustificativa {
+export class NovaJustificativa implements OnInit {
+  private platformId = inject(PLATFORM_ID);
+
   alunoSelecionado: string = '';
   motivo: string = '';
   dataFalta: string = '';
@@ -20,13 +22,22 @@ export class NovaJustificativa {
   enviando: boolean = false;
   progresso: number = 0;
   mensagemErro: string = '';
-
-  filhos = [
-    { nome: 'Flávia Santos', turma: '7º ano C' },
-    { nome: 'Henrique Santos', turma: '7º ano B' }
-  ];
+  filhos: any[] = [];
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    if (isPlatformBrowser(this.platformId)) {
+      const filhosSalvos = localStorage.getItem('meus_filhos');
+      if (filhosSalvos) {
+        try {
+          this.filhos = JSON.parse(filhosSalvos);
+        } catch (e) {
+          console.error('Erro ao carregar filhos salvos', e);
+        }
+      }
+    }
+  }
 
   selecionarArquivo(event: any) {
     const file = event.target.files[0];

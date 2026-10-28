@@ -7,7 +7,6 @@
 
   <!-- Seção de Cartões dos Filhos -->
   <section class="cards-grid">
-    <!-- Cards dos Filhos -->
     <div class="card filho-card" *ngFor="let filho of filhos">
       <div class="filho-info">
         <div class="avatar-vazio">👤</div>
@@ -19,7 +18,7 @@
       <button class="btn-primary" (click)="verPerfil(filho)">ver perfil</button>
     </div>
 
-    <!-- Card Adicionar Filho (Interativo) -->
+    <!-- Card Adicionar Filho -->
     <div class="card add-filho-card" (click)="abrirModalAdicionar()">
       <div class="add-icon">+</div>
       <h3>Adicionar filho</h3>
@@ -53,46 +52,72 @@
     </div>
   </section>
 
-  <!-- Banner de Alerta Importante -->
+  <!-- Banner de Alerta -->
   <section class="banner-alerta">
     <div class="banner-content">
       <strong>Importante!</strong>
       <p>As justificativas devem ser enviadas em até 2 dias após a volta do aluno as aulas</p>
     </div>
-    <div class="banner-icon">
-      📅
-    </div>
+    <div class="banner-icon">📅</div>
   </section>
 </div>
 
-<!-- MODAL PARA ADICIONAR FILHO -->
 <div class="fundo-modal" *ngIf="modalAdicionarAberto" (click)="fecharModalAdicionar()">
   <section class="modal-detalhes" (click)="$event.stopPropagation()">
     <button type="button" class="fechar-modal" (click)="fecharModalAdicionar()">×</button>
     <h2>Vincular novo filho</h2>
     
     <form (ngSubmit)="salvarNovoFilho()" class="form-modal">
+      
+      <!-- Nome completo -->
       <div class="campo-modal">
         <label>Nome completo</label>
-        <input type="text" [(ngModel)]="novoFilho.nome" name="nome" placeholder="Ex: Lucas Santos" required />
+        <input type="text" [(ngModel)]="novoFilho.nome" name="nome" placeholder="Ex: Lucas Santos" [class.input-erro]="errosFormulario.nome" />
+        <span class="texto-erro" *ngIf="errosFormulario.nome">ESTE CAMPO É OBRIGATÓRIO</span>
       </div>
 
+      <!-- Nome da instituição -->
       <div class="campo-modal">
         <label>Nome da instituição</label>
-        <input type="text" [(ngModel)]="novoFilho.instituicao" name="instituicao" placeholder="Ex: Colégio InterGenius" required />
+        <select [(ngModel)]="novoFilho.instituicao" name="instituicao" class="select-custom" [class.input-erro]="errosFormulario.instituicao">
+          <option value="" disabled selected>Selecione a escola em Macapá</option>
+          <option *ngFor="let escola of instituicoesMacapa" [value]="escola">{{ escola }}</option>
+        </select>
+        <span class="texto-erro" *ngIf="errosFormulario.instituicao">ESTE CAMPO É OBRIGATÓRIO</span>
       </div>
 
+      <!-- Matrícula -->
       <div class="campo-modal">
         <label>Matrícula</label>
-        <input type="text" [(ngModel)]="novoFilho.matricula" name="matricula" placeholder="Ex: 12345678" required />
+        <input type="text" [(ngModel)]="novoFilho.matricula" name="matricula" placeholder="Ex: 12345678" [class.input-erro]="errosFormulario.matricula" />
+        <span class="texto-erro" *ngIf="errosFormulario.matricula">ESTE CAMPO É OBRIGATÓRIO</span>
       </div>
 
+      <!-- Turma -->
       <div class="campo-modal">
         <label>Turma</label>
-        <input type="text" [(ngModel)]="novoFilho.turma" name="turma" placeholder="Ex: 8º ano A" required />
+        <select [(ngModel)]="novoFilho.turma" name="turma" class="select-custom" [class.input-erro]="errosFormulario.turma">
+          <option value="" disabled selected>Selecione a turma</option>
+          <option *ngFor="let t of turmasEscolares" [value]="t">{{ t }}</option>
+        </select>
+        <span class="texto-erro" *ngIf="errosFormulario.turma">ESTE CAMPO É OBRIGATÓRIO</span>
       </div>
 
       <button type="submit" class="btn-primary" style="margin-top: 10px;">Vincular aluno</button>
     </form>
   </section>
+</div>
+
+<div class="fundo-modal" *ngIf="modalMensagemAberto">
+  <div class="modal-alerta-custom" (click)="$event.stopPropagation()">
+    <div class="alerta-cabecalho">
+      <h3>{{ tituloMensagem }}</h3>
+    </div>
+    <div class="alerta-conteudo">
+      <p>{{ textoMensagem }}</p>
+    </div>
+    <div class="alerta-acoes">
+      <button type="button" class="btn-alerta-ok" (click)="fecharAlertaCustomizado()">OK</button>
+    </div>
+  </div>
 </div>

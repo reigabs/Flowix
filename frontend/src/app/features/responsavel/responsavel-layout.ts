@@ -59,7 +59,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
     .sidebar {
       width: 260px;
-      background-color: #1a0b2e;
+      background-color: #2D1054; /* Roxo profundo e refinado padronizado */
       color: white;
       display: flex;
       flex-direction: column;
@@ -105,7 +105,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
       align-items: center;
       gap: 12px;
       padding: 12px 16px;
-      color: #a0aec0;
+      color: #d1c4e9; /* Texto inativo com contraste suave */
       text-decoration: none;
       border-radius: 8px;
       font-weight: 500;
@@ -114,17 +114,18 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
     }
 
     .nav-links a:hover {
-      background-color: rgba(255, 255, 255, 0.05);
+      background-color: rgba(255, 255, 255, 0.08);
       color: #fff;
     }
 
     .nav-links a.active {
-      background-color: #581c87;
+      background-color: #6930C3; /* Roxo vibrante moderno para o item ativo */
       color: #fff;
+      font-weight: 600;
     }
 
     .logout-area {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
       padding-top: 16px;
     }
 
@@ -133,7 +134,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
       align-items: center;
       gap: 12px;
       padding: 12px 16px;
-      color: #f87171;
+      color: #ff8a8a;
       text-decoration: none;
       font-weight: 500;
       font-size: 14px;
@@ -141,7 +142,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
     }
 
     .logout-link:hover {
-      background-color: rgba(239, 68, 68, 0.1);
+      background-color: rgba(239, 68, 68, 0.12);
     }
 
     .main-content {
