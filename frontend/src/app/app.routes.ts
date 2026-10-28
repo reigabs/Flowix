@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { SecretariaLayoutComponent } from './features/secretaria/secretaria-layout';
-import { ResponsavelLayoutComponent } from './features/responsavel/responsavel-layout'; // Assegure-se de verificar o caminho correto do seu arquivo de layout
+import { ResponsavelLayoutComponent } from './features/responsavel/responsavel-layout';
+import { AlunoLayoutComponent } from './features/aluno/aluno-layout';
 
 export const routes: Routes = [
   {
@@ -29,7 +30,7 @@ export const routes: Routes = [
         .then(m => m.CadastroConcluido)
   },
 
-  // Grupo de Rotas da Secretaria
+  // Rotas da Secretaria
   {
     path: 'secretaria',
     canActivate: [authGuard],
@@ -62,10 +63,11 @@ export const routes: Routes = [
     ]
   },
 
-  // Grupo de Rotas do Aluno
+  // Rotas do Aluno 
   {
     path: 'aluno',
     canActivate: [authGuard],
+    component: AlunoLayoutComponent, 
     children: [
       {
         path: '',
@@ -105,7 +107,7 @@ export const routes: Routes = [
     ]
   },
 
-  // Grupo de Rotas do Responsável
+  // Rotas do Responsável
   {
     path: 'responsavel',
     canActivate: [authGuard],
@@ -154,8 +156,6 @@ export const routes: Routes = [
       }
     ]
   },
-
-  // Rota curinga para redirecionamento
   {
     path: '**',
     redirectTo: ''
