@@ -17,19 +17,7 @@ export const routes: Routes = [
       import('./features/autenticacao/login/login')
         .then(m => m.Login)
   },
-  {
-    path: 'cadastro',
-    loadComponent: () =>
-      import('./features/autenticacao/cadastro/cadastro')
-        .then(m => m.Cadastro)
-  },
-  {
-    path: 'cadastro-concluido',
-    loadComponent: () =>
-      import('./features/autenticacao/cadastro-concluido/cadastro-concluido')
-        .then(m => m.CadastroConcluido)
-  },
-
+  
   // Rotas da Secretaria
   {
     path: 'secretaria',

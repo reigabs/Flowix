@@ -211,47 +211,6 @@
   cursor: not-allowed;
 }
 
-.divisor-ou {
-  text-align: center;
-  font-size: 13px;
-  color: #777777;
-  margin: 2px 0;
-}
-
-.botao-google {
-  width: 100%;
-  background-color: #ffffff;
-  color: #333333;
-  border: 1.5px solid #333333;
-  padding: 13px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.botao-google:hover {
-  background-color: #f7f7f7;
-}
-
-.rodape-criar-conta {
-  text-align: center;
-  font-size: 14px;
-  color: #555555;
-  margin-top: 24px;
-}
-
-.link-criar-conta {
-  color: #180547;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.link-criar-conta:hover {
-  text-decoration: underline;
-}
-
 .mensagem-erro-global {
   color: #e53935;
   text-align: center;
