@@ -14,13 +14,13 @@ export class Perfil implements OnInit {
   editando: boolean = false;
 
   aluno = {
-    nome: 'Ana Beatriz da Silva',
+    nome: 'Bia Santos',
     instituicao: 'Escola Maria Neusa Carmo de Souza',
     matricula: '123345678',
     telefone: '(11) 98645-8765',
     email: 'beatrizsilva10@gmail.com',
     turma: '7º ano A',
-    fotoUrl: 'assets/download (3).jpg'
+    fotoUrl: '/images/perfil.png'
   };
 
   ngOnInit() {
