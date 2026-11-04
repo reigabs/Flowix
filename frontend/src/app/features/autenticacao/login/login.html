@@ -61,8 +61,11 @@
             @if (formulario.get('senha')?.errors?.['minlength']) {
               <small class="texto-erro">DEVE CONTER NO MÍNIMO 6 CARACTERES</small>}}
         </div>
+
+        <form [formGroup]="formulario" class="formulario-login" (ngSubmit)="entrar()"></form>
+
         <button 
-          type="button" 
+          type="submit" 
           (click)="entrar()" 
           [disabled]="formulario.invalid" 
           class="botao-entrar"
