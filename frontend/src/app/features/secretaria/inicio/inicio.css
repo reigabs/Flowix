@@ -207,22 +207,42 @@
 
 .label-stat {
   position: absolute;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   text-align: center;
-  color: #374151;
+  color: #1f2937;
+  z-index: 2;
+  line-height: 1.2;
 }
 
 .label-stat small {
-  font-size: 9px;
-  color: #6b7280;
-  font-weight: 500;
+  display: block;
+  font-size: 11px;
+  color: #374151;
+  font-weight: 600;
+  margin-top: 2px;
 }
 
-.stat-pendentes { top: 10px; right: 15px; }
-.stat-analise { top: 75px; right: -15px; }
-.stat-aprovadas { bottom: 10px; left: 60px; }
-.stat-rejeitadas { top: 20px; left: 10px; }
+/* Posições externas ao círculo */
+.stat-pendentes {
+  top: 3px;
+  right: 42px;
+}
+
+.stat-analise {
+  top: 40px;
+  right: 1px;
+}
+
+.stat-aprovadas {
+  bottom: -5px;
+  left: 60px;
+}
+
+.stat-rejeitadas {
+  top: 8px;
+  left: 35px;
+}
 
 .chart-footer {
   display: flex;
