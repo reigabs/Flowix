@@ -403,24 +403,275 @@
   font-weight: bold;
 }
 
-/* RESPONSIVIDADE */
-@media (max-width: 768px) {
+/* ==========================================
+   RESPONSIVIDADE - NOVA JUSTIFICATIVA
+   ========================================== */
+
+/* TABLETS */
+@media screen and (max-width: 900px) {
+
   .conteudo-principal {
-    padding: 20px 15px;
+    padding: 24px;
+  }
+
+  .cabecalho-pagina {
+    gap: 18px;
+    margin-bottom: 25px;
+  }
+
+  .formulario {
+    padding: 24px;
   }
 
   .campos-principais {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
   }
 
+  .campo label,
+  .titulo-anexo {
+    font-size: 16px;
+  }
+
+  .area-upload {
+    min-height: 200px;
+  }
+
+}
+
+/* CELULARES */
+@media screen and (max-width: 768px) {
+
+  :host {
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .conteudo {
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .conteudo-principal {
+    width: 100%;
+    padding: 20px 16px;
+  }
+
+  .cabecalho-pagina {
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .botao-voltar {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 21px;
+  }
+
+  .cabecalho-pagina p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* Formulário */
+  .formulario {
+    width: 100%;
+    flex: none;
+    padding: 20px 16px;
+    gap: 20px;
+    justify-content: flex-start;
+    border-radius: 12px;
+  }
+
+  .campo-select {
+    margin-bottom: 12px;
+  }
+
+  .select-aluno {
+    min-height: 52px;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  /* Campos de motivo e datas */
+  .campos-principais {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+
+  .campo {
+    width: 100%;
+    margin-top: 0;
+    gap: 8px;
+  }
+
+  .campo label {
+    font-size: 14px;
+  }
+
+  .campo textarea,
+  .campo input {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  .campo textarea {
+    min-height: 100px;
+    max-height: 180px;
+  }
+
+  /* Anexos */
+  .secao-anexo {
+    width: 100%;
+    flex: none;
+    margin-bottom: 10px;
+  }
+
+  .titulo-anexo {
+    font-size: 15px;
+  }
+
+  .area-upload {
+    width: 100%;
+    min-height: 190px;
+    flex: none;
+    padding: 20px 12px;
+    gap: 10px;
+    border-width: 2px;
+    border-radius: 12px;
+  }
+
+  .icone-upload {
+    width: 52px;
+    height: 52px;
+  }
+
+  .area-upload h2 {
+    font-size: 15px;
+    text-align: center;
+  }
+
+  .area-upload p {
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .arquivo-selecionado {
+    gap: 12px;
+  }
+
+  .informacoes-arquivo strong {
+    font-size: 13px;
+  }
+
+  /* Botões */
   .acoes {
+    width: 100%;
     flex-direction: column-reverse;
     gap: 12px;
+    padding-top: 18px;
+    margin-top: 0;
   }
 
   .botao-cancelar,
   .acoes .botao-enviar {
     width: 100%;
+    min-height: 48px;
+    font-size: 14px;
   }
+
+  /* Tela de carregamento */
+  .tela-envio {
+    min-height: 100vh;
+    padding: 65px 16px 20px;
+  }
+
+  .voltar-envio {
+    top: 10px;
+    left: 10px;
+  }
+
+  .cartao-envio {
+    width: 100%;
+    max-width: 400px;
+    padding: 28px 20px;
+    border-radius: 18px;
+  }
+
+  .cartao-envio h1 {
+    font-size: 21px;
+  }
+
+  .gato-enviando {
+    width: 190px;
+    height: 200px;
+  }
+
+  .texto-carregamento {
+    font-size: 14px;
+  }
+
+}
+
+/* CELULARES PEQUENOS */
+@media screen and (max-width: 380px) {
+
+  .conteudo-principal {
+    padding: 16px 12px;
+  }
+
+  .cabecalho-pagina {
+    gap: 10px;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 19px;
+  }
+
+  .formulario {
+    padding: 16px 12px;
+  }
+
+  .campo textarea,
+  .campo input {
+    font-size: 13px;
+    padding: 11px;
+  }
+
+  .area-upload {
+    min-height: 170px;
+    padding: 15px 8px;
+  }
+
+  .area-upload h2 {
+    font-size: 14px;
+  }
+
+  .area-upload p {
+    font-size: 12px;
+  }
+
+  .cartao-envio {
+    padding: 24px 16px;
+  }
+
+  .cartao-envio h1 {
+    font-size: 19px;
+  }
+
+  .gato-enviando {
+    width: 160px;
+    height: 175px;
+  }
+
 }

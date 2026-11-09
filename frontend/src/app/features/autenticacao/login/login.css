@@ -223,3 +223,201 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+
+/* ==========================================
+   RESPONSIVIDADE - LOGIN FLOWIX
+   ========================================== */
+
+/* TABLETS */
+@media screen and (max-width: 900px) {
+
+  :host {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .pagina-login {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    padding: 24px;
+  }
+
+  .cartao-login {
+    width: 100%;
+    max-width: 700px;
+    height: auto;
+    min-height: 550px;
+  }
+
+  .painel-esquerdo {
+    width: 38%;
+  }
+
+  .conteudo-esquerdo {
+    padding: 30px 15px;
+  }
+
+  .marca-flowix {
+    font-size: 34px;
+  }
+
+  .imagem-gatinho {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .painel-direito {
+    padding: 35px 30px;
+  }
+
+}
+
+/* CELULARES */
+@media screen and (max-width: 600px) {
+
+.cartao-login {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  min-height: 0;
+  flex-direction: column;
+  border-radius: 18px;
+}
+
+/* Painel roxo com o gatinho em cima */
+.painel-esquerdo {
+  order: 1;
+  width: 100%;
+  min-height: 190px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+/* Formulário branco embaixo */
+.painel-direito {
+  order: 2;
+  width: 100%;
+  flex: none;
+  padding: 32px 22px;
+}
+
+  /* Painel de identidade visual */
+  .painel-esquerdo {
+    width: 100%;
+    min-height: 190px;
+    height: auto;
+    flex-shrink: 0;
+  }
+
+  .onda-topo {
+    height: 90px;
+  }
+
+  .onda-base {
+    height: 80px;
+  }
+
+  .conteudo-esquerdo {
+    padding: 22px 15px;
+    height: auto;
+    justify-content: center;
+  }
+
+  .marca-flowix {
+    font-size: 32px;
+    margin-bottom: 2px;
+  }
+
+  .subtitulo-flowix {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  .container-ilustracao {
+    margin-top: 5px;
+  }
+
+  .imagem-gatinho {
+    width: 135px;
+    max-height: 105px;
+    object-fit: contain;
+  }
+
+  /* Formulário */
+  .painel-direito {
+    width: 100%;
+    flex: none;
+    padding: 32px 22px;
+  }
+
+  .cabecalho {
+    margin-bottom: 22px;
+  }
+
+  .titulo-acesse {
+    font-size: 23px;
+  }
+
+  .subtitulo-boas-vindas {
+    font-size: 13px;
+  }
+
+  .formulario-login {
+    gap: 15px;
+  }
+
+  .rotulo-campo {
+    font-size: 13px;
+  }
+
+  .entrada-texto {
+    padding: 13px;
+    font-size: 14px;
+  }
+
+  .botao-entrar {
+    padding: 14px;
+  }
+
+  .link-esqueceu-senha {
+    font-size: 12px;
+  }
+
+}
+
+/* CELULARES PEQUENOS */
+@media screen and (max-width: 380px) {
+
+  .pagina-login {
+    padding: 10px;
+  }
+
+  .cartao-login {
+    border-radius: 14px;
+  }
+
+  .painel-esquerdo {
+    min-height: 170px;
+  }
+
+  .marca-flowix {
+    font-size: 28px;
+  }
+
+  .imagem-gatinho {
+    width: 115px;
+    max-height: 85px;
+  }
+
+  .painel-direito {
+    padding: 26px 16px;
+  }
+
+  .titulo-acesse {
+    font-size: 21px;
+  }
+
+}

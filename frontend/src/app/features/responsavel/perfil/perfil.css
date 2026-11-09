@@ -235,35 +235,209 @@
   color: #ffffff;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
+
+/* ==========================================
+   RESPONSIVIDADE - PERFIL DO RESPONSÁVEL
+   ========================================== */
+
+/* TABLETS */
+@media screen and (max-width: 900px) {
+
   .conteudo {
-    padding: 16px;
+    padding: 24px;
+  }
+
+  .perfil-conteudo {
+    max-width: 100%;
+    gap: 22px;
   }
 
   .perfil-grid-layout {
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
+    gap: 35px;
   }
 
-  .formulario-perfil {
-    width: 100%;
+  .avatar-container {
+    width: 115px;
+    height: 115px;
   }
 
   .linha-dupla {
-    grid-template-columns: 1fr;
+    gap: 14px;
   }
 
-  .acoes-perfil {
-    flex-direction: column-reverse;
-    gap: 16px;
+}
+
+/* CELULARES */
+@media screen and (max-width: 768px) {
+
+  :host {
     width: 100%;
+    min-height: 100vh;
+  }
+
+  .conteudo {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px 16px;
+  }
+
+  /* Cabeçalho */
+  .cabecalho-pagina {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+
+  .titulo-com-voltar {
+    gap: 12px;
+  }
+
+  .botao-voltar {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 22px;
+  }
+
+  .cabecalho-pagina p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  /* Conteúdo do perfil */
+  .perfil-conteudo {
+    width: 100%;
+    gap: 22px;
+  }
+
+  .perfil-conteudo > h2 {
+    font-size: 19px;
+    margin-bottom: 4px;
+  }
+
+  .perfil-grid-layout {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+
+  /* Foto do responsável */
+  .avatar-secao {
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+  }
+
+  .avatar-container {
+    width: 115px;
+    height: 115px;
+  }
+
+  .avatar-placeholder {
+    font-size: 60px;
+  }
+
+  .botao-alterar-foto {
+    padding: 9px 18px;
+    font-size: 13px;
+  }
+
+  /* Formulário */
+  .formulario-perfil {
+    width: 100%;
+    gap: 16px;
+  }
+
+  .campo {
+    width: 100%;
+    gap: 7px;
+  }
+
+  .campo label {
+    font-size: 13px;
+  }
+
+  .campo input {
+    width: 100%;
+    padding: 13px 14px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  /* Campos que ficam lado a lado no computador */
+  .linha-dupla {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .input-senha-wrapper {
+    width: 100%;
+  }
+
+  .input-senha-wrapper input {
+    padding-right: 45px;
+  }
+
+  .botao-olho {
+    right: 12px;
+  }
+
+  /* Botões de ação */
+  .acoes-perfil {
+    width: 100%;
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 14px;
+    margin-top: 12px;
   }
 
   .botao-excluir,
   .botao-editar {
     width: 100%;
+    padding: 13px 20px;
     text-align: center;
+    font-size: 14px;
   }
+
+}
+
+/* CELULARES PEQUENOS */
+@media screen and (max-width: 380px) {
+
+  .conteudo {
+    padding: 16px 12px;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 20px;
+  }
+
+  .perfil-conteudo > h2 {
+    font-size: 17px;
+  }
+
+  .avatar-container {
+    width: 100px;
+    height: 100px;
+  }
+
+  .avatar-placeholder {
+    font-size: 52px;
+  }
+
+  .campo input {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .botao-excluir,
+  .botao-editar {
+    font-size: 13px;
+  }
+
 }

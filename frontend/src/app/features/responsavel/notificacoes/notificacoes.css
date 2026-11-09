@@ -207,26 +207,190 @@
   font-size: 15px;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
+/* ==========================================
+   RESPONSIVIDADE - NOTIFICAÇÕES
+   ========================================== */
+
+/* TABLETS */
+@media screen and (max-width: 900px) {
+
   .conteudo {
-    padding: 16px;
+    padding: 24px;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 23px;
+  }
+
+  .notificacoes-conteudo {
+    gap: 20px;
+  }
+
+  .linha-notificacao {
+    padding: 18px;
+    gap: 16px;
+  }
+
+  .notificacao-info {
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .mensagem {
+    font-size: 14px;
+  }
+
+}
+
+/* CELULARES */
+@media screen and (max-width: 600px) {
+
+  :host {
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .conteudo {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px 16px;
   }
 
   .cabecalho-pagina {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .titulo-com-voltar {
+    gap: 12px;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 22px;
+  }
+
+  .botao-voltar {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  .botao-marcar-todas {
+    align-self: flex-end;
+    font-size: 13px;
+  }
+
+  /* Abas de filtro */
+  .abas {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 4px 2px 10px;
+    margin-bottom: 4px;
+    scrollbar-width: thin;
+  }
+
+  .aba {
+    flex-shrink: 0;
+    padding: 10px 18px;
+    font-size: 13px;
+  }
+
+  /* Lista de notificações */
+  .notificacoes-conteudo {
+    gap: 16px;
+  }
+
+  .lista-notificacoes {
+    gap: 12px;
   }
 
   .linha-notificacao {
+    width: 100%;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    padding: 16px;
+    gap: 14px;
+    border-radius: 12px;
+  }
+
+  .notificacao-info {
+    width: 100%;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .icone-status {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+
+  .mensagem {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
   }
 
   .notificacao-acao {
     width: 100%;
     justify-content: space-between;
+    padding-left: 46px;
+    gap: 12px;
   }
+
+  .tempo {
+    font-size: 12px;
+  }
+
+  .botao-seta {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .lista-vazia {
+    padding: 30px 15px;
+    font-size: 14px;
+  }
+
+}
+
+/* CELULARES PEQUENOS */
+@media screen and (max-width: 380px) {
+
+  .conteudo {
+    padding: 16px 12px;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 20px;
+  }
+
+  .titulo-com-voltar {
+    gap: 10px;
+  }
+
+  .aba {
+    padding: 9px 14px;
+    font-size: 12px;
+  }
+
+  .linha-notificacao {
+    padding: 13px;
+  }
+
+  .mensagem {
+    font-size: 12px;
+  }
+
+  .notificacao-acao {
+    padding-left: 44px;
+  }
+
 }
