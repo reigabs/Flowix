@@ -143,6 +143,106 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
       background-color: #f8f9fa;
       min-height: 100vh;
     }
+
+
+    
+    /* =====================================
+       RESPONSIVIDADE - TABLETS E CELULARES
+    ===================================== */
+
+    @media (max-width: 768px) {
+
+      .app-layout {
+        flex-direction: column;
+        width: 100%;
+        min-height: 100vh;
+      }
+
+      /* Menu lateral adaptado para o topo */
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        box-sizing: border-box;
+        padding: 14px;
+        gap: 12px;
+      }
+
+      .logo-area {
+        padding-left: 4px;
+        margin-bottom: 4px;
+      }
+
+      .logo-area h2 {
+        font-size: 19px;
+      }
+
+      /* Navegação horizontal */
+      .nav-links {
+        flex-direction: row;
+        gap: 6px;
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        flex: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .nav-links a {
+        flex: 0 0 auto;
+        padding: 11px 12px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      /* Sair da conta */
+      .logout-area {
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        padding-top: 6px;
+      }
+
+      .logout-link {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      /* Conteúdo principal */
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+        min-width: 0;
+        min-height: calc(100vh - 150px);
+        box-sizing: border-box;
+      }
+    }
+
+    /* Celulares pequenos */
+    @media (max-width: 380px) {
+
+      .sidebar {
+        padding: 12px 10px;
+      }
+
+      .cat-logo-img {
+        width: 28px;
+        height: 28px;
+      }
+
+      .logo-area h2 {
+        font-size: 17px;
+      }
+
+      .nav-links a {
+        padding: 10px;
+        font-size: 11px;
+      }
+
+      .logout-link {
+        font-size: 11px;
+      }
+    }
+
   `]
 })
 export class SecretariaLayoutComponent {}
