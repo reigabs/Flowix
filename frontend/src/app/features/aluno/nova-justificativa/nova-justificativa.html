@@ -194,6 +194,7 @@
           src="gatinho-aviazinho.png"
           alt="Gatinho enviando uma mensagem em um avião de papel"
           class="gato-enviando"
+          [class.saindo]="finalizando"
         >
 
         <p class="texto-carregamento">
@@ -203,19 +204,19 @@
         </p>
 
         <div
-          class="barra-progresso"
-          role="progressbar"
-          [attr.aria-valuenow]="progresso"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        >
-          <div
-            class="progresso-preenchido"
-            [style.width.%]="progresso"
-          ></div>
-        </div>
+  class="barra-progresso"
+  role="progressbar"
+  [attr.aria-valuenow]="progresso"
+  aria-valuemin="0"
+  aria-valuemax="100"
+>
+  <div
+    class="progresso-preenchido"
+    [style.width.%]="progresso"
+  ></div>
+</div>
 
-        <strong class="porcentagem">{{ progresso }}%</strong>
+<strong class="porcentagem">{{ progresso }}%</strong>
 
       </div>
 

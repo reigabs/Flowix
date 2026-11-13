@@ -1,4 +1,10 @@
-import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  PLATFORM_ID,
+  ChangeDetectorRef
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,6 +18,7 @@ import { Router } from '@angular/router';
 })
 export class NovaJustificativa implements OnInit {
   private platformId = inject(PLATFORM_ID);
+  private cdr = inject(ChangeDetectorRef);
 
   alunoSelecionado: string = '';
   motivo: string = '';
@@ -20,8 +27,9 @@ export class NovaJustificativa implements OnInit {
   
   arrastando: boolean = false;
   enviando: boolean = false;
-  progresso: number = 0;
-  mensagemErro: string = '';
+progresso: number = 0;
+finalizando: boolean = false;
+mensagemErro: string = '';
   filhos: any[] = [];
 
   constructor(private router: Router) {}
@@ -91,27 +99,39 @@ export class NovaJustificativa implements OnInit {
   }
 
   enviar() {
-    if (!this.alunoSelecionado || !this.motivo || !this.dataFalta) {
-      this.mensagemErro = 'Por favor, preencha todos os campos obrigatórios.';
-      return;
+  console.log('Método enviar executado!');
+
+  if (!this.motivo.trim() || !this.dataFalta) {
+    this.mensagemErro = 'Por favor, preencha todos os campos obrigatórios.';
+    return;
+  }
+
+  this.mensagemErro = '';
+  this.enviando = true;
+  this.progresso = 0;
+  this.finalizando = false;
+
+  this.cdr.detectChanges();
+
+  const intervalo = setInterval(() => {
+    this.progresso += 10;
+
+    if (this.progresso >= 100) {
+      this.progresso = 100;
+      clearInterval(intervalo);
+      this.finalizando = true;
     }
 
-    this.enviando = true;
-    this.progresso = 0;
+    this.cdr.detectChanges();
 
-    const intervalo = setInterval(() => {
-      this.progresso += 10;
-      if (this.progresso > 100) {
-        this.progresso = 100;
-        clearInterval(intervalo);
-        setTimeout(() => {
-          this.router.navigate(['/responsavel/inicio']);
-        }, 500);
-      }
-    }, 200);
-  }
-
-  cancelar() {
-    this.router.navigate(['/responsavel/inicio']);
-  }
+    if (this.progresso >= 100) {
+      setTimeout(() => {
+        this.router.navigate(['/aluno/inicio']);
+      }, 500);
+    }
+  }, 200);
 }
+
+cancelar() {
+  this.router.navigate(['/aluno/inicio']);
+}}
