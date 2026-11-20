@@ -49,7 +49,8 @@ export class Login {
       if (emailDigitado === 'aluno@gmail.com' && senhaDigitada === '654321') {
         if (isPlatformBrowser(this.platformId)) {
           const dadosAluno = {
-            nome: 'João',
+            // foi implementado isso aqui (nome trocado de 'João' para 'Bia Santos')
+            nome: 'Bia Santos',
             email: emailDigitado,
             perfil: 'aluno',
             instituicao: 'Escola Central'

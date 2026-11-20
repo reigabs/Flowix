@@ -38,7 +38,9 @@
       </div>
       @if (erroLogin()) {
         <p class="mensagem-erro-global">Não foi possível realizar o Login</p>}
-      <form [formGroup]="formulario" class="formulario-login">
+
+      <!-- foi implementado isso aqui: (ngSubmit)="entrar()" agora fica no form principal -->
+      <form [formGroup]="formulario" class="formulario-login" (ngSubmit)="entrar()">
         <div class="grupo-campo">
           <label for="email" class="rotulo-campo">E-mail ou CPF</label>
           <input type="text" id="email" formControlName="email" placeholder="Digite seu e-mail ou cpf" class="entrada-texto"/>
@@ -62,12 +64,10 @@
               <small class="texto-erro">DEVE CONTER NO MÍNIMO 6 CARACTERES</small>}}
         </div>
 
-        <form [formGroup]="formulario" class="formulario-login" (ngSubmit)="entrar()"></form>
-
-        <button 
-          type="submit" 
-          (click)="entrar()" 
-          [disabled]="formulario.invalid" 
+        <!-- foi implementado isso aqui: o <form> vazio de dentro foi removido e o (click) saiu do botão -->
+        <button
+          type="submit"
+          [disabled]="formulario.invalid"
           class="botao-entrar"
         >
           Entrar
