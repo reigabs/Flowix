@@ -1,7 +1,14 @@
+
 import { Component, OnInit, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+
+// foi implementado isso aqui (import do service compartilhado de justificativas)
+import { JustificativaService } from '../../../core/services/justificativa.service';
+
+// foi implementado isso aqui (import do modelo de justificativas)
+import { Justificativa } from '../../../core/models/justificativa.model';
 
 interface Filho {
   id: number;
@@ -28,22 +35,19 @@ interface Solicitacao {
 })
 export class InicioResponsavel implements OnInit {
   private platformId = inject(PLATFORM_ID);
-  
-  nomeUsuario = 'Carla Santos'; 
 
-  filhos: Filho[] = [
-    { id: 1, nome: 'Flávia Santos', turma: '7º Ano do Ensino Fundamental - C', instituicao: 'Colégio InterGenius', matricula: '527478542' },
-    { id: 2, nome: 'Henrique Santos', turma: '2º Ano do Ensino Médio - B', instituicao: 'Colégio InterGenius', matricula: '92736423' }
-  ];
+  // foi implementado isso aqui (injeção do serviço compartilhado de justificativas)
+  private justificativaService = inject(JustificativaService);
 
-  solicitacoes: Solicitacao[] = [
-    { id: '#3458', aluno: 'Flávia Santos', data: '17/05/2026', motivo: 'Consulta médica', status: 'Em andamento' },
-    { id: '#3457', aluno: 'Henrique Santos', data: '10/05/2026', motivo: 'Atestado médico', status: 'Aprovada' },
-    { id: '#3456', aluno: 'Henrique Santos', data: '16/04/2026', motivo: 'Consulta odontológica', status: 'Aprovada' },
-    { id: '#3455', aluno: 'Flávia Santos', data: '02/04/2026', motivo: 'Declaração', status: 'Rejeitada' }
-  ];
+  nomeUsuario = 'Carla Santos';
+
+  filhos: Filho[] = [];
+
+  // foi implementado isso aqui (lista de solicitações reais, carregadas pelo JustificativaService)
+  solicitacoes: Solicitacao[] = [];
 
   modalAdicionarAberto: boolean = false;
+
   novoFilho = {
     nome: '',
     instituicao: '',
@@ -93,9 +97,11 @@ export class InicioResponsavel implements OnInit {
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       const usuarioSalvoStr = localStorage.getItem('usuario_cadastrado');
+
       if (usuarioSalvoStr) {
         try {
           const usuario = JSON.parse(usuarioSalvoStr);
+
           if (usuario.nome) {
             this.nomeUsuario = usuario.nome;
           }
@@ -105,6 +111,7 @@ export class InicioResponsavel implements OnInit {
       }
 
       const filhosSalvos = localStorage.getItem('meus_filhos');
+
       if (filhosSalvos) {
         try {
           this.filhos = JSON.parse(filhosSalvos);
@@ -114,6 +121,50 @@ export class InicioResponsavel implements OnInit {
       } else {
         localStorage.setItem('meus_filhos', JSON.stringify(this.filhos));
       }
+
+      // foi implementado isso aqui (carrega as justificativas reais dos filhos do responsável)
+      this.carregarSolicitacoes();
+    }
+  }
+
+  // foi implementado isso aqui (busca as justificativas e filtra somente as pertencentes aos filhos cadastrados)
+  carregarSolicitacoes() {
+    const nomesDosFilhos = this.filhos.map(filho => filho.nome);
+
+    const justificativas: Justificativa[] = this.justificativaService.listar();
+
+    this.solicitacoes = justificativas
+      .filter(j => nomesDosFilhos.includes(j.nomeAluno))
+      .sort((a, b) => new Date(b.dataEnvio).getTime() - new Date(a.dataEnvio).getTime())
+      .slice(0, 4)
+      .map(j => ({
+        id: this.justificativaService.formatarNumero(j.numero),
+
+        // foi implementado isso aqui (identifica se a justificativa foi enviada pelo aluno ou pela responsável)
+        aluno: j.enviadoPor === 'responsavel'
+          ? `${j.nomeAluno} (por ${j.nomeResponsavel || this.nomeUsuario})`
+          : j.nomeAluno,
+
+        data: this.justificativaService.formatarDataFalta(j.dataFalta),
+        motivo: j.motivo,
+        status: this.converterStatus(j.status)
+      }));
+  }
+
+  // foi implementado isso aqui (converte os status do modelo para os nomes utilizados no HTML original)
+  private converterStatus(status: Justificativa['status']): Solicitacao['status'] {
+    switch (status) {
+      case 'pendente':
+        return 'Em andamento';
+
+      case 'aceita':
+        return 'Aprovada';
+
+      case 'rejeitada':
+        return 'Rejeitada';
+
+      default:
+        return 'Em andamento';
     }
   }
 
@@ -147,8 +198,13 @@ export class InicioResponsavel implements OnInit {
     this.errosFormulario.matricula = !this.novoFilho.matricula;
     this.errosFormulario.turma = !this.novoFilho.turma;
 
-    if (this.errosFormulario.nome || this.errosFormulario.instituicao || this.errosFormulario.matricula || this.errosFormulario.turma) {
-      return; 
+    if (
+      this.errosFormulario.nome ||
+      this.errosFormulario.instituicao ||
+      this.errosFormulario.matricula ||
+      this.errosFormulario.turma
+    ) {
+      return;
     }
 
     const novo: Filho = {
@@ -165,6 +221,9 @@ export class InicioResponsavel implements OnInit {
       localStorage.setItem('meus_filhos', JSON.stringify(this.filhos));
     }
 
+    // foi implementado isso aqui (atualiza as solicitações após vincular um novo filho)
+    this.carregarSolicitacoes();
+
     this.fecharModalAdicionar();
     this.exibirAlertaCustomizado('Sucesso', `Filho(a) ${novo.nome} vinculado(a) com sucesso!`);
   }
@@ -173,10 +232,13 @@ export class InicioResponsavel implements OnInit {
     switch (status) {
       case 'Em andamento':
         return 'badge-andamento';
+
       case 'Aprovada':
         return 'badge-aprovada';
+
       case 'Rejeitada':
         return 'badge-rejeitada';
+
       default:
         return '';
     }

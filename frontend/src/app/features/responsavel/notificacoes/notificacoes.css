@@ -130,6 +130,15 @@
   transform: translateY(-1px);
 }
 
+/* foi implementado isso aqui: destaque das notificações não lidas */
+.linha-notificacao.nao-lida {
+  border-left: 4px solid #581c87;
+}
+
+.linha-notificacao.nao-lida .mensagem {
+  font-weight: 700;
+}
+
 .notificacao-info {
   display: flex;
   align-items: center;
