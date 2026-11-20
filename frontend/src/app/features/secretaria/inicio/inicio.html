@@ -7,12 +7,13 @@
 
   <!-- Cards de Resumo -->
   <div class="status-cards-grid">
+    <!-- foi implementado isso aqui: card "Pendentes" virou "Recebidas" (total), porque pendente e em análise são o mesmo status -->
     <div class="status-card">
-      <div class="card-icon pendente">⏳</div>
+      <div class="card-icon pendente">📄</div>
       <div class="card-info">
-        <span class="card-title">Pendentes</span>
-        <h3 class="card-number">{{ resumoSolicitacoes.pendentes }}</h3>
-        <span class="card-subtitle warning">aguardando análise</span>
+        <span class="card-title">Recebidas</span>
+        <h3 class="card-number">{{ resumoSolicitacoes.total }}</h3>
+        <span class="card-subtitle warning">total de solicitações</span>
       </div>
     </div>
 
@@ -21,7 +22,7 @@
       <div class="card-info">
         <span class="card-title">Em análise</span>
         <h3 class="card-number">{{ resumoSolicitacoes.emAnalise }}</h3>
-        <span class="card-subtitle info">Em andamento</span>
+        <span class="card-subtitle info">aguardando análise</span>
       </div>
     </div>
 
@@ -83,12 +84,29 @@
     <div class="dashboard-box chart-box">
       <h3>Resumo do período</h3>
       <div class="chart-placeholder">
-        <div class="donut-chart">
-          <span class="label-stat stat-pendentes">14<br><small>13.9%</small></span>
-          <span class="label-stat stat-analise">10<br><small>9.9%</small></span>
-          <span class="label-stat stat-aprovadas">54<br><small>53.5%</small></span>
-          <span class="label-stat stat-rejeitadas">23<br><small>22.8%</small></span>
-        </div>
+        <!-- foi implementado isso aqui: rosca com fundo calculado (3 fatias) e legenda no lugar dos números fixos ao redor -->
+        <div class="donut-chart" [style.background]="gradiente"></div>
+
+        <ul class="legenda">
+          <li>
+            <span class="ponto ponto-analise"></span>
+            <span class="legenda-nome">Em análise</span>
+            <strong>{{ resumoSolicitacoes.emAnalise }}</strong>
+            <small>{{ percentual(resumoSolicitacoes.emAnalise) }}%</small>
+          </li>
+          <li>
+            <span class="ponto ponto-aprovadas"></span>
+            <span class="legenda-nome">Aprovadas</span>
+            <strong>{{ resumoSolicitacoes.aprovadas }}</strong>
+            <small>{{ percentual(resumoSolicitacoes.aprovadas) }}%</small>
+          </li>
+          <li>
+            <span class="ponto ponto-rejeitadas"></span>
+            <span class="legenda-nome">Rejeitadas</span>
+            <strong>{{ resumoSolicitacoes.rejeitadas }}</strong>
+            <small>{{ percentual(resumoSolicitacoes.rejeitadas) }}%</small>
+          </li>
+        </ul>
       </div>
       <div class="chart-footer">
         <span>Total de solicitações</span>

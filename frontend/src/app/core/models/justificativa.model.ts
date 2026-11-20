@@ -15,6 +15,8 @@ export interface Justificativa {
   documento?: { nome: string; tipo: string; tamanho: number };
   respostaEm?: string;
   motivoRejeicao?: string;
+  // foi implementado isso aqui (observação opcional da secretaria ao aprovar)
+  observacaoAprovacao?: string;
 }
 
 export interface Notificacao {

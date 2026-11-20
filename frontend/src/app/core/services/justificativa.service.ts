@@ -38,7 +38,7 @@ export class JustificativaService {
     });
   }
 
-  // foi implementado isso aqui (aceita um nome ou vários, para o responsável com vários filhos)
+  /** Aceita um nome ou vários, para o responsável com vários filhos. */
   private nomeCombina(nomeAluno: string, filtro?: string | string[]): boolean {
     if (filtro === undefined) return true;
     return Array.isArray(filtro) ? filtro.includes(nomeAluno) : filtro === nomeAluno;
@@ -68,7 +68,7 @@ export class JustificativaService {
     return 'Aluno';
   }
 
-  // foi implementado isso aqui (nomes dos filhos cadastrados pelo responsável)
+  /** Nomes dos filhos cadastrados pelo responsável. */
   obterNomesDosFilhos(): string[] {
     if (!this.navegador) return [];
     try {
@@ -121,7 +121,6 @@ export class JustificativaService {
       throw e;
     }
 
-    // foi implementado isso aqui (a notificação "em análise" agora vai para aluno e responsável)
     this.notificarAlunoEResponsavel(justificativa, 'analise', 'está em análise.');
 
     return justificativa;
@@ -139,37 +138,52 @@ export class JustificativaService {
     return this.navegador ? localStorage.getItem(PREFIXO_DOC + id) : null;
   }
 
+  // foi implementado isso aqui (troca o documento salvo pela versão editada; lança erro se não couber no localStorage)
+  substituirDocumento(id: string, dataUrl: string, tamanho: number) {
+    localStorage.setItem(PREFIXO_DOC + id, dataUrl);
+
+    const lista = this.listar();
+    const j = lista.find(x => x.id === id);
+    if (j?.documento) {
+      j.documento.tamanho = tamanho;
+      this.gravar(CHAVE_JUSTIFICATIVAS, lista);
+    }
+  }
+
   /** Secretaria aceita ou rejeita e já gera a notificação para aluno e responsável. */
-  responder(id: string, status: Exclude<StatusJustificativa, 'pendente'>, motivoRejeicao?: string) {
+  responder(id: string, status: Exclude<StatusJustificativa, 'pendente'>, observacao?: string) {
     const lista = this.listar();
     const j = lista.find(x => x.id === id);
     if (!j) return;
 
+    const obs = observacao?.trim() || undefined;
+
     j.status = status;
     j.respostaEm = new Date().toISOString();
-    j.motivoRejeicao = status === 'rejeitada' ? motivoRejeicao : undefined;
+    j.motivoRejeicao = status === 'rejeitada' ? obs : undefined;
+    j.observacaoAprovacao = status === 'aceita' ? obs : undefined;
     this.gravar(CHAVE_JUSTIFICATIVAS, lista);
 
     const dataFalta = this.formatarDataFalta(j.dataFalta);
 
-    // foi implementado isso aqui (resposta da secretaria também vai para aluno e responsável)
     if (status === 'aceita') {
       this.notificarAlunoEResponsavel(
         j, 'aprovado',
         `(falta do dia ${dataFalta}) foi aprovada.`
+          + (obs ? ` Observação: ${obs}` : '')
       );
     } else {
       this.notificarAlunoEResponsavel(
         j, 'rejeitado',
         `(falta do dia ${dataFalta}) foi rejeitada.`
-          + (motivoRejeicao?.trim() ? ` Motivo: ${motivoRejeicao.trim()}` : '')
+          + (obs ? ` Motivo: ${obs}` : '')
       );
     }
   }
 
   // ---------- Notificações ----------
 
-  // foi implementado isso aqui (gera as duas notificações de uma vez, com texto próprio para cada um)
+  /** Gera as duas notificações de uma vez, com texto próprio para cada um. */
   private notificarAlunoEResponsavel(j: Justificativa, tipo: TipoNotificacao, complemento: string) {
     const numero = this.formatarNumero(j.numero);
 
@@ -180,7 +194,6 @@ export class JustificativaService {
     );
   }
 
-  // foi implementado isso aqui (agora recebe o destinatário em vez de usar j.enviadoPor)
   private adicionarNotificacao(
     j: Justificativa,
     destinatario: PerfilEnvio,
@@ -201,7 +214,6 @@ export class JustificativaService {
     this.gravar(CHAVE_NOTIFICACOES, lista);
   }
 
-  // foi implementado isso aqui (nomeAluno agora pode ser um nome ou uma lista de nomes)
   listarNotificacoes(destinatario: PerfilEnvio, nomeAluno?: string | string[]): Notificacao[] {
     return this.ler<Notificacao>(CHAVE_NOTIFICACOES).filter(n =>
       n.destinatario === destinatario && this.nomeCombina(n.nomeAluno, nomeAluno)
@@ -221,7 +233,6 @@ export class JustificativaService {
     }
   }
 
-  // foi implementado isso aqui (aceita um nome ou uma lista de nomes)
   marcarTodasComoLidas(destinatario: PerfilEnvio, nomeAluno?: string | string[]) {
     const lista = this.ler<Notificacao>(CHAVE_NOTIFICACOES);
     lista.forEach(n => {

@@ -1,123 +1,210 @@
-<div class="solicitacoes-container">
-  
-  <!-- LISTAGEM E ABAS -->
-  @if (!itemSelecionado) {
-    <div class="header-section">
-      <h2>Solicitações</h2>
-      <p>Acompanhe e analise as justificativas de faltas enviadas</p>
+<div class="conteudo">
+  <main class="conteudo-principal">
+
+    <section class="pagina-solicitacoes">
+
+      <header class="cabecalho-pagina">
+        <h1>Solicitações</h1>
+        <p>Analise as justificativas enviadas por alunos e responsáveis</p>
+      </header>
+
+      <nav class="abas-filtro" aria-label="Filtrar solicitações">
+        <button type="button" [class.ativo]="filtroAtual === 'Pendentes'" (click)="filtrar('Pendentes')">
+          Pendentes ({{ contar('pendente') }})
+        </button>
+        <button type="button" [class.ativo]="filtroAtual === 'Aprovadas'" (click)="filtrar('Aprovadas')">
+          Aprovadas
+        </button>
+        <button type="button" [class.ativo]="filtroAtual === 'Rejeitadas'" (click)="filtrar('Rejeitadas')">
+          Rejeitadas
+        </button>
+        <button type="button" [class.ativo]="filtroAtual === 'Todas'" (click)="filtrar('Todas')">
+          Todas
+        </button>
+      </nav>
+
+      <p class="aviso" *ngIf="mensagem">{{ mensagem }}</p>
+
+      <div class="lista-solicitacoes">
+
+        <article class="cartao" *ngFor="let j of solicitacoesFiltradas">
+
+          <div class="cartao-topo">
+            <div class="cartao-id">
+              <strong>{{ numero(j) }}</strong>
+              <span class="aluno">{{ j.nomeAluno }}</span>
+            </div>
+
+            <div class="cartao-topo-direita">
+              <span class="badge" [ngClass]="statusClasse(j)">{{ statusTexto(j) }}</span>
+              <button
+                type="button"
+                class="botao-ver-solicitacao"
+                [class.aberto]="estaAberto(j)"
+                [attr.aria-expanded]="estaAberto(j)"
+                (click)="alternarDetalhes(j)"
+              >
+                {{ estaAberto(j) ? 'Ocultar solicitação' : 'Ver solicitação' }}
+              </button>
+            </div>
+          </div>
+
+          <ng-container *ngIf="estaAberto(j)">
+
+            <p class="motivo">{{ j.motivo }}</p>
+
+            <div class="cartao-info">
+              <div>
+                <span class="rotulo">Data da falta</span>
+                <span class="valor">{{ dataFalta(j) }}</span>
+              </div>
+              <div>
+                <span class="rotulo">Enviada em</span>
+                <span class="valor">{{ dataEnvio(j) }}</span>
+              </div>
+              <div>
+                <span class="rotulo">Enviada por</span>
+                <span class="valor">{{ enviadoPor(j) }}</span>
+              </div>
+              <div>
+                <span class="rotulo">Documento</span>
+                <span class="valor">{{ j.documento ? j.documento.nome : 'Sem anexo' }}</span>
+              </div>
+            </div>
+
+            <p class="obs-rejeicao" *ngIf="j.status === 'rejeitada' && j.motivoRejeicao">
+              Motivo da rejeição: {{ j.motivoRejeicao }}
+            </p>
+
+            <p class="obs-aprovacao" *ngIf="j.status === 'aceita' && j.observacaoAprovacao">
+              Observação: {{ j.observacaoAprovacao }}
+            </p>
+
+            <div class="cartao-documento">
+              <button
+                type="button"
+                class="botao-doc"
+                [disabled]="!j.documento"
+                (click)="verDocumento(j)"
+              >
+                Ver documento
+              </button>
+            </div>
+
+          </ng-container>
+
+          <div class="cartao-acoes" *ngIf="j.status === 'pendente'">
+            <button type="button" class="botao-rejeitar" (click)="abrirRejeicao(j)">Rejeitar</button>
+            <button type="button" class="botao-aceitar" (click)="abrirAceitar(j)">Aceitar</button>
+          </div>
+
+        </article>
+
+        <div class="sem-registros" *ngIf="solicitacoesFiltradas.length === 0">
+          <p>Nenhuma solicitação encontrada.</p>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<!-- modal único para aceitar e rejeitar (texto opcional ao aceitar, obrigatório ao rejeitar) -->
+<div class="modal-overlay" *ngIf="exibirModal" (click)="fecharModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>{{ acaoModal === 'aceitar' ? 'Aceitar justificativa' : 'Rejeitar justificativa' }}</h2>
+      <button type="button" class="modal-close" (click)="fecharModal()">×</button>
     </div>
 
-    <div class="tabs-nav">
-      <button [class.active]="abaAtiva === 'Todas'" (click)="mudarAba('Todas')">Todas</button>
-      <button [class.active]="abaAtiva === 'Pendente'" (click)="mudarAba('Pendente')">Pendentes</button>
-      <button [class.active]="abaAtiva === 'Em análise'" (click)="mudarAba('Em análise')">Em análise</button>
+    <p class="modal-subtitulo">
+      Solicitação {{ alvoModal ? numero(alvoModal) : '' }} de {{ alvoModal?.nomeAluno }}
+    </p>
+
+    <div class="modal-campo">
+      <label for="observacaoModal">
+        {{ acaoModal === 'aceitar' ? 'Observação (opcional)' : 'Motivo da rejeição' }}
+      </label>
+      <textarea
+        id="observacaoModal"
+        name="observacaoModal"
+        [(ngModel)]="observacao"
+        rows="4"
+        maxlength="300"
+        [placeholder]="acaoModal === 'aceitar' ? 'Adicione uma observação, se quiser' : 'Explique o que precisa ser corrigido'"
+      ></textarea>
+      <p class="mensagem-erro" *ngIf="erroModal">{{ erroModal }}</p>
     </div>
 
-    @if (solicitacoesFiltradas.length === 0) {
-      <div class="empty-state">
-        <div class="empty-icon">📂</div>
-        <h3>Nenhuma solicitação encontrada</h3>
-        <p>Não há itens para exibir nesta categoria no momento.</p>
-      </div>
-    } @else {
-      <div class="table-card">
-        <div class="table-header">
-          <span>Protocolo</span>
-          <span>Aluno</span>
-          <span>Turma</span>
-          <span>Enviado em</span>
-          <span>Status</span>
-          <span>Ação</span>
-        </div>
-
-        @for (item of solicitacoesFiltradas; track item.protocolo) {
-          <div class="table-row">
-            <span class="protocolo"><strong>{{ item.protocolo }}</strong></span>
-            <span class="aluno">{{ item.aluno }}</span>
-            <span class="turma">{{ item.turma }}</span>
-            <span class="data">{{ item.enviadoEm }}</span>
-            <span>
-              <span class="badge" [class.pendente]="item.status === 'Pendente'" [class.em-analise]="item.status === 'Em análise'">
-                {{ item.status }}
-              </span>
-            </span>
-            <span>
-              <button class="btn-analisar" (click)="verDetalhes(item)">analisar</button>
-            </span>
-          </div>
-        }
-      </div>
-    }
-  } 
-  
-  <!-- DETALHES DA SOLICITAÇÃO -->
-  @else {
-    <div class="detalhes-header">
-      <button class="btn-voltar" (click)="voltarParaLista()">←</button>
-      <h2>Solicitações / Protocolo {{ itemSelecionado.protocolo }}</h2>
+    <div class="modal-footer">
+      <button type="button" class="modal-btn-cancelar" (click)="fecharModal()">Cancelar</button>
+      <button
+        type="button"
+        class="modal-btn-confirmar"
+        [class.aceitar]="acaoModal === 'aceitar'"
+        (click)="confirmarModal()"
+      >
+        {{ acaoModal === 'aceitar' ? 'Confirmar aprovação' : 'Confirmar rejeição' }}
+      </button>
     </div>
 
-    <div class="detalhes-card">
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Aluno</label>
-          <input type="text" [value]="itemSelecionado.aluno" disabled />
-        </div>
-        <div class="form-group">
-          <label>Turma</label>
-          <input type="text" [value]="itemSelecionado.turma" disabled />
-        </div>
+  </div>
+</div>
+
+<!-- foi implementado isso aqui: visualizador do documento, aberto dentro da própria página (sem outra aba e sem tela cheia) -->
+<div class="visualizador-overlay" *ngIf="visualizando">
+  <div class="visualizador" role="dialog" aria-modal="true" aria-label="Documento anexado">
+
+    <header class="visualizador-topo">
+      <div class="visualizador-titulo">
+        <strong>{{ docAtual ? numero(docAtual) : '' }}</strong>
+        <span>{{ docAtual?.documento?.nome }}</span>
       </div>
 
-      <div class="form-group">
-        <label>Motivo da falta</label>
-        <textarea disabled>{{ itemSelecionado.motivo }}</textarea>
-      </div>
+      <div class="visualizador-botoes">
 
-      <div class="form-group">
-        <label>Documento em anexo</label>
-        <div class="anexo-box">
-          <span>📄</span>
-          <span>{{ itemSelecionado.documento }}</span>
-        </div>
-      </div>
+        <!-- foi implementado isso aqui: botão "Editar documento" (só imagens; PDF só visualiza) -->
+        <ng-container *ngIf="!editando">
+          <button
+            type="button"
+            class="visualizador-botao"
+            [disabled]="!docEhImagem"
+            [attr.title]="docEhImagem ? 'Girar e ampliar a imagem' : 'A edição está disponível só para imagens (JPG e PNG)'"
+            (click)="iniciarEdicao()"
+          >
+            Editar documento
+          </button>
+        </ng-container>
 
-      <div class="detalhes-footer">
-        <button class="btn-cancelar" (click)="voltarParaLista()">cancelar</button>
-        <div class="acoes-principais">
-          <button class="btn-aprovar" (click)="abrirModal('aprovar')">aprovar</button>
-          <button class="btn-rejeitar" (click)="abrirModal('rejeitar')">rejeitar</button>
-        </div>
+        <!-- foi implementado isso aqui: ferramentas de edição da imagem -->
+        <ng-container *ngIf="editando">
+          <button type="button" class="visualizador-botao" aria-label="Girar para a esquerda" (click)="girar(-90)">↺ Girar</button>
+          <button type="button" class="visualizador-botao" aria-label="Girar para a direita" (click)="girar(90)">↻ Girar</button>
+          <button type="button" class="visualizador-botao" aria-label="Reduzir" (click)="alterarZoom(-0.1)">−</button>
+          <button type="button" class="visualizador-botao" aria-label="Ampliar" (click)="alterarZoom(0.1)">+</button>
+          <button type="button" class="visualizador-botao" (click)="cancelarEdicao()">Cancelar</button>
+          <button type="button" class="visualizador-botao principal" (click)="salvarEdicao()">Salvar</button>
+        </ng-container>
+
+        <!-- foi implementado isso aqui: botão "Sair" -->
+        <button type="button" class="visualizador-botao sair" (click)="fecharDocumento()">Sair</button>
       </div>
+    </header>
+
+    <p class="visualizador-aviso" *ngIf="avisoDoc">{{ avisoDoc }}</p>
+
+    <div class="visualizador-corpo">
+      <iframe *ngIf="!docEhImagem && docPdfUrl" [src]="docPdfUrl" title="Documento anexado"></iframe>
+      <img
+        *ngIf="docEhImagem"
+        [src]="docDataUrl"
+        [style.transform]="transformacao"
+        alt="Documento anexado"
+      />
     </div>
 
-    <!--  APROVAR / REJEITAR -->
-    @if (modalAcao) {
-      <div class="modal-overlay">
-        <div class="modal-card">
-          <div class="modal-header">
-            <h3>{{ modalAcao === 'aprovar' ? 'Aprovar solicitação?' : 'Rejeitar solicitação?' }}</h3>
-          </div>
-          
-          <div class="modal-icon-cat">
-            <img src="gatinho-dúvida.jpeg" alt="Ícone de dúvida do gatinho" class="cat-sticker" />
-          </div>
-
-          <div class="form-group">
-            <label>Observação (opcional)</label>
-            <textarea [(ngModel)]="observacao" placeholder="Adicione uma observação se necessário..."></textarea>
-          </div>
-
-          <div class="modal-footer">
-            <button class="btn-modal-voltar" (click)="fecharModal()">Voltar</button>
-            @if (modalAcao === 'aprovar') {
-              <button class="btn-modal-confirmar-aprovar" (click)="confirmarAprovacao()">Aprovar</button>
-            } @else {
-              <button class="btn-modal-confirmar-rejeitar" (click)="confirmarRejeicao()">Rejeitar</button>
-            }
-          </div>
-        </div>
-      </div>
-    }
-  }
+  </div>
 </div>

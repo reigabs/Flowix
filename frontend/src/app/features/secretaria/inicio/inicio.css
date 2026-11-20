@@ -171,25 +171,23 @@
   justify-content: space-between;
 }
 
+/* foi implementado isso aqui: rosca e legenda lado a lado */
 .chart-placeholder {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px;
+  gap: 28px;
+  min-height: 200px;
   position: relative;
 }
 
-
+/* foi implementado isso aqui: o fundo agora vem do componente ([style.background]); este é só o valor padrão */
 .donut-chart {
   width: 150px;
   height: 150px;
+  flex-shrink: 0;
   border-radius: 50%;
-  background: conic-gradient(
-    #7c3aed 0% 13.9%,     
-    #f97316 13.9% 23.8%,  
-    #10b981 23.8% 77.3%,  
-    #ef4444 77.3% 100%   
-  );
+  background: #e5e7eb;
   position: relative;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
@@ -205,44 +203,44 @@
   border-radius: 50%;
 }
 
-.label-stat {
-  position: absolute;
+/* foi implementado isso aqui: legenda (substitui os números posicionados ao redor da rosca) */
+.legenda {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.legenda li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-  color: #1f2937;
-  z-index: 2;
-  line-height: 1.2;
-}
-
-.label-stat small {
-  display: block;
-  font-size: 11px;
   color: #374151;
+}
+
+.legenda strong {
+  color: #1f2937;
+}
+
+.legenda small {
+  color: #6b7280;
+  font-size: 12px;
   font-weight: 600;
-  margin-top: 2px;
 }
 
-/* Posições externas ao círculo */
-.stat-pendentes {
-  top: 3px;
-  right: 42px;
+.ponto {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
-.stat-analise {
-  top: 40px;
-  right: 1px;
-}
-
-.stat-aprovadas {
-  bottom: -5px;
-  left: 60px;
-}
-
-.stat-rejeitadas {
-  top: 8px;
-  left: 35px;
-}
+.ponto-analise { background-color: #f97316; }
+.ponto-aprovadas { background-color: #10b981; }
+.ponto-rejeitadas { background-color: #ef4444; }
 
 .chart-footer {
   display: flex;
@@ -256,5 +254,12 @@
 @media (max-width: 900px) {
   .dashboard-bottom-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* foi implementado isso aqui: no celular a legenda desce para baixo da rosca */
+@media (max-width: 480px) {
+  .chart-placeholder {
+    flex-direction: column;
   }
 }

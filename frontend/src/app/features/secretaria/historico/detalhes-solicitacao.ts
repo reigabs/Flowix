@@ -1,5 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+// foi implementado isso aqui (inject adicionado ao import; PLATFORM_ID e isPlatformBrowser saíram, não são mais usados)
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+// foi implementado isso aqui (service e model compartilhados)
+import { JustificativaService } from '../../../core/services/justificativa.service';
+import { Justificativa } from '../../../core/models/justificativa.model';
+
+// foi implementado isso aqui (formato de cada linha do histórico, montado a partir da justificativa real)
+interface ItemHistorico {
+  id: string;
+  protocolo: string;
+  aluno: string;
+  dataFalta: string;
+  enviadoEm: string;
+  enviadoPor: string;
+  status: 'Aprovado' | 'Rejeitado';
+  motivo: string;
+  documento: string;
+  temDocumento: boolean;
+  observacaoAnalise: string;
+}
 
 @Component({
   selector: 'app-historico',
@@ -9,107 +28,122 @@ import { CommonModule } from '@angular/common';
   styleUrl: './detalhes-solicitacao.css'
 })
 export class HistoricoComponent implements OnInit {
-  itemSelecionado: any | null = null;
+  // foi implementado isso aqui (service injetado)
+  private service = inject(JustificativaService);
+
+  itemSelecionado: ItemHistorico | null = null;
   paginaAtual: number = 1;
 
-  listaHistoricoBase: any[] = [
-    {
-      protocolo: '#6737',
-      aluno: 'João Guimarães Rosa',
-      turma: '7º ano B',
-      enviadoEm: '19/05/2026 11:00',
-      status: 'Rejeitado',
-      motivo: 'Ausência sem comprovação médica válida dentro do prazo.',
-      documento: 'declaracao_invalida.pdf (700KB)',
-      observacaoAnalise: 'Documento ilegível.'
-    },
-    {
-      protocolo: '#6736',
-      aluno: 'Isaac Newton',
-      turma: '5º ano A',
-      enviadoEm: '19/05/2026 10:30',
-      status: 'Aprovado',
-      motivo: 'Consulta médica especialista.',
-      documento: 'atestado_Isaac.pdf (1.1MB)',
-      observacaoAnalise: 'Tudo em ordem.'
-    },
-    {
-      protocolo: '#6735',
-      aluno: 'Hipátia de Alexandria',
-      turma: '9º ano A',
-      enviadoEm: '19/05/2026 10:14',
-      status: 'Aprovado',
-      motivo: 'Participação em olimpíada de matemática.',
-      documento: 'declaracao_oficial.pdf (950KB)',
-      observacaoAnalise: 'Justificativa aceita pela direção.'
-    },
-    {
-      protocolo: '#6734',
-      aluno: 'Clarice Lispector',
-      turma: '6º ano C',
-      enviadoEm: '18/05/2026 13:12',
-      status: 'Rejeitado',
-      motivo: 'Viagem familiar.',
-      documento: 'aviso_pais.pdf (500KB)',
-      observacaoAnalise: 'Motivo não previsto em regimento escolar.'
-    },
-    {
-      protocolo: '#6731',
-      aluno: 'Carlos Drummond de Andrade',
-      turma: '7º ano B',
-      enviadoEm: '17/05/2026 15:41',
-      status: 'Rejeitado',
-      motivo: 'Consulta odontológica sem atestado de horas.',
-      documento: 'comprovante_parcial.pdf (400KB)',
-      observacaoAnalise: 'Faltou comprovar o horário de permanência.'
-    },
-    {
-      protocolo: '#6729',
-      aluno: 'Graciliano Ramos',
-      turma: '9º ano E',
-      enviadoEm: '16/05/2026 10:21',
-      status: 'Aprovado',
-      motivo: 'Doença com atestado de repouso.',
-      documento: 'atestado_medico.pdf (1.3MB)',
-      observacaoAnalise: 'Aprovado conforme regras.'
-    },
-    {
-      protocolo: '#6727',
-      aluno: 'Machado de Assis',
-      turma: '5º ano A',
-      enviadoEm: '16/05/2026 08:19',
-      status: 'Aprovado',
-      motivo: 'Exame médico preventivo.',
-      documento: 'atestado.pdf (800KB)',
-      observacaoAnalise: 'Validado.'
-    }
-  ];
+  // foi implementado isso aqui (5 itens por página)
+  itensPorPagina: number = 5;
 
-  listaHistorico: any[] = [];
+  // foi implementado isso aqui (aviso quando o documento não abre)
+  mensagemDocumento: string = '';
+
+  // foi implementado isso aqui (lista real, começa vazia; a lista de exemplo saiu)
+  listaHistorico: ItemHistorico[] = [];
 
   ngOnInit() {
     this.carregarHistorico();
   }
 
+  // foi implementado isso aqui (só o que já foi respondido, da resposta mais recente para a mais antiga)
   carregarHistorico() {
-    const historicoSalvo = localStorage.getItem('flowix_historico');
-    const itensNovos = historicoSalvo ? JSON.parse(historicoSalvo) : [];
-    const listaCompleta = [...itensNovos, ...this.listaHistoricoBase];
-
-    this.listaHistorico = listaCompleta.filter((item, index, self) =>
-      index === self.findIndex((t) => t.protocolo === item.protocolo)
-    );
+    this.listaHistorico = this.service
+      .listar()
+      .filter(j => j.status !== 'pendente')
+      .sort((a, b) => (b.respostaEm ?? '').localeCompare(a.respostaEm ?? ''))
+      .map(j => this.paraItem(j));
   }
 
-  verDetalhes(item: any) {
+  // foi implementado isso aqui (converte a justificativa salva para o formato da tela)
+  private paraItem(j: Justificativa): ItemHistorico {
+    const aprovada = j.status === 'aceita';
+
+    return {
+      id: j.id,
+      protocolo: this.service.formatarNumero(j.numero),
+      aluno: j.nomeAluno,
+      dataFalta: this.service.formatarDataFalta(j.dataFalta),
+      enviadoEm: new Date(j.dataEnvio).toLocaleString('pt-BR', {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      }),
+      enviadoPor: j.enviadoPor === 'responsavel' ? 'Responsável' : 'Aluno',
+      status: aprovada ? 'Aprovado' : 'Rejeitado',
+      motivo: j.motivo,
+      documento: j.documento
+        ? `${j.documento.nome} (${this.formatarTamanho(j.documento.tamanho)})`
+        : 'Sem anexo',
+      temDocumento: !!j.documento,
+      observacaoAnalise: aprovada
+        ? 'Justificativa aceita pela secretaria.'
+        : (j.motivoRejeicao?.trim() || 'Justificativa rejeitada pela secretaria.')
+    };
+  }
+
+  // foi implementado isso aqui (700 KB, 1.2 MB...)
+  private formatarTamanho(bytes: number): string {
+    return bytes >= 1024 * 1024
+      ? `${(bytes / 1024 / 1024).toFixed(1)}MB`
+      : `${Math.round(bytes / 1024)}KB`;
+  }
+
+  // foi implementado isso aqui (total de páginas e lista de páginas calculados, antes eram botões fixos 1, 2 e 3)
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.listaHistorico.length / this.itensPorPagina));
+  }
+
+  get paginas(): number[] {
+    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  }
+
+  // foi implementado isso aqui (só os itens da página atual)
+  get itensDaPagina(): ItemHistorico[] {
+    const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+    return this.listaHistorico.slice(inicio, inicio + this.itensPorPagina);
+  }
+
+  verDetalhes(item: ItemHistorico) {
     this.itemSelecionado = item;
+    this.mensagemDocumento = '';
   }
 
   voltarParaLista() {
     this.itemSelecionado = null;
+    this.mensagemDocumento = '';
   }
 
+  // foi implementado isso aqui (a página só muda se existir; antes o › podia passar do total)
   mudarPagina(pagina: number) {
-    this.paginaAtual = pagina;
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaAtual = pagina;
+    }
+  }
+
+  // foi implementado isso aqui (abre o PDF ou a imagem em outra aba)
+  async abrirDocumento(item: ItemHistorico) {
+    this.mensagemDocumento = '';
+    const dataUrl = this.service.buscarDocumento(item.id);
+
+    if (!dataUrl) {
+      this.mensagemDocumento = 'Esta solicitação não tem documento anexado.';
+      return;
+    }
+
+    // abre a aba antes do await para o navegador não bloquear o pop-up
+    const aba = window.open('', '_blank');
+    try {
+      const blob = await (await fetch(dataUrl)).blob();
+      const url = URL.createObjectURL(blob);
+      if (aba) {
+        aba.location.href = url;
+      } else {
+        window.open(url, '_blank');
+      }
+    } catch {
+      aba?.close();
+      this.mensagemDocumento = 'Não foi possível abrir o documento.';
+    }
   }
 }
