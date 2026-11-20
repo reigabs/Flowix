@@ -5,15 +5,16 @@
     <p>Acompanhe suas justificativas e solicitações</p>
   </header>
 
-  <!-- Cards de Resumo (Pendentes, Em análise, Aprovadas, Rejeitadas) -->
+  <!-- Cards de Resumo (Enviadas, Em análise, Aprovadas, Rejeitadas) -->
   <section class="stats-grid">
+    <!-- foi implementado isso aqui: card "Pendentes" virou "Enviadas" (total) -->
     <div class="stat-card">
       <div class="stat-info">
-        <span class="stat-title">Pendentes</span>
-        <span class="stat-number">{{ resumo.pendentes }}</span>
-        <span class="stat-subtitle aguardando">aguardando análise</span>
+        <span class="stat-title">Enviadas</span>
+        <span class="stat-number">{{ resumo.total }}</span>
+        <span class="stat-subtitle aguardando">total de justificativas</span>
       </div>
-      <div class="stat-icon purple">⏳</div>
+      <div class="stat-icon purple">📄</div>
     </div>
 
     <div class="stat-card">
@@ -70,6 +71,11 @@
           <span class="col-type">{{ item.tipo }}</span>
           <span class="badge" [ngClass]="item.statusClass">{{ item.status }}</span>
         </div>
+
+        <!-- foi implementado isso aqui: mensagem quando ainda não há justificativas -->
+        <p class="sem-registros" *ngIf="solicitacoesRecentes.length === 0">
+          Você ainda não enviou nenhuma justificativa.
+        </p>
       </div>
     </div>
   </div>

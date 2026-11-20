@@ -8,6 +8,7 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { JustificativaService } from '../../../core/services/justificativa.service';
 
 @Component({
   selector: 'app-nova-justificativa',
@@ -19,17 +20,18 @@ import { Router } from '@angular/router';
 export class NovaJustificativa implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private cdr = inject(ChangeDetectorRef);
+  private justificativaService = inject(JustificativaService);
 
   alunoSelecionado: string = '';
   motivo: string = '';
   dataFalta: string = '';
   arquivo: File | null = null;
-  
+
   arrastando: boolean = false;
   enviando: boolean = false;
-progresso: number = 0;
-finalizando: boolean = false;
-mensagemErro: string = '';
+  progresso: number = 0;
+  finalizando: boolean = false;
+  mensagemErro: string = '';
   filhos: any[] = [];
 
   constructor(private router: Router) {}
@@ -49,7 +51,9 @@ mensagemErro: string = '';
 
   selecionarArquivo(event: any) {
     const file = event.target.files[0];
-    this.validarEAtribuirArquivo(file);
+    if (file) {
+      this.validarEAtribuirArquivo(file);
+    }
   }
 
   aoArrastar(event: DragEvent) {
@@ -77,7 +81,7 @@ mensagemErro: string = '';
 
   validarEAtribuirArquivo(file: File) {
     this.mensagemErro = '';
-    const tamanhoMaximo = 5 * 1024 * 1024; // 5 MB
+    const tamanhoMaximo = 2 * 1024 * 1024; // 2 MB (limite do localStorage)
     const tiposPermitidos = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
 
     if (!tiposPermitidos.includes(file.type)) {
@@ -86,7 +90,7 @@ mensagemErro: string = '';
     }
 
     if (file.size > tamanhoMaximo) {
-      this.mensagemErro = 'O arquivo é muito grande. O tamanho máximo permitido é 5 MB.';
+      this.mensagemErro = 'O arquivo é muito grande. O tamanho máximo permitido é 2 MB.';
       return;
     }
 
@@ -98,40 +102,57 @@ mensagemErro: string = '';
     this.mensagemErro = '';
   }
 
-  enviar() {
-  console.log('Método enviar executado!');
-
-  if (!this.motivo.trim() || !this.dataFalta) {
-    this.mensagemErro = 'Por favor, preencha todos os campos obrigatórios.';
-    return;
-  }
-
-  this.mensagemErro = '';
-  this.enviando = true;
-  this.progresso = 0;
-  this.finalizando = false;
-
-  this.cdr.detectChanges();
-
-  const intervalo = setInterval(() => {
-    this.progresso += 10;
-
-    if (this.progresso >= 100) {
-      this.progresso = 100;
-      clearInterval(intervalo);
-      this.finalizando = true;
+  async enviar() {
+    if (!this.motivo.trim() || !this.dataFalta) {
+      this.mensagemErro = 'Por favor, preencha todos os campos obrigatórios.';
+      return;
     }
 
+    this.mensagemErro = '';
+
+    try {
+      await this.justificativaService.criar(
+        {
+          enviadoPor: 'aluno',
+          nomeAluno: this.justificativaService.obterNomeAlunoLogado(),
+          motivo: this.motivo.trim(),
+          dataFalta: this.dataFalta
+        },
+        this.arquivo
+      );
+    } catch (e) {
+      console.error('Erro ao salvar justificativa', e);
+      this.mensagemErro = 'Não foi possível salvar. O arquivo pode ser grande demais, tente um menor.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // animação de envio
+    this.enviando = true;
+    this.progresso = 0;
+    this.finalizando = false;
     this.cdr.detectChanges();
 
-    if (this.progresso >= 100) {
-      setTimeout(() => {
-        this.router.navigate(['/aluno/inicio']);
-      }, 500);
-    }
-  }, 200);
-}
+    const intervalo = setInterval(() => {
+      this.progresso += 10;
 
-cancelar() {
-  this.router.navigate(['/aluno/inicio']);
-}}
+      if (this.progresso >= 100) {
+        this.progresso = 100;
+        clearInterval(intervalo);
+        this.finalizando = true;
+      }
+
+      this.cdr.detectChanges();
+
+      if (this.progresso >= 100) {
+        setTimeout(() => {
+          this.router.navigate(['/aluno/inicio']);
+        }, 500);
+      }
+    }, 200);
+  }
+
+  cancelar() {
+    this.router.navigate(['/aluno/inicio']);
+  }
+}

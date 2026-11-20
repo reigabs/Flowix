@@ -256,3 +256,11 @@
     justify-content: space-between;
   }
 }
+/* Notificação não lida */
+.linha-notificacao.nao-lida {
+  border-left: 4px solid #6930C3;
+}
+
+.linha-notificacao.nao-lida .mensagem {
+  font-weight: 700;
+}
