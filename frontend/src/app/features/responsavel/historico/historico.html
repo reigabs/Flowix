@@ -1,3 +1,4 @@
+
 <div class="conteudo">
 
   <header class="cabecalho-pagina">
@@ -214,31 +215,7 @@
       </div>
 
       <div class="visualizador-botoes">
-
-        <!-- botão "Editar documento" (só imagens e só enquanto a justificativa está em análise) -->
-        <ng-container *ngIf="!editando">
-          <button
-            type="button"
-            class="visualizador-botao"
-            [disabled]="!podeEditar"
-            [attr.title]="dicaEdicao"
-            (click)="iniciarEdicao()"
-          >
-            Editar documento
-          </button>
-        </ng-container>
-
-        <!-- ferramentas de edição da imagem -->
-        <ng-container *ngIf="editando">
-          <button type="button" class="visualizador-botao" aria-label="Girar para a esquerda" (click)="girar(-90)">↺ Girar</button>
-          <button type="button" class="visualizador-botao" aria-label="Girar para a direita" (click)="girar(90)">↻ Girar</button>
-          <button type="button" class="visualizador-botao" aria-label="Reduzir" (click)="alterarZoom(-0.1)">−</button>
-          <button type="button" class="visualizador-botao" aria-label="Ampliar" (click)="alterarZoom(0.1)">+</button>
-          <button type="button" class="visualizador-botao" (click)="cancelarEdicao()">Cancelar</button>
-          <button type="button" class="visualizador-botao principal" (click)="salvarEdicao()">Salvar</button>
-        </ng-container>
-
-        <!-- botão "Sair" -->
+        <!-- foi implementado isso aqui: mantém somente o botão para fechar o visualizador -->
         <button type="button" class="visualizador-botao sair" (click)="fecharDocumento()">Sair</button>
       </div>
     </header>
