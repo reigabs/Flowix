@@ -1,3 +1,4 @@
+
 <div class="conteudo">
   <main class="conteudo-principal">
 
@@ -19,37 +20,37 @@
 
       <!-- Abas de Filtro -->
       <nav class="abas-filtro" aria-label="Filtrar histórico">
-        <button 
-          type="button" 
-          [class.ativo]="filtroAtual === 'Todas'" 
+        <button
+          type="button"
+          [class.ativo]="filtroAtual === 'Todas'"
           (click)="filtrar('Todas')"
         >
           Todas
         </button>
-        <button 
-          type="button" 
-          [class.ativo]="filtroAtual === 'Pendentes'" 
+        <button
+          type="button"
+          [class.ativo]="filtroAtual === 'Pendentes'"
           (click)="filtrar('Pendentes')"
         >
           Pendentes
         </button>
-        <button 
-          type="button" 
-          [class.ativo]="filtroAtual === 'Em análise'" 
+        <button
+          type="button"
+          [class.ativo]="filtroAtual === 'Em análise'"
           (click)="filtrar('Em análise')"
         >
           Em análise
         </button>
-        <button 
-          type="button" 
-          [class.ativo]="filtroAtual === 'Aprovado'" 
+        <button
+          type="button"
+          [class.ativo]="filtroAtual === 'Aprovado'"
           (click)="filtrar('Aprovado')"
         >
           Aprovados
         </button>
-        <button 
-          type="button" 
-          [class.ativo]="filtroAtual === 'Rejeitado'" 
+        <button
+          type="button"
+          [class.ativo]="filtroAtual === 'Rejeitado'"
           (click)="filtrar('Rejeitado')"
         >
           Rejeitados
@@ -59,14 +60,14 @@
       <!-- Lista de Solicitações -->
       <div class="lista-historico">
         <!-- foi implementado isso aqui: a lista mostra só os itens da página atual (solicitacoesDaPagina); o destaque fixo no #3455 saiu e o número agora é item.numero -->
-        <div 
-          class="linha-historico" 
+        <div
+          class="linha-historico"
           *ngFor="let item of solicitacoesDaPagina"
         >
           <span class="col-id">{{ item.numero }}</span>
           <span class="col-data">{{ item.data }}</span>
           <span class="col-tipo">{{ item.tipo }}</span>
-          
+
           <div class="col-status">
             <span class="badge" [ngClass]="item.statusClass">
               {{ item.status }}
@@ -74,9 +75,9 @@
           </div>
 
           <div class="col-acao">
-            <button 
-              type="button" 
-              class="botao-visualizar" 
+            <button
+              type="button"
+              class="botao-visualizar"
               (click)="visualizarDetalhes(item)"
               title="Visualizar justificativa"
             >
@@ -92,9 +93,9 @@
 
       <!-- Paginação -->
       <footer class="paginacao" *ngIf="todasSolicitacoes.length > 0">
-        <button 
-          type="button" 
-          class="pagina-btn" 
+        <button
+          type="button"
+          class="pagina-btn"
           *ngFor="let p of paginas"
           [class.ativo]="paginaAtual === p"
           (click)="mudarPagina(p)"
@@ -102,9 +103,9 @@
           {{ p }}
         </button>
         <!-- foi implementado isso aqui: o botão › avança uma página e fica desativado na última -->
-        <button 
-          type="button" 
-          class="pagina-btn proximo" 
+        <button
+          type="button"
+          class="pagina-btn proximo"
           [disabled]="paginaAtual >= totalPaginas"
           (click)="mudarPagina(paginaAtual + 1)"
           title="Próxima página"
@@ -121,7 +122,7 @@
 <!-- MODAL DE DETALHES -->
 <div class="modal-overlay" *ngIf="exibirModal" (click)="fecharModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    
+
     <div class="modal-header">
       <h2>Detalhes da justificativa</h2>
       <button type="button" class="modal-close" (click)="fecharModal()">×</button>
@@ -197,31 +198,7 @@
       </div>
 
       <div class="visualizador-botoes">
-
-        <!-- botão "Editar documento" (só imagens e só enquanto a justificativa está em análise) -->
-        <ng-container *ngIf="!editando">
-          <button
-            type="button"
-            class="visualizador-botao"
-            [disabled]="!podeEditar"
-            [attr.title]="dicaEdicao"
-            (click)="iniciarEdicao()"
-          >
-            Editar documento
-          </button>
-        </ng-container>
-
-        <!-- ferramentas de edição da imagem -->
-        <ng-container *ngIf="editando">
-          <button type="button" class="visualizador-botao" aria-label="Girar para a esquerda" (click)="girar(-90)">↺ Girar</button>
-          <button type="button" class="visualizador-botao" aria-label="Girar para a direita" (click)="girar(90)">↻ Girar</button>
-          <button type="button" class="visualizador-botao" aria-label="Reduzir" (click)="alterarZoom(-0.1)">−</button>
-          <button type="button" class="visualizador-botao" aria-label="Ampliar" (click)="alterarZoom(0.1)">+</button>
-          <button type="button" class="visualizador-botao" (click)="cancelarEdicao()">Cancelar</button>
-          <button type="button" class="visualizador-botao principal" (click)="salvarEdicao()">Salvar</button>
-        </ng-container>
-
-        <!-- botão "Sair" -->
+        <!-- foi implementado isso aqui: mantém somente o botão para fechar o visualizador -->
         <button type="button" class="visualizador-botao sair" (click)="fecharDocumento()">Sair</button>
       </div>
     </header>
