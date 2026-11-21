@@ -40,9 +40,10 @@
     <!-- LISTA DE NOTIFICAÇÕES -->
     <section class="lista-notificacoes">
 
+      <!-- foi implementado isso aqui: a lista mostra só as notificações da página atual (notificacoesDaPagina) -->
       <article
         class="linha-notificacao"
-        *ngFor="let item of notificacoesVisiveis"
+        *ngFor="let item of notificacoesDaPagina"
         [class.nao-lida]="!item.lida"
       >
         <div class="notificacao-info">
@@ -84,6 +85,30 @@
       </div>
 
     </section>
+
+    <!-- foi implementado isso aqui: paginação (só aparece quando há mais de uma página) -->
+    <nav class="paginacao" aria-label="Paginação das notificações" *ngIf="totalPaginas > 1">
+      <button
+        *ngFor="let pagina of paginas"
+        type="button"
+        class="botao-pagina"
+        [class.pagina-ativa]="paginaAtual === pagina"
+        [attr.aria-current]="paginaAtual === pagina ? 'page' : null"
+        (click)="mudarPagina(pagina)"
+      >
+        {{ pagina }}
+      </button>
+
+      <button
+        type="button"
+        class="botao-proxima"
+        aria-label="Próxima página"
+        [disabled]="paginaAtual >= totalPaginas"
+        (click)="mudarPagina(paginaAtual + 1)"
+      >
+        ›
+      </button>
+    </nav>
 
   </section>
 

@@ -44,16 +44,27 @@ export class PerfilComponent implements OnInit {
   alternarEdicao() {
     this.editando = !this.editando;
     if (!this.editando) {
-      // Quando salvar, podemos atualizar o localStorage com os novos dados editados
-      if (isPlatformBrowser(this.platformId)) {
-        localStorage.setItem('usuario_cadastrado', JSON.stringify({
-          nome: this.perfil.nomeCompleto,
-          email: this.perfil.emailCpf,
-          instituicao: this.perfil.nomeInstituicao,
-          matricula: this.perfil.matricula,
-          telefone: this.perfil.telefone
-        }));
-      }
+      // foi implementado isso aqui (ao salvar, só os campos editados são atualizados; o campo "perfil" e qualquer outro que o login gravou ficam preservados)
+      this.salvarNoUsuarioLogado();
+    }
+  }
+
+  // foi implementado isso aqui (lê o usuário atual, troca só os campos do formulário e grava de volta)
+  private salvarNoUsuarioLogado() {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    try {
+      const usuario = JSON.parse(localStorage.getItem('usuario_cadastrado') || '{}');
+
+      usuario.nome = this.perfil.nomeCompleto.trim();
+      usuario.email = this.perfil.emailCpf.trim();
+      usuario.instituicao = this.perfil.nomeInstituicao.trim();
+      usuario.matricula = this.perfil.matricula.trim();
+      usuario.telefone = this.perfil.telefone.trim();
+
+      localStorage.setItem('usuario_cadastrado', JSON.stringify(usuario));
+    } catch (e) {
+      console.error('Erro ao salvar os dados do perfil', e);
     }
   }
 

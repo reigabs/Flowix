@@ -1,13 +1,9 @@
-// foi implementado isso aqui (OnInit e inject adicionados ao import)
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// foi implementado isso aqui (Router adicionado ao import)
 import { Router, RouterLink } from '@angular/router';
-// foi implementado isso aqui (service e model compartilhados)
 import { JustificativaService } from '../../../core/services/justificativa.service';
 import { Notificacao } from '../../../core/models/justificativa.model';
 
-// foi implementado isso aqui (id agora é texto, vem do service)
 interface ItemNotificacao {
   id: string;
   mensagem: string;
@@ -23,24 +19,23 @@ interface ItemNotificacao {
   templateUrl: './notificacoes.html',
   styleUrl: './notificacoes.css'
 })
-// foi implementado isso aqui (implements OnInit)
 export class NotificacoesResponsavel implements OnInit {
-  // foi implementado isso aqui (injeções novas)
   private justificativaService = inject(JustificativaService);
   private router = inject(Router);
 
   abas: string[] = ['Todos', 'Não lidas', 'Lidas'];
   abaSelecionada: string = 'Todos';
 
-  // foi implementado isso aqui (lista real, começa vazia)
   listaNotificacoes: ItemNotificacao[] = [];
 
-  // foi implementado isso aqui (carrega as notificações dos filhos cadastrados)
+  // foi implementado isso aqui (paginação: 5 notificações por página)
+  itensPorPagina: number = 5;
+  paginaAtual: number = 1;
+
   ngOnInit() {
     this.carregar();
   }
 
-  // foi implementado isso aqui (lê do service só as notificações do responsável sobre os filhos dele)
   private carregar() {
     const nomesDosFilhos = this.justificativaService.obterNomesDosFilhos();
 
@@ -49,7 +44,6 @@ export class NotificacoesResponsavel implements OnInit {
       .map(n => this.paraItem(n));
   }
 
-  // foi implementado isso aqui (converte a notificação salva para o formato da tela)
   private paraItem(n: Notificacao): ItemNotificacao {
     return {
       id: n.id,
@@ -60,7 +54,6 @@ export class NotificacoesResponsavel implements OnInit {
     };
   }
 
-  // foi implementado isso aqui (transforma a data em "há 10 min", "há 7 dias"...)
   private tempoRelativo(iso: string): string {
     const min = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
     if (min < 1) return 'agora';
@@ -92,20 +85,45 @@ export class NotificacoesResponsavel implements OnInit {
     return this.listaNotificacoes;
   }
 
-  selecionarAba(aba: string) {
-    this.abaSelecionada = aba;
+  // foi implementado isso aqui (total de páginas, calculado a partir da lista filtrada)
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.notificacoesVisiveis.length / this.itensPorPagina));
   }
 
-  // foi implementado isso aqui (grava no service, não só na tela)
+  // foi implementado isso aqui (números dos botões de página: 1, 2, 3...)
+  get paginas(): number[] {
+    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  }
+
+  // foi implementado isso aqui (só as notificações da página atual; a página 2 mostra as mais antigas)
+  get notificacoesDaPagina(): ItemNotificacao[] {
+    const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+    return this.notificacoesVisiveis.slice(inicio, inicio + this.itensPorPagina);
+  }
+
+  // foi implementado isso aqui (só muda para uma página que existe)
+  mudarPagina(pagina: number) {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaAtual = pagina;
+    }
+  }
+
+  selecionarAba(aba: string) {
+    this.abaSelecionada = aba;
+    // foi implementado isso aqui (ao trocar de aba, volta para a página 1)
+    this.paginaAtual = 1;
+  }
+
   marcarTodasComoLidas() {
     this.justificativaService.marcarTodasComoLidas(
       'responsavel',
       this.justificativaService.obterNomesDosFilhos()
     );
     this.listaNotificacoes.forEach(n => n.lida = true);
+    // foi implementado isso aqui (na aba "Não lidas" a lista esvazia, então volta para a página 1)
+    this.paginaAtual = 1;
   }
 
-  // foi implementado isso aqui (marca como lida no service e abre o histórico do responsável)
   abrirNotificacao(item: ItemNotificacao) {
     this.justificativaService.marcarNotificacaoComoLida(item.id);
     item.lida = true;

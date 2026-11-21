@@ -311,6 +311,47 @@
   border-radius: 12px;
 }
 
+/* foi implementado isso aqui: paginação */
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-bottom: 20px;
+}
+
+.pagina-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: white;
+  color: #333;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagina-btn:hover:not(:disabled) {
+  background-color: #f1f3f5;
+}
+
+.pagina-btn.ativo {
+  background-color: #6930C3;
+  color: white;
+  border-color: #6930C3;
+}
+
+.pagina-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* Modal */
 .modal-overlay {
   position: fixed;
@@ -440,7 +481,7 @@
   background: #351078;
 }
 
-/* foi implementado isso aqui: visualizador do documento (painel no meio da tela, sem tela cheia) */
+/* Visualizador do documento (painel no meio da tela, sem tela cheia) */
 .visualizador-overlay {
   position: fixed;
   inset: 0;
@@ -608,7 +649,6 @@
     display: block;
   }
 
-  /* foi implementado isso aqui: no celular, o visualizador ocupa melhor a tela e os botões descem para baixo do título */
   .visualizador-overlay {
     padding: 12px;
   }

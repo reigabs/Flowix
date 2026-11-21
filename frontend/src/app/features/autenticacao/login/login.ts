@@ -34,7 +34,8 @@ export class Login {
       if (emailDigitado === 'secretaria@gmail.com' && senhaDigitada === '123456') {
         if (isPlatformBrowser(this.platformId)) {
           const dadosSecretaria = {
-            nome: '',
+            // foi implementado isso aqui (nome da persona da secretaria já registrado; antes ficava vazio)
+            nome: 'Marcia Oliveira',
             email: emailDigitado,
             perfil: 'secretaria',
             instituicao: 'Escola Central'
@@ -49,7 +50,6 @@ export class Login {
       if (emailDigitado === 'aluno@gmail.com' && senhaDigitada === '654321') {
         if (isPlatformBrowser(this.platformId)) {
           const dadosAluno = {
-            // foi implementado isso aqui (nome trocado de 'João' para 'Bia Santos')
             nome: 'Bia Santos',
             email: emailDigitado,
             perfil: 'aluno',
@@ -65,7 +65,8 @@ export class Login {
        if (emailDigitado === 'responsavel@gmail.com' && senhaDigitada === '123456') {
         if (isPlatformBrowser(this.platformId)) {
           const dadosResponsavel = {
-            nome: 'Carla',
+            // foi implementado isso aqui (nome completo da persona do responsável: Carla Mendes)
+            nome: 'Carla Mendes',
             email: emailDigitado,
             perfil: 'responsavel',
             instituicao: 'Escola Central'

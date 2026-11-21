@@ -27,7 +27,8 @@
 
       <div class="lista-solicitacoes">
 
-        <article class="cartao" *ngFor="let j of solicitacoesFiltradas">
+        <!-- foi implementado isso aqui: a lista mostra só as solicitações da página atual (solicitacoesDaPagina) -->
+        <article class="cartao" *ngFor="let j of solicitacoesDaPagina">
 
           <div class="cartao-topo">
             <div class="cartao-id">
@@ -106,6 +107,28 @@
 
       </div>
 
+      <!-- foi implementado isso aqui: paginação (só aparece quando há mais de uma página) -->
+      <footer class="paginacao" *ngIf="totalPaginas > 1">
+        <button
+          type="button"
+          class="pagina-btn"
+          *ngFor="let p of paginas"
+          [class.ativo]="paginaAtual === p"
+          (click)="mudarPagina(p)"
+        >
+          {{ p }}
+        </button>
+        <button
+          type="button"
+          class="pagina-btn proximo"
+          [disabled]="paginaAtual >= totalPaginas"
+          (click)="mudarPagina(paginaAtual + 1)"
+          title="Próxima página"
+        >
+          ❯
+        </button>
+      </footer>
+
     </section>
 
   </main>
@@ -154,7 +177,7 @@
   </div>
 </div>
 
-<!-- foi implementado isso aqui: visualizador do documento, aberto dentro da própria página (sem outra aba e sem tela cheia) -->
+<!-- visualizador do documento, aberto dentro da própria página (sem outra aba e sem tela cheia) -->
 <div class="visualizador-overlay" *ngIf="visualizando">
   <div class="visualizador" role="dialog" aria-modal="true" aria-label="Documento anexado">
 
@@ -166,7 +189,6 @@
 
       <div class="visualizador-botoes">
 
-        <!-- foi implementado isso aqui: botão "Editar documento" (só imagens; PDF só visualiza) -->
         <ng-container *ngIf="!editando">
           <button
             type="button"
@@ -179,7 +201,6 @@
           </button>
         </ng-container>
 
-        <!-- foi implementado isso aqui: ferramentas de edição da imagem -->
         <ng-container *ngIf="editando">
           <button type="button" class="visualizador-botao" aria-label="Girar para a esquerda" (click)="girar(-90)">↺ Girar</button>
           <button type="button" class="visualizador-botao" aria-label="Girar para a direita" (click)="girar(90)">↻ Girar</button>
@@ -189,7 +210,6 @@
           <button type="button" class="visualizador-botao principal" (click)="salvarEdicao()">Salvar</button>
         </ng-container>
 
-        <!-- foi implementado isso aqui: botão "Sair" -->
         <button type="button" class="visualizador-botao sair" (click)="fecharDocumento()">Sair</button>
       </div>
     </header>

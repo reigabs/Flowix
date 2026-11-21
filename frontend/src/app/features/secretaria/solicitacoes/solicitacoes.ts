@@ -1,8 +1,6 @@
-// foi implementado isso aqui (OnDestroy adicionado ao import, para liberar o PDF aberto ao sair da tela)
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-// foi implementado isso aqui (necessário para exibir o PDF dentro da página)
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { JustificativaService } from '../../../core/services/justificativa.service';
 import { Justificativa } from '../../../core/models/justificativa.model';
@@ -14,15 +12,17 @@ import { Justificativa } from '../../../core/models/justificativa.model';
   templateUrl: './solicitacoes.html',
   styleUrl: './solicitacoes.css'
 })
-// foi implementado isso aqui (implements OnDestroy)
 export class SolicitacoesComponent implements OnInit, OnDestroy {
   private service = inject(JustificativaService);
-  // foi implementado isso aqui (sanitizer injetado)
   private sanitizer = inject(DomSanitizer);
 
   filtroAtual: string = 'Pendentes';
   solicitacoes: Justificativa[] = [];
   mensagem: string = '';
+
+  // foi implementado isso aqui (paginação: 5 solicitações por página)
+  itensPorPagina: number = 5;
+  paginaAtual: number = 1;
 
   // ids dos cartões abertos pelo botão "Ver solicitação"
   private abertos = new Set<string>();
@@ -34,7 +34,7 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
   observacao = '';
   erroModal = '';
 
-  // foi implementado isso aqui (estado do visualizador de documento, que abre dentro da página)
+  // estado do visualizador de documento, que abre dentro da página
   visualizando = false;
   docAtual: Justificativa | null = null;
   docEhImagem = false;
@@ -50,7 +50,6 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     this.carregar();
   }
 
-  // foi implementado isso aqui (libera o PDF da memória ao sair da tela)
   ngOnDestroy() {
     this.liberarBlob();
   }
@@ -62,6 +61,8 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
   filtrar(filtro: string) {
     this.filtroAtual = filtro;
     this.mensagem = '';
+    // foi implementado isso aqui (ao trocar de aba, volta para a página 1)
+    this.paginaAtual = 1;
   }
 
   get solicitacoesFiltradas(): Justificativa[] {
@@ -72,6 +73,36 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     };
     const alvo = mapa[this.filtroAtual];
     return alvo ? this.solicitacoes.filter(j => j.status === alvo) : this.solicitacoes;
+  }
+
+  // foi implementado isso aqui (total de páginas, calculado a partir da lista filtrada)
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.solicitacoesFiltradas.length / this.itensPorPagina));
+  }
+
+  // foi implementado isso aqui (números dos botões de página: 1, 2, 3...)
+  get paginas(): number[] {
+    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  }
+
+  // foi implementado isso aqui (só as solicitações da página atual; a página 2 mostra as mais antigas)
+  get solicitacoesDaPagina(): Justificativa[] {
+    const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+    return this.solicitacoesFiltradas.slice(inicio, inicio + this.itensPorPagina);
+  }
+
+  // foi implementado isso aqui (só muda para uma página que existe)
+  mudarPagina(pagina: number) {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaAtual = pagina;
+    }
+  }
+
+  // foi implementado isso aqui (depois de aceitar ou rejeitar a lista encolhe; se a página atual deixou de existir, volta para a última)
+  private ajustarPagina() {
+    if (this.paginaAtual > this.totalPaginas) {
+      this.paginaAtual = this.totalPaginas;
+    }
   }
 
   contar(status: 'pendente' | 'aceita' | 'rejeitada'): number {
@@ -120,7 +151,6 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
   }
 
   // ---------- documento ----------
-  // foi implementado isso aqui (abre o documento num painel dentro da própria página, sem trocar a URL e sem outra aba)
   async verDocumento(j: Justificativa) {
     this.mensagem = '';
     const dataUrl = this.service.buscarDocumento(j.id);
@@ -152,7 +182,6 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     this.visualizando = true;
   }
 
-  // foi implementado isso aqui (botão "Sair": fecha o painel e descarta o que não foi salvo)
   fecharDocumento() {
     this.visualizando = false;
     this.docAtual = null;
@@ -172,7 +201,6 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     }
   }
 
-  // foi implementado isso aqui (botão "Editar documento": liga as ferramentas, só para imagens)
   iniciarEdicao() {
     if (!this.docEhImagem) return;
     this.avisoDoc = '';
@@ -181,29 +209,24 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     this.editando = true;
   }
 
-  // foi implementado isso aqui (botão "Cancelar" da edição: desfaz o que não foi salvo)
   cancelarEdicao() {
     this.editando = false;
     this.rotacao = 0;
     this.zoom = 1;
   }
 
-  // foi implementado isso aqui (gira a imagem para a esquerda ou direita)
   girar(graus: number) {
     this.rotacao = (this.rotacao + graus) % 360;
   }
 
-  // foi implementado isso aqui (amplia ou reduz a imagem, entre 50% e 300%)
   alterarZoom(passo: number) {
     this.zoom = Math.min(3, Math.max(0.5, Math.round((this.zoom + passo) * 10) / 10));
   }
 
-  // foi implementado isso aqui (estilo aplicado na imagem enquanto edita)
   get transformacao(): string {
     return `rotate(${this.rotacao}deg) scale(${this.zoom})`;
   }
 
-  // foi implementado isso aqui (botão "Salvar": grava a rotação no documento da justificativa)
   async salvarEdicao() {
     if (!this.docAtual) return;
 
@@ -236,7 +259,6 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     }
   }
 
-  // foi implementado isso aqui (aplica a rotação na imagem de verdade, usando um canvas)
   private rotacionarImagem(dataUrl: string, graus: number, tipo: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -305,6 +327,8 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     this.service.responder(j.id, aceitar ? 'aceita' : 'rejeitada', texto);
     this.fecharModal();
     this.carregar();
+    // foi implementado isso aqui (garante que a página atual ainda existe depois da resposta)
+    this.ajustarPagina();
     this.mensagem =
       `Justificativa ${this.numero(j)} ${aceitar ? 'aprovada' : 'rejeitada'}. ` +
       `Aluno e responsável foram notificados.`;

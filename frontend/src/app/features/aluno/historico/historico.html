@@ -58,12 +58,12 @@
 
       <!-- Lista de Solicitações -->
       <div class="lista-historico">
+        <!-- foi implementado isso aqui: a lista mostra só os itens da página atual (solicitacoesDaPagina); o destaque fixo no #3455 saiu e o número agora é item.numero -->
         <div 
           class="linha-historico" 
-          *ngFor="let item of solicitacoesFiltradas"
-          [class.destacado]="item.id === '#3455'"
+          *ngFor="let item of solicitacoesDaPagina"
         >
-          <span class="col-id">{{ item.id }}</span>
+          <span class="col-id">{{ item.numero }}</span>
           <span class="col-data">{{ item.data }}</span>
           <span class="col-tipo">{{ item.tipo }}</span>
           
@@ -101,10 +101,12 @@
         >
           {{ p }}
         </button>
+        <!-- foi implementado isso aqui: o botão › avança uma página e fica desativado na última -->
         <button 
           type="button" 
           class="pagina-btn proximo" 
-          (click)="mudarPagina(paginaAtual < paginas.length ? paginaAtual + 1 : paginas.length)"
+          [disabled]="paginaAtual >= totalPaginas"
+          (click)="mudarPagina(paginaAtual + 1)"
           title="Próxima página"
         >
           ❯
@@ -125,12 +127,19 @@
       <button type="button" class="modal-close" (click)="fecharModal()">×</button>
     </div>
 
-    <p class="modal-subtitulo">Solicitação {{ solicitacaoSelecionada?.id }}</p>
+    <!-- foi implementado isso aqui: o subtítulo usa o número formatado (#0001) -->
+    <p class="modal-subtitulo">Solicitação {{ solicitacaoSelecionada?.numero }}</p>
 
     <div class="modal-body">
       <div class="modal-info-grupo">
         <span class="modal-label">Data da falta</span>
         <span class="modal-valor">{{ solicitacaoSelecionada?.data }}</span>
+      </div>
+
+      <!-- foi implementado isso aqui: data e hora em que a justificativa foi enviada -->
+      <div class="modal-info-grupo">
+        <span class="modal-label">Enviada em</span>
+        <span class="modal-valor">{{ solicitacaoSelecionada?.dataEnvio }}</span>
       </div>
 
       <div class="modal-info-grupo">
@@ -151,12 +160,82 @@
         <span class="modal-label">Observação</span>
         <span class="modal-valor">{{ solicitacaoSelecionada?.observacao }}</span>
       </div>
+
+      <!-- foi implementado isso aqui: documento anexado e botão que abre o visualizador -->
+      <div class="modal-info-grupo">
+        <span class="modal-label">Documento</span>
+        <span class="modal-valor">{{ solicitacaoSelecionada?.docNome || 'Sem anexo' }}</span>
+        <button
+          type="button"
+          class="botao-ver-documento"
+          [disabled]="!solicitacaoSelecionada?.temDocumento"
+          (click)="verDocumento(solicitacaoSelecionada!)"
+        >
+          Ver documento
+        </button>
+        <p class="aviso-documento" *ngIf="mensagemDocumento">{{ mensagemDocumento }}</p>
+      </div>
     </div>
 
     <div class="modal-footer">
       <button type="button" class="modal-btn-fechar" (click)="fecharModal()">
         Fechar
       </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- foi implementado isso aqui: visualizador do documento, aberto dentro da própria página (sem outra aba e sem tela cheia) -->
+<div class="visualizador-overlay" *ngIf="visualizando">
+  <div class="visualizador" role="dialog" aria-modal="true" aria-label="Documento anexado">
+
+    <header class="visualizador-topo">
+      <div class="visualizador-titulo">
+        <strong>{{ docAtual?.numero }}</strong>
+        <span>{{ docAtual?.docNome }}</span>
+      </div>
+
+      <div class="visualizador-botoes">
+
+        <!-- botão "Editar documento" (só imagens e só enquanto a justificativa está em análise) -->
+        <ng-container *ngIf="!editando">
+          <button
+            type="button"
+            class="visualizador-botao"
+            [disabled]="!podeEditar"
+            [attr.title]="dicaEdicao"
+            (click)="iniciarEdicao()"
+          >
+            Editar documento
+          </button>
+        </ng-container>
+
+        <!-- ferramentas de edição da imagem -->
+        <ng-container *ngIf="editando">
+          <button type="button" class="visualizador-botao" aria-label="Girar para a esquerda" (click)="girar(-90)">↺ Girar</button>
+          <button type="button" class="visualizador-botao" aria-label="Girar para a direita" (click)="girar(90)">↻ Girar</button>
+          <button type="button" class="visualizador-botao" aria-label="Reduzir" (click)="alterarZoom(-0.1)">−</button>
+          <button type="button" class="visualizador-botao" aria-label="Ampliar" (click)="alterarZoom(0.1)">+</button>
+          <button type="button" class="visualizador-botao" (click)="cancelarEdicao()">Cancelar</button>
+          <button type="button" class="visualizador-botao principal" (click)="salvarEdicao()">Salvar</button>
+        </ng-container>
+
+        <!-- botão "Sair" -->
+        <button type="button" class="visualizador-botao sair" (click)="fecharDocumento()">Sair</button>
+      </div>
+    </header>
+
+    <p class="visualizador-aviso" *ngIf="avisoDoc">{{ avisoDoc }}</p>
+
+    <div class="visualizador-corpo">
+      <iframe *ngIf="!docEhImagem && docPdfUrl" [src]="docPdfUrl" title="Documento anexado"></iframe>
+      <img
+        *ngIf="docEhImagem"
+        [src]="docDataUrl"
+        [style.transform]="transformacao"
+        alt="Documento anexado"
+      />
     </div>
 
   </div>

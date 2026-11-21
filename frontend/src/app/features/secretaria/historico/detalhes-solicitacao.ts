@@ -76,8 +76,9 @@ export class HistoricoComponent implements OnInit {
         ? `${j.documento.nome} (${this.formatarTamanho(j.documento.tamanho)})`
         : 'Sem anexo',
       temDocumento: !!j.documento,
+      // foi implementado isso aqui (na aprovação mostra a observação opcional que a secretaria escreveu; sem ela, o texto padrão)
       observacaoAnalise: aprovada
-        ? 'Justificativa aceita pela secretaria.'
+        ? (j.observacaoAprovacao?.trim() || 'Justificativa aceita pela secretaria.')
         : (j.motivoRejeicao?.trim() || 'Justificativa rejeitada pela secretaria.')
     };
   }

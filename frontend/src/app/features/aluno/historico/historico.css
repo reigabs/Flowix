@@ -146,7 +146,9 @@
   font-weight: 500;
   color: #333;
   padding: 0 16px;
-    white-space: nowrap;
+  /* motivo longo não quebra a linha */
+  min-width: 0;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -237,7 +239,7 @@
   transition: all 0.2s;
 }
 
-.pagina-btn:hover {
+.pagina-btn:hover:not(:disabled) {
   background-color: #f1f3f5;
 }
 
@@ -245,6 +247,12 @@
   background-color: #6930C3;
   color: white;
   border-color: #6930C3;
+}
+
+/* foi implementado isso aqui: botão › desativado na última página */
+.pagina-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ESTILOS DO MODAL */
@@ -273,6 +281,9 @@
   flex-direction: column;
   gap: 20px;
   animation: modalFadeIn 0.2s ease-out;
+  /* foi implementado isso aqui: com o documento, o modal pode ficar alto; rola dentro dele em telas baixas */
+  max-height: 92vh;
+  overflow-y: auto;
 }
 
 @keyframes modalFadeIn {
@@ -340,6 +351,42 @@
   font-size: 15px;
   color: #222;
   font-weight: 500;
+  /* foi implementado isso aqui: nomes de arquivo e textos longos quebram em vez de estourar o modal */
+  overflow-wrap: anywhere;
+}
+
+/* foi implementado isso aqui: botão "Ver documento" dentro dos detalhes */
+.botao-ver-documento {
+  align-self: flex-start;
+  margin-top: 6px;
+  min-height: 38px;
+  padding: 8px 18px;
+  border: 2px solid #4b1eaa;
+  border-radius: 10px;
+  background: #fff;
+  color: #4b1eaa;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.botao-ver-documento:hover:not(:disabled) {
+  background: #4b1eaa;
+  color: #fff;
+}
+
+.botao-ver-documento:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* foi implementado isso aqui: aviso quando o documento não abre */
+.aviso-documento {
+  margin: 6px 0 0;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .modal-footer {
@@ -364,6 +411,142 @@
   background-color: #3a0ca3;
 }
 
+/* foi implementado isso aqui: visualizador do documento (painel no meio da tela, sem tela cheia, acima do modal de detalhes) */
+.visualizador-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 24px;
+}
+
+.visualizador {
+  background: #fff;
+  width: 100%;
+  max-width: 900px;
+  height: min(80vh, 760px);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.visualizador-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.visualizador-titulo {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.visualizador-titulo strong {
+  font-size: 16px;
+}
+
+.visualizador-titulo span {
+  color: #666;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.visualizador-botoes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.visualizador-botao {
+  min-height: 38px;
+  padding: 8px 16px;
+  border: 2px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
+  color: #111;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.visualizador-botao:hover:not(:disabled) {
+  background: #f8f9fa;
+}
+
+.visualizador-botao:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.visualizador-botao.principal {
+  border-color: #4b1eaa;
+  background: #4b1eaa;
+  color: #fff;
+}
+
+.visualizador-botao.principal:hover {
+  border-color: #351078;
+  background: #351078;
+}
+
+.visualizador-botao.sair {
+  border-color: #b91c1c;
+  color: #b91c1c;
+}
+
+.visualizador-botao.sair:hover {
+  background: #fee2e2;
+}
+
+.visualizador-aviso {
+  margin: 0;
+  padding: 10px 20px;
+  background: #f3e8ff;
+  color: #4b1eaa;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.visualizador-corpo {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  background: #f1f3f5;
+}
+
+.visualizador-corpo iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #fff;
+}
+
+.visualizador-corpo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .conteudo-principal {
@@ -384,5 +567,23 @@
   .col-tipo {
     width: 100%;
     padding: 0;
+  }
+
+  /* foi implementado isso aqui: no celular, o visualizador ocupa melhor a tela e os botões descem para baixo do título */
+  .visualizador-overlay {
+    padding: 12px;
+  }
+
+  .visualizador {
+    height: 85vh;
+  }
+
+  .visualizador-topo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .visualizador-botoes {
+    justify-content: flex-start;
   }
 }

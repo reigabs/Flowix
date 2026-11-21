@@ -27,6 +27,10 @@ export class Notificacoes implements OnInit {
   filtroAtual: string = 'Todos';
   notificacoes: ItemNotificacao[] = [];
 
+  // foi implementado isso aqui (paginação: 5 notificações por página)
+  itensPorPagina: number = 5;
+  paginaAtual: number = 1;
+
   private get nomeAluno(): string {
     return this.justificativaService.obterNomeAlunoLogado();
   }
@@ -79,6 +83,8 @@ export class Notificacoes implements OnInit {
 
   filtrar(filtro: string) {
     this.filtroAtual = filtro;
+    // foi implementado isso aqui (ao trocar de aba, volta para a página 1)
+    this.paginaAtual = 1;
   }
 
   get notificacoesFiltradas(): ItemNotificacao[] {
@@ -91,9 +97,34 @@ export class Notificacoes implements OnInit {
     return this.notificacoes;
   }
 
+  // foi implementado isso aqui (total de páginas, calculado a partir da lista filtrada)
+  get totalPaginas(): number {
+    return Math.max(1, Math.ceil(this.notificacoesFiltradas.length / this.itensPorPagina));
+  }
+
+  // foi implementado isso aqui (números dos botões de página: 1, 2, 3...)
+  get paginas(): number[] {
+    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+  }
+
+  // foi implementado isso aqui (só as notificações da página atual; a página 2 mostra as mais antigas)
+  get notificacoesDaPagina(): ItemNotificacao[] {
+    const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
+    return this.notificacoesFiltradas.slice(inicio, inicio + this.itensPorPagina);
+  }
+
+  // foi implementado isso aqui (só muda para uma página que existe)
+  mudarPagina(pagina: number) {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaAtual = pagina;
+    }
+  }
+
   marcarTodasComoLidas() {
     this.justificativaService.marcarTodasComoLidas('aluno', this.nomeAluno);
     this.notificacoes.forEach(n => (n.lida = true));
+    // foi implementado isso aqui (na aba "Não lidas" a lista esvazia, então volta para a página 1)
+    this.paginaAtual = 1;
   }
 
   abrirNotificacao(notificacao: ItemNotificacao) {

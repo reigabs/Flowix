@@ -53,9 +53,10 @@
 
       <!-- Lista de Notificações -->
       <div class="lista-notificacoes">
+        <!-- foi implementado isso aqui: a lista mostra só as notificações da página atual (notificacoesDaPagina) -->
         <div 
           class="linha-notificacao" 
-          *ngFor="let item of notificacoesFiltradas"
+          *ngFor="let item of notificacoesDaPagina"
           [class.nao-lida]="!item.lida"
           (click)="abrirNotificacao(item)"
         >
@@ -82,6 +83,28 @@
           <p>Nenhuma notificação encontrada.</p>
         </div>
       </div>
+
+      <!-- foi implementado isso aqui: paginação (só aparece quando há mais de uma página) -->
+      <footer class="paginacao" *ngIf="totalPaginas > 1">
+        <button
+          type="button"
+          class="pagina-btn"
+          *ngFor="let p of paginas"
+          [class.ativo]="paginaAtual === p"
+          (click)="mudarPagina(p)"
+        >
+          {{ p }}
+        </button>
+        <button
+          type="button"
+          class="pagina-btn proximo"
+          [disabled]="paginaAtual >= totalPaginas"
+          (click)="mudarPagina(paginaAtual + 1)"
+          title="Próxima página"
+        >
+          ❯
+        </button>
+      </footer>
 
     </section>
 

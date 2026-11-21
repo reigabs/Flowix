@@ -130,7 +130,7 @@
   transform: translateY(-1px);
 }
 
-/* foi implementado isso aqui: destaque das notificações não lidas */
+/* destaque das notificações não lidas */
 .linha-notificacao.nao-lida {
   border-left: 4px solid #581c87;
 }
@@ -214,6 +214,45 @@
   padding: 40px;
   color: #6b7280;
   font-size: 15px;
+}
+
+/* foi implementado isso aqui: paginação */
+.paginacao {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.botao-pagina,
+.botao-proxima {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: #ffffff;
+  color: #374151;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s;
+}
+
+.botao-pagina:hover,
+.botao-proxima:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.botao-pagina.pagina-ativa {
+  background: #d8b4fe;
+  color: #581c87;
+}
+
+.botao-proxima:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ==========================================
