@@ -1,3 +1,4 @@
+
 <div class="historico-container">
   
   @if (!itemSelecionado) {
@@ -95,7 +96,7 @@
         <div class="anexo-box">
           <span>📄</span>
           <span>{{ itemSelecionado.documento }}</span>
-          <!-- foi implementado isso aqui: botão que abre o documento em outra aba -->
+          <!-- foi implementado isso aqui: botão abre o documento no visualizador central da própria tela -->
           @if (itemSelecionado.temDocumento) {
             <button class="btn-ver" (click)="abrirDocumento(itemSelecionado)">abrir documento</button>
           }
@@ -121,3 +122,33 @@
     </div>
   }
 </div>
+
+<!-- foi implementado isso aqui (visualizador em painel central, dentro da própria tela, igual ao padrão de Solicitações) -->
+@if (visualizando) {
+  <div class="visualizador-overlay" (click)="fecharDocumento()">
+    <div class="visualizador" (click)="$event.stopPropagation()">
+      <div class="visualizador-topo">
+        <div class="visualizador-titulo">
+          <strong>Protocolo {{ docAtual?.protocolo }}</strong>
+          <span>{{ docAtual?.nomeDocumento }}</span>
+        </div>
+
+        <div class="visualizador-botoes">
+          <button class="visualizador-botao sair" (click)="fecharDocumento()">Sair</button>
+        </div>
+      </div>
+
+      @if (avisoDoc) {
+        <p class="visualizador-aviso">{{ avisoDoc }}</p>
+      }
+
+      <div class="visualizador-corpo">
+        @if (docEhImagem) {
+          <img [src]="docDataUrl" [alt]="docAtual?.nomeDocumento || 'Documento anexado'" />
+        } @else if (docPdfUrl) {
+          <iframe [src]="docPdfUrl" title="Documento anexado"></iframe>
+        }
+      </div>
+    </div>
+  </div>
+}
