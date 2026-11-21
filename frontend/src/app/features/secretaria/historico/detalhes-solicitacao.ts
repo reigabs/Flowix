@@ -1,6 +1,9 @@
-// foi implementado isso aqui (inject adicionado ao import; PLATFORM_ID e isPlatformBrowser saíram, não são mais usados)
-import { Component, OnInit, inject } from '@angular/core';
+
+// foi implementado isso aqui (OnDestroy para liberar a URL temporária do documento quando o componente for destruído)
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+// foi implementado isso aqui (DomSanitizer e SafeResourceUrl para exibir o PDF com segurança no iframe)
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 // foi implementado isso aqui (service e model compartilhados)
 import { JustificativaService } from '../../../core/services/justificativa.service';
 import { Justificativa } from '../../../core/models/justificativa.model';
@@ -18,6 +21,9 @@ interface ItemHistorico {
   documento: string;
   temDocumento: boolean;
   observacaoAnalise: string;
+  // foi implementado isso aqui (tipo e nome originais do arquivo para identificar como exibi-lo no visualizador)
+  tipoDocumento?: string;
+  nomeDocumento?: string;
 }
 
 @Component({
@@ -27,9 +33,13 @@ interface ItemHistorico {
   templateUrl: './detalhes-solicitacao.html',
   styleUrl: './detalhes-solicitacao.css'
 })
-export class HistoricoComponent implements OnInit {
+// foi implementado isso aqui (OnDestroy para limpar recursos do visualizador ao sair da tela)
+export class HistoricoComponent implements OnInit, OnDestroy {
   // foi implementado isso aqui (service injetado)
   private service = inject(JustificativaService);
+
+  // foi implementado isso aqui (sanitizador usado para liberar a URL temporária do PDF no iframe)
+  private sanitizer = inject(DomSanitizer);
 
   itemSelecionado: ItemHistorico | null = null;
   paginaAtual: number = 1;
@@ -42,6 +52,15 @@ export class HistoricoComponent implements OnInit {
 
   // foi implementado isso aqui (lista real, começa vazia; a lista de exemplo saiu)
   listaHistorico: ItemHistorico[] = [];
+
+  // foi implementado isso aqui (estado do visualizador dentro da própria tela)
+  visualizando: boolean = false;
+  docAtual: ItemHistorico | null = null;
+  docEhImagem: boolean = false;
+  docDataUrl: string = '';
+  docPdfUrl: SafeResourceUrl | null = null;
+  private blobUrl: string | null = null;
+  avisoDoc: string = '';
 
   ngOnInit() {
     this.carregarHistorico();
@@ -79,7 +98,11 @@ export class HistoricoComponent implements OnInit {
       // foi implementado isso aqui (na aprovação mostra a observação opcional que a secretaria escreveu; sem ela, o texto padrão)
       observacaoAnalise: aprovada
         ? (j.observacaoAprovacao?.trim() || 'Justificativa aceita pela secretaria.')
-        : (j.motivoRejeicao?.trim() || 'Justificativa rejeitada pela secretaria.')
+        : (j.motivoRejeicao?.trim() || 'Justificativa rejeitada pela secretaria.'),
+      // foi implementado isso aqui (guarda o tipo MIME original para diferenciar imagens de outros documentos)
+      tipoDocumento: j.documento?.tipo,
+      // foi implementado isso aqui (guarda o nome original para mostrar no cabeçalho do visualizador)
+      nomeDocumento: j.documento?.nome
     };
   }
 
@@ -122,29 +145,63 @@ export class HistoricoComponent implements OnInit {
     }
   }
 
-  // foi implementado isso aqui (abre o PDF ou a imagem em outra aba)
+  // foi implementado isso aqui (abre o documento dentro de um painel central, sem criar outra aba)
   async abrirDocumento(item: ItemHistorico) {
     this.mensagemDocumento = '';
+    this.avisoDoc = '';
+
     const dataUrl = this.service.buscarDocumento(item.id);
 
     if (!dataUrl) {
-      this.mensagemDocumento = 'Esta solicitação não tem documento anexado.';
+      this.mensagemDocumento = 'Não foi possível encontrar o documento anexado.';
       return;
     }
 
-    // abre a aba antes do await para o navegador não bloquear o pop-up
-    const aba = window.open('', '_blank');
+    // foi implementado isso aqui (fecha e limpa qualquer documento que já estivesse aberto)
+    this.fecharDocumento();
+
+    this.docAtual = item;
+    this.docDataUrl = dataUrl;
+    this.docEhImagem = item.tipoDocumento?.startsWith('image/') ?? false;
+
+    // foi implementado isso aqui (imagens são exibidas diretamente no painel)
+    if (this.docEhImagem) {
+      this.visualizando = true;
+      return;
+    }
+
+    // foi implementado isso aqui (PDF e outros documentos compatíveis são carregados no iframe do painel)
     try {
-      const blob = await (await fetch(dataUrl)).blob();
-      const url = URL.createObjectURL(blob);
-      if (aba) {
-        aba.location.href = url;
-      } else {
-        window.open(url, '_blank');
-      }
+      const resposta = await fetch(dataUrl);
+      const blob = await resposta.blob();
+
+      this.blobUrl = URL.createObjectURL(blob);
+      this.docPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.blobUrl);
+      this.visualizando = true;
     } catch {
-      aba?.close();
+      this.fecharDocumento();
       this.mensagemDocumento = 'Não foi possível abrir o documento.';
     }
+  }
+
+  // foi implementado isso aqui (fecha o painel e limpa os dados do documento exibido)
+  fecharDocumento() {
+    this.visualizando = false;
+    this.docAtual = null;
+    this.docEhImagem = false;
+    this.docDataUrl = '';
+    this.docPdfUrl = null;
+    this.avisoDoc = '';
+
+    // foi implementado isso aqui (revoga a URL temporária para liberar memória)
+    if (this.blobUrl) {
+      URL.revokeObjectURL(this.blobUrl);
+      this.blobUrl = null;
+    }
+  }
+
+  // foi implementado isso aqui (libera a URL temporária caso o componente seja destruído com o visualizador aberto)
+  ngOnDestroy() {
+    this.fecharDocumento();
   }
 }
