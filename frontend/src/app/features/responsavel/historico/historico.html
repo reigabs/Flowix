@@ -11,6 +11,15 @@
     </a>
 
     <h1>Histórico</h1>
+
+    <!-- foi implementado isso aqui (botão para limpar somente as justificativas enviadas pela Responsável) -->
+    <button
+      type="button"
+      class="botao-limpar-historico"
+      (click)="limparHistorico()"
+    >
+      Limpar histórico
+    </button>
   </header>
 
   <section class="historico-conteudo">
@@ -204,7 +213,7 @@
   </section>
 </div>
 
-<!-- foi implementado isso aqui: visualizador do documento, aberto dentro da própria página (sem outra aba e sem tela cheia) -->
+<!-- foi implementado isso aqui: visualizador do documento, aberto dentro da própria página -->
 <div class="visualizador-overlay" *ngIf="visualizando">
   <div class="visualizador" role="dialog" aria-modal="true" aria-label="Documento anexado">
 
@@ -215,19 +224,16 @@
       </div>
 
       <div class="visualizador-botoes">
-        <!-- foi implementado isso aqui: mantém somente o botão para fechar o visualizador -->
-        <button type="button" class="visualizador-botao sair" (click)="fecharDocumento()">Sair</button>
+        <!-- foi implementado isso aqui: fecha o visualizador e os detalhes da justificativa selecionada -->
+        <button type="button" class="visualizador-botao sair" (click)="sairDocumento()">Sair</button>
       </div>
     </header>
-
-    <p class="visualizador-aviso" *ngIf="avisoDoc">{{ avisoDoc }}</p>
 
     <div class="visualizador-corpo">
       <iframe *ngIf="!docEhImagem && docPdfUrl" [src]="docPdfUrl" title="Documento anexado"></iframe>
       <img
         *ngIf="docEhImagem"
         [src]="docDataUrl"
-        [style.transform]="transformacao"
         alt="Documento anexado"
       />
     </div>

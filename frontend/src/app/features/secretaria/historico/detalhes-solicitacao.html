@@ -1,10 +1,15 @@
 
 <div class="historico-container">
-  
+
   @if (!itemSelecionado) {
     <div class="header-section">
       <h2>Histórico</h2>
       <p>Registro de todas as solicitações já aprovadas ou rejeitadas</p>
+
+      <!-- foi implementado isso aqui (botão para apagar todas as justificativas, notificações e documentos do Flowix) -->
+      <button class="btn-limpar-historico" type="button" (click)="limparHistoricoCompleto()">
+        Limpar histórico
+      </button>
     </div>
 
     @if (listaHistorico.length === 0) {
@@ -137,10 +142,6 @@
           <button class="visualizador-botao sair" (click)="fecharDocumento()">Sair</button>
         </div>
       </div>
-
-      @if (avisoDoc) {
-        <p class="visualizador-aviso">{{ avisoDoc }}</p>
-      }
 
       <div class="visualizador-corpo">
         @if (docEhImagem) {

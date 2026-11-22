@@ -1,7 +1,16 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  inject
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import {
+  DomSanitizer,
+  SafeResourceUrl
+} from '@angular/platform-browser';
 import { JustificativaService } from '../../../core/services/justificativa.service';
 import { Justificativa } from '../../../core/models/justificativa.model';
 
@@ -12,46 +21,38 @@ import { Justificativa } from '../../../core/models/justificativa.model';
   templateUrl: './solicitacoes.html',
   styleUrl: './solicitacoes.css'
 })
-export class SolicitacoesComponent implements OnInit, OnDestroy {
+export class SolicitacoesComponent implements OnInit {
   private service = inject(JustificativaService);
   private sanitizer = inject(DomSanitizer);
+  private cdr = inject(ChangeDetectorRef);
 
   filtroAtual: string = 'Pendentes';
   solicitacoes: Justificativa[] = [];
   mensagem: string = '';
 
-  // foi implementado isso aqui (paginação: 5 solicitações por página)
+  // Paginação: 5 solicitações por página
   itensPorPagina: number = 5;
   paginaAtual: number = 1;
 
-  // ids dos cartões abertos pelo botão "Ver solicitação"
+  // IDs dos cartões abertos pelo botão "Ver solicitação"
   private abertos = new Set<string>();
 
-  // um único modal para aceitar e rejeitar
+  // Modal único para aceitar e rejeitar
   exibirModal = false;
   acaoModal: 'aceitar' | 'rejeitar' = 'aceitar';
   alvoModal: Justificativa | null = null;
   observacao = '';
   erroModal = '';
 
-  // estado do visualizador de documento, que abre dentro da página
+  // Estado do visualizador de documentos
   visualizando = false;
   docAtual: Justificativa | null = null;
   docEhImagem = false;
   docDataUrl = '';
   docPdfUrl: SafeResourceUrl | null = null;
-  private blobUrl: string | null = null;
-  editando = false;
-  rotacao = 0;
-  zoom = 1;
-  avisoDoc = '';
 
   ngOnInit() {
     this.carregar();
-  }
-
-  ngOnDestroy() {
-    this.liberarBlob();
   }
 
   private carregar() {
@@ -61,7 +62,6 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
   filtrar(filtro: string) {
     this.filtroAtual = filtro;
     this.mensagem = '';
-    // foi implementado isso aqui (ao trocar de aba, volta para a página 1)
     this.paginaAtual = 1;
   }
 
@@ -71,34 +71,48 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
       Aprovadas: 'aceita',
       Rejeitadas: 'rejeitada'
     };
+
     const alvo = mapa[this.filtroAtual];
-    return alvo ? this.solicitacoes.filter(j => j.status === alvo) : this.solicitacoes;
+
+    return alvo
+      ? this.solicitacoes.filter(j => j.status === alvo)
+      : this.solicitacoes;
   }
 
-  // foi implementado isso aqui (total de páginas, calculado a partir da lista filtrada)
+  // Total de páginas calculado a partir da lista filtrada
   get totalPaginas(): number {
-    return Math.max(1, Math.ceil(this.solicitacoesFiltradas.length / this.itensPorPagina));
+    return Math.max(
+      1,
+      Math.ceil(this.solicitacoesFiltradas.length / this.itensPorPagina)
+    );
   }
 
-  // foi implementado isso aqui (números dos botões de página: 1, 2, 3...)
+  // Números dos botões de página
   get paginas(): number[] {
-    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+    return Array.from(
+      { length: this.totalPaginas },
+      (_, i) => i + 1
+    );
   }
 
-  // foi implementado isso aqui (só as solicitações da página atual; a página 2 mostra as mais antigas)
+  // Solicitações da página atual
   get solicitacoesDaPagina(): Justificativa[] {
     const inicio = (this.paginaAtual - 1) * this.itensPorPagina;
-    return this.solicitacoesFiltradas.slice(inicio, inicio + this.itensPorPagina);
+
+    return this.solicitacoesFiltradas.slice(
+      inicio,
+      inicio + this.itensPorPagina
+    );
   }
 
-  // foi implementado isso aqui (só muda para uma página que existe)
+  // Só permite navegar para páginas existentes
   mudarPagina(pagina: number) {
     if (pagina >= 1 && pagina <= this.totalPaginas) {
       this.paginaAtual = pagina;
     }
   }
 
-  // foi implementado isso aqui (depois de aceitar ou rejeitar a lista encolhe; se a página atual deixou de existir, volta para a última)
+  // Ajusta a página depois de aceitar ou rejeitar uma solicitação
   private ajustarPagina() {
     if (this.paginaAtual > this.totalPaginas) {
       this.paginaAtual = this.totalPaginas;
@@ -110,6 +124,7 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
   }
 
   // ---------- exibição ----------
+
   numero(j: Justificativa): string {
     return this.service.formatarNumero(j.numero);
   }
@@ -126,18 +141,29 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
   }
 
   statusTexto(j: Justificativa): string {
-    return { pendente: 'Em análise', aceita: 'Aprovada', rejeitada: 'Rejeitada' }[j.status];
+    return {
+      pendente: 'Em análise',
+      aceita: 'Aprovada',
+      rejeitada: 'Rejeitada'
+    }[j.status];
   }
 
   statusClasse(j: Justificativa): string {
-    return { pendente: 'em-analise', aceita: 'aprovado', rejeitada: 'rejeitado' }[j.status];
+    return {
+      pendente: 'em-analise',
+      aceita: 'aprovado',
+      rejeitada: 'rejeitado'
+    }[j.status];
   }
 
   enviadoPor(j: Justificativa): string {
-    return j.enviadoPor === 'responsavel' ? 'Responsável' : 'Aluno';
+    return j.enviadoPor === 'responsavel'
+      ? 'Responsável'
+      : 'Aluno';
   }
 
-  // abre e fecha os detalhes do cartão
+  // ---------- detalhes da solicitação ----------
+
   alternarDetalhes(j: Justificativa) {
     if (this.abertos.has(j.id)) {
       this.abertos.delete(j.id);
@@ -151,12 +177,17 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
   }
 
   // ---------- documento ----------
-  async verDocumento(j: Justificativa) {
+
+  // foi ajustado isso aqui: abre o documento diretamente pela Data URL, sem aguardar fetch ou conversão para Blob
+  verDocumento(j: Justificativa) {
     this.mensagem = '';
+
     const dataUrl = this.service.buscarDocumento(j.id);
 
     if (!dataUrl) {
-      this.mensagem = `A justificativa ${this.numero(j)} não tem documento anexado.`;
+      this.mensagem =
+        `A justificativa ${this.numero(j)} não tem documento anexado.`;
+
       return;
     }
 
@@ -166,20 +197,45 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     this.docDataUrl = dataUrl;
     this.docEhImagem = (j.documento?.tipo ?? '').startsWith('image/');
 
-    // PDF: precisa virar um endereço temporário para aparecer dentro da página
+    // foi ajustado isso aqui: utiliza a Data URL original para exibir o PDF imediatamente
     if (!this.docEhImagem) {
-      try {
-        const blob = await (await fetch(dataUrl)).blob();
-        this.blobUrl = URL.createObjectURL(blob);
-        this.docPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.blobUrl);
-      } catch {
-        this.docAtual = null;
-        this.mensagem = 'Não foi possível abrir o documento.';
-        return;
-      }
+      this.docPdfUrl =
+        this.sanitizer.bypassSecurityTrustResourceUrl(
+          `${dataUrl}#toolbar=0&navpanes=0`
+        );
     }
 
+    // foi ajustado isso aqui: ativa o visualizador sem esperar processamento assíncrono
     this.visualizando = true;
+
+    // Atualiza a interface imediatamente após preparar o documento
+    this.cdr.detectChanges();
+  }
+
+  // foi implementado isso aqui: permite à Secretaria baixar o documento original diretamente pelo Flowix
+  baixarDocumento(j: Justificativa) {
+    this.mensagem = '';
+
+    const dataUrl = this.service.buscarDocumento(j.id);
+
+    if (!dataUrl) {
+      this.mensagem =
+        `A justificativa ${this.numero(j)} não tem documento anexado.`;
+
+      return;
+    }
+
+    // foi implementado isso aqui: utiliza o nome original do arquivo no download
+    const nomeArquivo = j.documento?.nome?.trim() || `documento-${this.numero(j)}`;
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = nomeArquivo;
+    link.style.display = 'none';
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   }
 
   fecharDocumento() {
@@ -187,108 +243,10 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     this.docAtual = null;
     this.docDataUrl = '';
     this.docPdfUrl = null;
-    this.editando = false;
-    this.rotacao = 0;
-    this.zoom = 1;
-    this.avisoDoc = '';
-    this.liberarBlob();
-  }
-
-  private liberarBlob() {
-    if (this.blobUrl) {
-      URL.revokeObjectURL(this.blobUrl);
-      this.blobUrl = null;
-    }
-  }
-
-  iniciarEdicao() {
-    if (!this.docEhImagem) return;
-    this.avisoDoc = '';
-    this.rotacao = 0;
-    this.zoom = 1;
-    this.editando = true;
-  }
-
-  cancelarEdicao() {
-    this.editando = false;
-    this.rotacao = 0;
-    this.zoom = 1;
-  }
-
-  girar(graus: number) {
-    this.rotacao = (this.rotacao + graus) % 360;
-  }
-
-  alterarZoom(passo: number) {
-    this.zoom = Math.min(3, Math.max(0.5, Math.round((this.zoom + passo) * 10) / 10));
-  }
-
-  get transformacao(): string {
-    return `rotate(${this.rotacao}deg) scale(${this.zoom})`;
-  }
-
-  async salvarEdicao() {
-    if (!this.docAtual) return;
-
-    const graus = ((this.rotacao % 360) + 360) % 360;
-
-    // nada foi girado: só sai do modo de edição
-    if (graus === 0) {
-      this.cancelarEdicao();
-      return;
-    }
-
-    try {
-      const novo = await this.rotacionarImagem(
-        this.docDataUrl,
-        graus,
-        this.docAtual.documento?.tipo ?? 'image/jpeg'
-      );
-
-      // tamanho aproximado do arquivo, a partir do texto base64
-      const tamanho = Math.round(novo.length * 0.75);
-
-      this.service.substituirDocumento(this.docAtual.id, novo, tamanho);
-
-      this.docDataUrl = novo;
-      this.cancelarEdicao();
-      this.carregar();
-      this.avisoDoc = 'Alterações salvas no documento.';
-    } catch {
-      this.avisoDoc = 'Não foi possível salvar. A imagem editada pode ser grande demais.';
-    }
-  }
-
-  private rotacionarImagem(dataUrl: string, graus: number, tipo: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-
-      img.onload = () => {
-        const trocaLados = graus === 90 || graus === 270;
-        const canvas = document.createElement('canvas');
-        canvas.width = trocaLados ? img.height : img.width;
-        canvas.height = trocaLados ? img.width : img.height;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          reject(new Error('canvas indisponível'));
-          return;
-        }
-
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate((graus * Math.PI) / 180);
-        ctx.drawImage(img, -img.width / 2, -img.height / 2);
-
-        const saida = tipo === 'image/png' ? 'image/png' : 'image/jpeg';
-        resolve(canvas.toDataURL(saida, 0.92));
-      };
-
-      img.onerror = () => reject(new Error('imagem inválida'));
-      img.src = dataUrl;
-    });
   }
 
   // ---------- responder ----------
+
   abrirAceitar(j: Justificativa) {
     this.abrirModal(j, 'aceitar');
   }
@@ -297,7 +255,10 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     this.abrirModal(j, 'rejeitar');
   }
 
-  private abrirModal(j: Justificativa, acao: 'aceitar' | 'rejeitar') {
+  private abrirModal(
+    j: Justificativa,
+    acao: 'aceitar' | 'rejeitar'
+  ) {
     this.alvoModal = j;
     this.acaoModal = acao;
     this.observacao = '';
@@ -310,7 +271,7 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     this.alvoModal = null;
   }
 
-  // observação opcional ao aceitar, obrigatória ao rejeitar
+  // Observação opcional ao aceitar e obrigatória ao rejeitar
   confirmarModal() {
     if (!this.alvoModal) return;
 
@@ -324,11 +285,18 @@ export class SolicitacoesComponent implements OnInit, OnDestroy {
     const j = this.alvoModal;
     const aceitar = this.acaoModal === 'aceitar';
 
-    this.service.responder(j.id, aceitar ? 'aceita' : 'rejeitada', texto);
+    this.service.responder(
+      j.id,
+      aceitar ? 'aceita' : 'rejeitada',
+      texto
+    );
+
     this.fecharModal();
     this.carregar();
-    // foi implementado isso aqui (garante que a página atual ainda existe depois da resposta)
+
+    // Garante que a página atual ainda existe depois da resposta
     this.ajustarPagina();
+
     this.mensagem =
       `Justificativa ${this.numero(j)} ${aceitar ? 'aprovada' : 'rejeitada'}. ` +
       `Aluno e responsável foram notificados.`;

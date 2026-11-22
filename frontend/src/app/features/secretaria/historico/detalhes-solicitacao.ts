@@ -1,6 +1,6 @@
 
 // foi implementado isso aqui (OnDestroy para liberar a URL temporária do documento quando o componente for destruído)
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // foi implementado isso aqui (DomSanitizer e SafeResourceUrl para exibir o PDF com segurança no iframe)
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -41,6 +41,9 @@ export class HistoricoComponent implements OnInit, OnDestroy {
   // foi implementado isso aqui (sanitizador usado para liberar a URL temporária do PDF no iframe)
   private sanitizer = inject(DomSanitizer);
 
+  // foi implementado isso aqui (atualiza a interface depois do carregamento assíncrono do PDF)
+  private cdr = inject(ChangeDetectorRef);
+
   itemSelecionado: ItemHistorico | null = null;
   paginaAtual: number = 1;
 
@@ -60,7 +63,6 @@ export class HistoricoComponent implements OnInit, OnDestroy {
   docDataUrl: string = '';
   docPdfUrl: SafeResourceUrl | null = null;
   private blobUrl: string | null = null;
-  avisoDoc: string = '';
 
   ngOnInit() {
     this.carregarHistorico();
@@ -145,10 +147,39 @@ export class HistoricoComponent implements OnInit, OnDestroy {
     }
   }
 
+  // foi implementado isso aqui (solicita a senha exclusiva e executa a limpeza global dos dados do Flowix)
+  limparHistoricoCompleto() {
+    const senha = window.prompt('Digite a senha para limpar todos os dados do Flowix:');
+
+    if (senha === null) {
+      return;
+    }
+
+    // foi implementado isso aqui (valida a senha exclusiva da limpeza da Secretaria)
+    if (senha.trim() !== '1990') {
+      window.alert('Senha incorreta. Nenhum dado foi apagado.');
+      return;
+    }
+
+    // foi implementado isso aqui (executa a limpeza global de justificativas, notificações e documentos)
+    const totalRemovido = this.service.limparTodosOsDadosDaSecretaria();
+
+    // foi implementado isso aqui (fecha qualquer documento aberto e atualiza a tela após a limpeza)
+    this.fecharDocumento();
+    this.itemSelecionado = null;
+    this.paginaAtual = 1;
+    this.mensagemDocumento = '';
+    this.carregarHistorico();
+
+    // foi implementado isso aqui (informa a conclusão da limpeza)
+    window.alert(
+      `Limpeza concluída! ${totalRemovido} justificativa(s) removida(s). Todos os documentos e notificações também foram apagados.`
+    );
+  }
+
   // foi implementado isso aqui (abre o documento dentro de um painel central, sem criar outra aba)
   async abrirDocumento(item: ItemHistorico) {
     this.mensagemDocumento = '';
-    this.avisoDoc = '';
 
     const dataUrl = this.service.buscarDocumento(item.id);
 
@@ -176,11 +207,22 @@ export class HistoricoComponent implements OnInit, OnDestroy {
       const blob = await resposta.blob();
 
       this.blobUrl = URL.createObjectURL(blob);
-      this.docPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.blobUrl);
+
+      // foi implementado isso aqui (remove os controles internos do visualizador PDF, mantendo o documento no iframe)
+      this.docPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+        `${this.blobUrl}#toolbar=0&navpanes=0`
+      );
+
       this.visualizando = true;
+
+      // foi implementado isso aqui (força a atualização da interface assim que o PDF termina de carregar)
+      this.cdr.detectChanges();
     } catch {
       this.fecharDocumento();
       this.mensagemDocumento = 'Não foi possível abrir o documento.';
+
+      // foi implementado isso aqui (atualiza a mensagem de erro após a falha no carregamento assíncrono)
+      this.cdr.detectChanges();
     }
   }
 
@@ -191,7 +233,6 @@ export class HistoricoComponent implements OnInit, OnDestroy {
     this.docEhImagem = false;
     this.docDataUrl = '';
     this.docPdfUrl = null;
-    this.avisoDoc = '';
 
     // foi implementado isso aqui (revoga a URL temporária para liberar memória)
     if (this.blobUrl) {

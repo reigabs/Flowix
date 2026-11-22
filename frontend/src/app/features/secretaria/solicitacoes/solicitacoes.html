@@ -91,6 +91,16 @@
               >
                 Ver documento
               </button>
+
+              <!-- foi implementado isso aqui: botão próprio do Flowix para baixar o documento original -->
+              <button
+                type="button"
+                class="botao-baixar"
+                [disabled]="!j.documento"
+                (click)="baixarDocumento(j)"
+              >
+                Baixar documento
+              </button>
             </div>
 
           </ng-container>
@@ -193,14 +203,13 @@
       </div>
     </header>
 
-    <p class="visualizador-aviso" *ngIf="avisoDoc">{{ avisoDoc }}</p>
+    <!-- foi mantida a visualização do documento sem a barra nativa de ferramentas do PDF -->
 
     <div class="visualizador-corpo">
       <iframe *ngIf="!docEhImagem && docPdfUrl" [src]="docPdfUrl" title="Documento anexado"></iframe>
       <img
         *ngIf="docEhImagem"
         [src]="docDataUrl"
-        [style.transform]="transformacao"
         alt="Documento anexado"
       />
     </div>

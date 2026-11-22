@@ -1,3 +1,4 @@
+
 :host {
   display: block;
   min-height: 100vh;
@@ -247,6 +248,9 @@
 
 .cartao-documento {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 /* Botões do cartão */
@@ -278,6 +282,23 @@
 }
 
 .botao-doc:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* foi implementado isso aqui: estilo do botão próprio de download do Flowix */
+.botao-baixar {
+  border: 2px solid #4b1eaa;
+  background: #4b1eaa;
+  color: #fff;
+}
+
+.botao-baixar:hover:not(:disabled) {
+  border-color: #351078;
+  background: #351078;
+}
+
+.botao-baixar:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -555,26 +576,7 @@
   transition: 0.2s;
 }
 
-.visualizador-botao:hover:not(:disabled) {
-  background: #f8f9fa;
-}
-
-.visualizador-botao:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.visualizador-botao.principal {
-  border-color: #4b1eaa;
-  background: #4b1eaa;
-  color: #fff;
-}
-
-.visualizador-botao.principal:hover {
-  border-color: #351078;
-  background: #351078;
-}
-
+/* foi ajustado isso aqui (o visualizador agora possui somente o botão Sair) */
 .visualizador-botao.sair {
   border-color: #b91c1c;
   color: #b91c1c;
@@ -582,15 +584,6 @@
 
 .visualizador-botao.sair:hover {
   background: #fee2e2;
-}
-
-.visualizador-aviso {
-  margin: 0;
-  padding: 10px 20px;
-  background: #f3e8ff;
-  color: #4b1eaa;
-  font-size: 13px;
-  font-weight: bold;
 }
 
 .visualizador-corpo {
@@ -614,7 +607,6 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  transition: transform 0.2s ease;
 }
 
 /* Responsividade */
@@ -641,12 +633,15 @@
     flex-wrap: wrap;
   }
 
-  .botao-doc {
+  /* foi ajustado isso aqui: os dois botões de documento ocupam a largura disponível no celular */
+  .botao-doc,
+  .botao-baixar {
     width: 100%;
   }
 
   .cartao-documento {
-    display: block;
+    display: flex;
+    width: 100%;
   }
 
   .visualizador-overlay {

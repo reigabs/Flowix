@@ -18,6 +18,23 @@
   margin-bottom: 24px;
 }
 
+/* foi implementado isso aqui (estilo do botão de limpeza total do histórico da Secretaria) */
+.btn-limpar-historico {
+  background: #dc2626;
+  border: none;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-limpar-historico:hover {
+  background: #b91c1c;
+}
+
 .empty-state {
   background: white;
   border-radius: 12px;
@@ -302,15 +319,6 @@
   transition: 0.2s;
 }
 
-.visualizador-botao:hover:not(:disabled) {
-  background: #f8f9fa;
-}
-
-.visualizador-botao:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .visualizador-botao.sair {
   border-color: #b91c1c;
   color: #b91c1c;
@@ -318,15 +326,6 @@
 
 .visualizador-botao.sair:hover {
   background: #fee2e2;
-}
-
-.visualizador-aviso {
-  margin: 0;
-  padding: 10px 20px;
-  background: #f3e8ff;
-  color: #4b1eaa;
-  font-size: 13px;
-  font-weight: bold;
 }
 
 .visualizador-corpo {
@@ -350,7 +349,6 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  transition: transform 0.2s ease;
 }
 
 /* =====================================

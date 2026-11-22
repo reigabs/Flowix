@@ -1,3 +1,4 @@
+
 :host {
   display: block;
   min-height: 100vh;
@@ -69,6 +70,26 @@
   font-weight: bold;
 }
 
+/* foi implementado isso aqui: botão de limpeza alinhado à direita no cabeçalho do histórico */
+.botao-limpar-historico {
+  margin-left: auto;
+  min-height: 40px;
+  padding: 9px 18px;
+  border: 1px solid #b91c1c;
+  border-radius: 9px;
+  background: #fff;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.botao-limpar-historico:hover {
+  background: #b91c1c;
+  color: #fff;
+}
+
 /* Abas de Filtro */
 .abas-filtro {
   display: flex;
@@ -123,10 +144,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   border: 1px solid transparent;
   transition: border-color 0.2s;
-}
-
-.linha-historico.destacado {
-  border: 2px solid #b57edc;
 }
 
 .col-id {
@@ -411,7 +428,7 @@
   background-color: #3a0ca3;
 }
 
-/* foi implementado isso aqui: visualizador do documento (painel no meio da tela, sem tela cheia, acima do modal de detalhes) */
+/* foi implementado isso aqui: visualizador do documento dentro da própria página */
 .visualizador-overlay {
   position: fixed;
   inset: 0;
@@ -485,26 +502,6 @@
   transition: 0.2s;
 }
 
-.visualizador-botao:hover:not(:disabled) {
-  background: #f8f9fa;
-}
-
-.visualizador-botao:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.visualizador-botao.principal {
-  border-color: #4b1eaa;
-  background: #4b1eaa;
-  color: #fff;
-}
-
-.visualizador-botao.principal:hover {
-  border-color: #351078;
-  background: #351078;
-}
-
 .visualizador-botao.sair {
   border-color: #b91c1c;
   color: #b91c1c;
@@ -512,15 +509,6 @@
 
 .visualizador-botao.sair:hover {
   background: #fee2e2;
-}
-
-.visualizador-aviso {
-  margin: 0;
-  padding: 10px 20px;
-  background: #f3e8ff;
-  color: #4b1eaa;
-  font-size: 13px;
-  font-weight: bold;
 }
 
 .visualizador-corpo {
@@ -544,7 +532,6 @@
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  transition: transform 0.2s ease;
 }
 
 /* Responsividade */
@@ -569,7 +556,7 @@
     padding: 0;
   }
 
-  /* foi implementado isso aqui: no celular, o visualizador ocupa melhor a tela e os botões descem para baixo do título */
+  /* foi implementado isso aqui: no celular, o visualizador ocupa melhor a tela e o botão desce para baixo do título */
   .visualizador-overlay {
     padding: 12px;
   }
@@ -585,5 +572,19 @@
 
   .visualizador-botoes {
     justify-content: flex-start;
+  }
+
+  /* foi implementado isso aqui: adapta o botão de limpeza ao cabeçalho em telas menores */
+  .botao-limpar-historico {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .cabecalho-pagina {
+    flex-wrap: wrap;
+  }
+
+  .cabecalho-pagina h1 {
+    font-size: 21px;
   }
 }

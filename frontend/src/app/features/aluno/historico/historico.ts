@@ -1,4 +1,4 @@
-// foi implementado isso aqui (OnDestroy adicionado ao import, para liberar o PDF aberto ao sair da tela)
+
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -12,14 +12,12 @@ import { Justificativa } from '../../../core/models/justificativa.model';
 interface ItemHistorico {
   id: string;
   numero: string;
-  data: string;        // data da falta
+  data: string;
   dataEnvio: string;
-  tipo: string;        // motivo
+  tipo: string;
   status: string;
   statusClass: string;
   observacao: string;
-  // foi implementado isso aqui (dados do documento e se ainda está em análise, para o visualizador)
-  emAnalise: boolean;
   temDocumento: boolean;
   docNome: string;
   docTipo: string;
@@ -32,7 +30,7 @@ interface ItemHistorico {
   templateUrl: './historico.html',
   styleUrl: './historico.css'
 })
-// foi implementado isso aqui (implements OnDestroy)
+// foi implementado isso aqui (implements OnDestroy para liberar o PDF ao sair da tela)
 export class Historico implements OnInit, OnDestroy {
   // foi implementado isso aqui (service injetado)
   private justificativaService = inject(JustificativaService);
@@ -44,7 +42,7 @@ export class Historico implements OnInit, OnDestroy {
   // foi implementado isso aqui (lista real, começa vazia; a lista de exemplo saiu)
   todasSolicitacoes: ItemHistorico[] = [];
 
-  // foi implementado isso aqui (paginação real: 5 itens por página; antes era [1, 2, 3] fixo)
+  // foi implementado isso aqui (paginação real: 5 itens por página)
   itensPorPagina: number = 5;
   paginaAtual: number = 1;
 
@@ -61,12 +59,8 @@ export class Historico implements OnInit, OnDestroy {
   docDataUrl = '';
   docPdfUrl: SafeResourceUrl | null = null;
   private blobUrl: string | null = null;
-  editando = false;
-  rotacao = 0;
-  zoom = 1;
-  avisoDoc = '';
 
-  // foi implementado isso aqui (carrega só as justificativas do aluno logado)
+  // foi implementado isso aqui (carrega as justificativas do aluno logado)
   ngOnInit() {
     this.carregar();
   }
@@ -76,7 +70,7 @@ export class Historico implements OnInit, OnDestroy {
     this.liberarBlob();
   }
 
-  // foi implementado isso aqui (separado do ngOnInit para poder recarregar depois de salvar a edição)
+  // foi implementado isso aqui (carrega novamente a lista de justificativas do aluno)
   private carregar() {
     const nome = this.justificativaService.obterNomeAlunoLogado();
 
@@ -92,12 +86,13 @@ export class Historico implements OnInit, OnDestroy {
     const svc = this.justificativaService;
 
     const status = {
-      pendente:  { texto: 'Em análise', classe: 'em-analise' },
-      aceita:    { texto: 'Aprovado',   classe: 'aprovado' },
-      rejeitada: { texto: 'Rejeitado',  classe: 'rejeitado' }
+      pendente: { texto: 'Em análise', classe: 'em-analise' },
+      aceita: { texto: 'Aprovado', classe: 'aprovado' },
+      rejeitada: { texto: 'Rejeitado', classe: 'rejeitado' }
     }[j.status];
 
     let observacao = 'Aguardando análise da secretaria.';
+
     if (j.status === 'aceita') {
       // foi implementado isso aqui (mostra a observação opcional que a secretaria escreveu ao aceitar)
       observacao = j.observacaoAprovacao?.trim() || 'Justificativa aceita pela secretaria.';
@@ -119,8 +114,7 @@ export class Historico implements OnInit, OnDestroy {
       status: status.texto,
       statusClass: status.classe,
       observacao,
-      // foi implementado isso aqui (dados do documento para o visualizador)
-      emAnalise: j.status === 'pendente',
+      // foi implementado isso aqui (mantém os dados necessários para exibir o documento anexado)
       temDocumento: !!j.documento,
       docNome: j.documento?.nome ?? '',
       docTipo: j.documento?.tipo ?? ''
@@ -137,6 +131,7 @@ export class Historico implements OnInit, OnDestroy {
     if (this.filtroAtual === 'Todas') {
       return this.todasSolicitacoes;
     }
+
     // "Pendentes" e "Em análise" apontam para o mesmo status por enquanto
     const alvo = this.filtroAtual === 'Pendentes' ? 'Em análise' : this.filtroAtual;
     return this.todasSolicitacoes.filter(item => item.status === alvo);
@@ -177,7 +172,43 @@ export class Historico implements OnInit, OnDestroy {
     }
   }
 
+  // foi implementado isso aqui (solicita a senha e executa a limpeza do histórico do aluno)
+  limparHistorico() {
+    const senha = window.prompt('Digite a senha para limpar o histórico do Aluno:');
+
+    if (senha === null) {
+      return;
+    }
+
+    // foi implementado isso aqui (confere a senha exclusiva da limpeza)
+    if (senha !== '175161214') {
+      window.alert('Senha incorreta. Nenhum dado foi apagado.');
+      return;
+    }
+
+    // foi implementado isso aqui (limpa somente as justificativas enviadas pelo próprio aluno)
+    const nomeAluno = this.justificativaService.obterNomeAlunoLogado();
+    const quantidadeRemovida = this.justificativaService.limparJustificativasDoAluno(nomeAluno);
+
+    // foi implementado isso aqui (fecha possíveis janelas abertas antes de atualizar o histórico)
+    this.fecharDocumento();
+    this.fecharModal();
+
+    // foi implementado isso aqui (atualiza o histórico depois da limpeza)
+    this.filtroAtual = 'Todas';
+    this.paginaAtual = 1;
+    this.carregar();
+
+    // foi implementado isso aqui (informa o resultado da limpeza)
+    if (quantidadeRemovida > 0) {
+      window.alert(`${quantidadeRemovida} justificativa(s) do Aluno foram apagadas com sucesso.`);
+    } else {
+      window.alert('Não foram encontradas justificativas enviadas pelo Aluno para apagar.');
+    }
+  }
+
   // ---------- documento ----------
+
   // foi implementado isso aqui (abre o documento num painel dentro da própria página, sem trocar a URL e sem outra aba)
   async verDocumento(item: ItemHistorico) {
     this.mensagemDocumento = '';
@@ -199,7 +230,11 @@ export class Historico implements OnInit, OnDestroy {
       try {
         const blob = await (await fetch(dataUrl)).blob();
         this.blobUrl = URL.createObjectURL(blob);
-        this.docPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.blobUrl);
+
+        // foi implementado isso aqui: solicita ao visualizador PDF que oculte a barra de ferramentas e o painel de navegação
+        this.docPdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
+          `${this.blobUrl}#toolbar=0&navpanes=0`
+        );
       } catch {
         this.docAtual = null;
         this.mensagemDocumento = 'Não foi possível abrir o documento.';
@@ -207,19 +242,18 @@ export class Historico implements OnInit, OnDestroy {
       }
     }
 
+    // foi implementado isso aqui: fecha automaticamente os detalhes para o visualizador aparecer imediatamente
+    this.fecharModal();
+
     this.visualizando = true;
   }
 
-  // foi implementado isso aqui (botão "Sair": fecha o painel e descarta o que não foi salvo)
+  // foi implementado isso aqui (botão "Sair": fecha o painel e limpa o estado do visualizador)
   fecharDocumento() {
     this.visualizando = false;
     this.docAtual = null;
     this.docDataUrl = '';
     this.docPdfUrl = null;
-    this.editando = false;
-    this.rotacao = 0;
-    this.zoom = 1;
-    this.avisoDoc = '';
     this.liberarBlob();
   }
 
@@ -228,106 +262,5 @@ export class Historico implements OnInit, OnDestroy {
       URL.revokeObjectURL(this.blobUrl);
       this.blobUrl = null;
     }
-  }
-
-  // foi implementado isso aqui (a edição só vale para imagens e enquanto a justificativa está em análise)
-  get podeEditar(): boolean {
-    return this.docEhImagem && !!this.docAtual?.emAnalise;
-  }
-
-  // foi implementado isso aqui (texto que explica por que o botão "Editar documento" pode estar desativado)
-  get dicaEdicao(): string {
-    if (!this.docEhImagem) return 'A edição está disponível só para imagens (JPG e PNG)';
-    if (!this.docAtual?.emAnalise) return 'O documento só pode ser editado enquanto a justificativa está em análise';
-    return 'Girar e ampliar a imagem';
-  }
-
-  // foi implementado isso aqui (botão "Editar documento": liga as ferramentas)
-  iniciarEdicao() {
-    if (!this.podeEditar) return;
-    this.avisoDoc = '';
-    this.rotacao = 0;
-    this.zoom = 1;
-    this.editando = true;
-  }
-
-  // foi implementado isso aqui (botão "Cancelar" da edição: desfaz o que não foi salvo)
-  cancelarEdicao() {
-    this.editando = false;
-    this.rotacao = 0;
-    this.zoom = 1;
-  }
-
-  // foi implementado isso aqui (gira a imagem para a esquerda ou direita)
-  girar(graus: number) {
-    this.rotacao = (this.rotacao + graus) % 360;
-  }
-
-  // foi implementado isso aqui (amplia ou reduz a imagem, entre 50% e 300%)
-  alterarZoom(passo: number) {
-    this.zoom = Math.min(3, Math.max(0.5, Math.round((this.zoom + passo) * 10) / 10));
-  }
-
-  // foi implementado isso aqui (estilo aplicado na imagem enquanto edita)
-  get transformacao(): string {
-    return `rotate(${this.rotacao}deg) scale(${this.zoom})`;
-  }
-
-  // foi implementado isso aqui (botão "Salvar": grava a rotação no documento da justificativa)
-  async salvarEdicao() {
-    if (!this.docAtual) return;
-
-    const graus = ((this.rotacao % 360) + 360) % 360;
-
-    // nada foi girado: só sai do modo de edição
-    if (graus === 0) {
-      this.cancelarEdicao();
-      return;
-    }
-
-    try {
-      const novo = await this.rotacionarImagem(this.docDataUrl, graus, this.docAtual.docTipo);
-
-      // tamanho aproximado do arquivo, a partir do texto base64
-      const tamanho = Math.round(novo.length * 0.75);
-
-      this.justificativaService.substituirDocumento(this.docAtual.id, novo, tamanho);
-
-      this.docDataUrl = novo;
-      this.cancelarEdicao();
-      this.avisoDoc = 'Alterações salvas no documento.';
-    } catch {
-      this.avisoDoc = 'Não foi possível salvar. A imagem editada pode ser grande demais.';
-    }
-  }
-
-  // foi implementado isso aqui (aplica a rotação na imagem de verdade, usando um canvas)
-  private rotacionarImagem(dataUrl: string, graus: number, tipo: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-
-      img.onload = () => {
-        const trocaLados = graus === 90 || graus === 270;
-        const canvas = document.createElement('canvas');
-        canvas.width = trocaLados ? img.height : img.width;
-        canvas.height = trocaLados ? img.width : img.height;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          reject(new Error('canvas indisponível'));
-          return;
-        }
-
-        ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate((graus * Math.PI) / 180);
-        ctx.drawImage(img, -img.width / 2, -img.height / 2);
-
-        const saida = tipo === 'image/png' ? 'image/png' : 'image/jpeg';
-        resolve(canvas.toDataURL(saida, 0.92));
-      };
-
-      img.onerror = () => reject(new Error('imagem inválida'));
-      img.src = dataUrl;
-    });
   }
 }

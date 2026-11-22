@@ -1,6 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 import { JustificativaService } from '../../../core/services/justificativa.service';
 import { Notificacao } from '../../../core/models/justificativa.model';
 
@@ -19,9 +21,13 @@ interface ItemNotificacao {
   templateUrl: './notificacoes.html',
   styleUrl: './notificacoes.css'
 })
-export class NotificacoesResponsavel implements OnInit {
+// foi implementado isso aqui (OnDestroy para liberar a inscrição do Router)
+export class NotificacoesResponsavel implements OnInit, OnDestroy {
   private justificativaService = inject(JustificativaService);
   private router = inject(Router);
+
+  // foi implementado isso aqui (guarda a inscrição das mudanças de rota)
+  private inscricaoRota?: Subscription;
 
   abas: string[] = ['Todos', 'Não lidas', 'Lidas'];
   abaSelecionada: string = 'Todos';
@@ -34,14 +40,32 @@ export class NotificacoesResponsavel implements OnInit {
 
   ngOnInit() {
     this.carregar();
+
+    // foi implementado isso aqui (atualiza as notificações sempre que a tela voltar a ser acessada)
+    this.inscricaoRota = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        if (this.router.url === '/responsavel/notificacoes') {
+          this.carregar();
+        }
+      });
   }
 
+  // foi implementado isso aqui (libera a inscrição ao destruir o componente)
+  ngOnDestroy() {
+    this.inscricaoRota?.unsubscribe();
+  }
+
+  // foi implementado isso aqui (recarrega a lista diretamente do localStorage por meio do service)
   private carregar() {
     const nomesDosFilhos = this.justificativaService.obterNomesDosFilhos();
 
     this.listaNotificacoes = this.justificativaService
       .listarNotificacoes('responsavel', nomesDosFilhos)
       .map(n => this.paraItem(n));
+
+    // foi implementado isso aqui (evita permanecer em uma página que não existe após a atualização)
+    this.paginaAtual = Math.min(this.paginaAtual, this.totalPaginas);
   }
 
   private paraItem(n: Notificacao): ItemNotificacao {

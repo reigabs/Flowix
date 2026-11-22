@@ -16,6 +16,16 @@
         </button>
 
         <h1>Meu histórico</h1>
+
+        <!-- foi implementado isso aqui: botão para limpar o histórico do próprio aluno -->
+        <button
+          type="button"
+          class="botao-limpar-historico"
+          (click)="limparHistorico()"
+          title="Limpar justificativas enviadas pelo Aluno"
+        >
+          Limpar histórico
+        </button>
       </header>
 
       <!-- Abas de Filtro -->
@@ -59,7 +69,7 @@
 
       <!-- Lista de Solicitações -->
       <div class="lista-historico">
-        <!-- foi implementado isso aqui: a lista mostra só os itens da página atual (solicitacoesDaPagina); o destaque fixo no #3455 saiu e o número agora é item.numero -->
+        <!-- foi implementado isso aqui: a lista mostra só os itens da página atual; o número agora é item.numero -->
         <div
           class="linha-historico"
           *ngFor="let item of solicitacoesDaPagina"
@@ -187,7 +197,7 @@
   </div>
 </div>
 
-<!-- foi implementado isso aqui: visualizador do documento, aberto dentro da própria página (sem outra aba e sem tela cheia) -->
+<!-- foi implementado isso aqui: visualizador do documento, aberto dentro da própria página -->
 <div class="visualizador-overlay" *ngIf="visualizando">
   <div class="visualizador" role="dialog" aria-modal="true" aria-label="Documento anexado">
 
@@ -203,14 +213,11 @@
       </div>
     </header>
 
-    <p class="visualizador-aviso" *ngIf="avisoDoc">{{ avisoDoc }}</p>
-
     <div class="visualizador-corpo">
       <iframe *ngIf="!docEhImagem && docPdfUrl" [src]="docPdfUrl" title="Documento anexado"></iframe>
       <img
         *ngIf="docEhImagem"
         [src]="docDataUrl"
-        [style.transform]="transformacao"
         alt="Documento anexado"
       />
     </div>
