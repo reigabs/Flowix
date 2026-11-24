@@ -1,0 +1,168 @@
+
+<div class="inicio-container">
+
+  <div class="welcome-section">
+    <h2>Olá, {{ nomeUsuario }}! 👋</h2>
+    <p>Acompanhe os relatórios de justificativas analisados pela Secretaria.</p>
+  </div>
+
+  <section class="notifications-section">
+    <div class="section-header">
+      <div>
+        <h3>Relatórios recentes</h3>
+        <p>Relatórios disponibilizados pela Secretaria nos últimos 15 minutos.</p>
+      </div>
+
+      <span class="notification-counter">
+        {{ notificacoesRecentes.length }}/4 notificações
+      </span>
+    </div>
+
+    @if (notificacoesRecentes.length > 0) {
+      <div class="notifications-grid">
+        @for (item of notificacoesRecentes; track item.id) {
+          <article class="notification-card">
+
+            <div class="notification-card-header">
+              <div class="notification-icon">📄</div>
+
+              <span
+                class="status-badge"
+                [class.accepted]="item.status === 'aceita'"
+                [class.rejected]="item.status === 'rejeitada'">
+                {{ nomeStatus(item.status) }}
+              </span>
+            </div>
+
+            <div class="notification-info">
+              <span class="sender-label">{{ origemEnvio(item) }}</span>
+              <h4>{{ nomeRemetente(item) }}</h4>
+
+              <p>
+                Relatório da justificativa de
+                <strong>{{ item.nomeAluno }}</strong>
+                disponível para consulta.
+              </p>
+
+              <span class="report-number">
+                Relatório {{ justificativaService.formatarNumero(item.numero) }}
+              </span>
+            </div>
+
+            <div class="notification-card-footer">
+              <span class="time-remaining">
+                ⏱ {{ tempoRestante(item) }}
+              </span>
+
+              <button
+                type="button"
+                class="view-report-btn"
+                (click)="verRelatorio(item.id)">
+                Ver relatório
+              </button>
+            </div>
+
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty-notifications">
+        <div class="empty-icon">🔔</div>
+        <h4>Nenhum relatório recente</h4>
+        <p>Quando a Secretaria analisar uma justificativa, o relatório aparecerá aqui por 15 minutos.</p>
+      </div>
+    }
+  </section>
+
+  <div class="dashboard-bottom-grid">
+
+    <div class="dashboard-box calendar-box">
+      <div class="calendar-header">
+        <h3>Calendário</h3>
+
+        <div class="calendar-nav-container">
+          <button
+            class="cal-nav-btn"
+            (click)="mudarMes(-1)"
+            aria-label="Mês anterior">
+            ❮
+          </button>
+
+          <span class="month-selector">{{ mesNome }}</span>
+
+          <button
+            class="cal-nav-btn"
+            (click)="mudarMes(1)"
+            aria-label="Próximo mês">
+            ❯
+          </button>
+        </div>
+      </div>
+
+      <div class="calendar-grid">
+        <span class="cal-day-name">Su</span>
+        <span class="cal-day-name">Mo</span>
+        <span class="cal-day-name">Tu</span>
+        <span class="cal-day-name">We</span>
+        <span class="cal-day-name">Th</span>
+        <span class="cal-day-name">Fr</span>
+        <span class="cal-day-name">Sa</span>
+
+        @for (item of diasMes; track $index) {
+          @if (item.dia !== null) {
+            <span class="cal-day" [class.active]="item.ativo">
+              {{ item.dia }}
+            </span>
+          } @else {
+            <span class="cal-day empty"></span>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="dashboard-box chart-box">
+      <h3>Resumo da justificativa de faltas escolares</h3>
+
+      <div class="chart-placeholder">
+
+        <div class="donut-wrapper">
+          <div class="donut-chart" [style.background]="gradiente"></div>
+
+          <div class="donut-center">
+            <strong>{{ resumoJustificativas.total }}</strong>
+            <span>total</span>
+          </div>
+        </div>
+
+        <ul class="legenda">
+          <li>
+            <span class="ponto ponto-aceitas"></span>
+            <span class="legenda-nome">Justificativa aceita</span>
+            <strong>{{ resumoJustificativas.aceitas }}</strong>
+            <small>{{ percentual(resumoJustificativas.aceitas) }}%</small>
+          </li>
+
+          <li>
+            <span class="ponto ponto-rejeitadas"></span>
+            <span class="legenda-nome">Justificativa rejeitada</span>
+            <strong>{{ resumoJustificativas.rejeitadas }}</strong>
+            <small>{{ percentual(resumoJustificativas.rejeitadas) }}%</small>
+          </li>
+
+          <li>
+            <span class="ponto ponto-processamento"></span>
+            <span class="legenda-nome">Em processamento</span>
+            <strong>{{ resumoJustificativas.emProcessamento }}</strong>
+            <small>{{ percentual(resumoJustificativas.emProcessamento) }}%</small>
+          </li>
+        </ul>
+      </div>
+
+      <div class="chart-footer">
+        <span>Total de justificativas</span>
+        <strong>{{ resumoJustificativas.total }}</strong>
+      </div>
+    </div>
+
+  </div>
+</div>
