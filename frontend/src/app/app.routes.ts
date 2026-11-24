@@ -1,8 +1,11 @@
+
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { SecretariaLayoutComponent } from './features/secretaria/secretaria-layout';
 import { ResponsavelLayoutComponent } from './features/responsavel/responsavel-layout';
 import { AlunoLayoutComponent } from './features/aluno/aluno-layout';
+// foi implementado isso aqui: importação do layout da nova persona Professor
+import { ProfessorLayoutComponent } from './features/professor/professor-layout';
 
 export const routes: Routes = [
   {
@@ -138,12 +141,51 @@ export const routes: Routes = [
       },
       {
         path: 'perfil-filhos',
-        loadComponent: () => 
+        loadComponent: () =>
           import('./features/responsavel/perfil-filhos/perfil-filhos')
             .then(m => m.PerfilFilhosResponsavel)
       }
     ]
   },
+
+  // foi implementado isso aqui: rotas da nova persona Professor
+  {
+    path: 'professor',
+    canActivate: [authGuard],
+    component: ProfessorLayoutComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'inicio',
+        pathMatch: 'full'
+      },
+      {
+        path: 'inicio',
+        loadComponent: () =>
+          import('./features/professor/inicio/inicio')
+            .then(m => m.Inicio)
+      },
+      {
+        path: 'historico',
+        loadComponent: () =>
+          import('./features/professor/historico/historico')
+            .then(m => m.Historico)
+      },
+      {
+        path: 'notificacoes',
+        loadComponent: () =>
+          import('./features/professor/notificacoes/notificacoes')
+            .then(m => m.Notificacoes)
+      },
+      {
+        path: 'perfil',
+        loadComponent: () =>
+          import('./features/professor/perfil/perfil')
+            .then(m => m.Perfil)
+      }
+    ]
+  },
+
   {
     path: '**',
     redirectTo: ''

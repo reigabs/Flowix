@@ -2,11 +2,17 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import {
-  Justificativa, Notificacao, PerfilEnvio, StatusJustificativa, TipoNotificacao
+  Justificativa,
+  Notificacao,
+  PerfilEnvio,
+  PerfilDestinatarioNotificacao,
+  StatusJustificativa,
+  TipoNotificacao
 } from '../models/justificativa.model';
 
 const CHAVE_JUSTIFICATIVAS = 'flowix_justificativas';
 const CHAVE_NOTIFICACOES = 'flowix_notificacoes';
+
 // foi implementado isso aqui (prefixo correto utilizado para localizar todos os documentos armazenados pelo Flowix)
 const PREFIXO_DOC = 'flowix_doc_';
 
@@ -269,7 +275,7 @@ export class JustificativaService {
     return totalJustificativas;
   }
 
-  /** Secretaria aceita ou rejeita e já gera a notificação para aluno e responsável. */
+  /** Secretaria aceita ou rejeita e já gera as notificações para aluno, responsável e professor. */
   responder(
     id: string,
     status: Exclude<StatusJustificativa, 'pendente'>,
@@ -298,12 +304,26 @@ export class JustificativaService {
         `(falta do dia ${dataFalta}) foi aprovada.` +
           (obs ? ` Observação: ${obs}` : '')
       );
+
+      // foi implementado isso aqui (envia ao Professor uma notificação individual quando a Secretaria aprova a justificativa)
+      this.notificarProfessor(
+        j,
+        'aprovado',
+        `(falta do dia ${dataFalta}) foi aprovada.`
+      );
     } else {
       this.notificarAlunoEResponsavel(
         j,
         'rejeitado',
         `(falta do dia ${dataFalta}) foi rejeitada.` +
           (obs ? ` Motivo: ${obs}` : '')
+      );
+
+      // foi implementado isso aqui (envia ao Professor uma notificação individual quando a Secretaria rejeita a justificativa)
+      this.notificarProfessor(
+        j,
+        'rejeitado',
+        `(falta do dia ${dataFalta}) foi rejeitada.`
       );
     }
   }
@@ -333,9 +353,29 @@ export class JustificativaService {
     );
   }
 
+  // foi implementado isso aqui (gera uma notificação exclusiva para o Professor, vinculada à justificativa respondida pela Secretaria)
+  private notificarProfessor(
+    j: Justificativa,
+    tipo: TipoNotificacao,
+    complemento: string
+  ) {
+    const numero = this.formatarNumero(j.numero);
+    const remetente = j.enviadoPor === 'responsavel' && j.nomeResponsavel
+      ? ` enviada pelo responsável ${j.nomeResponsavel}`
+      : ' enviada pelo aluno';
+
+    this.adicionarNotificacao(
+      j,
+      'professor',
+      tipo,
+      `A justificativa ${numero} de ${j.nomeAluno}${remetente} ${complemento}`
+    );
+  }
+
+  // foi implementado isso aqui (permite que o método de criação receba notificações destinadas ao Professor sem alterar o tipo de remetente da justificativa)
   private adicionarNotificacao(
     j: Justificativa,
-    destinatario: PerfilEnvio,
+    destinatario: PerfilDestinatarioNotificacao,
     tipo: TipoNotificacao,
     mensagem: string
   ) {
@@ -355,8 +395,9 @@ export class JustificativaService {
     this.gravar(CHAVE_NOTIFICACOES, lista);
   }
 
+  // foi implementado isso aqui (permite consultar notificações do Professor sem filtrar pelo nome do aluno, mantendo os filtros anteriores para Aluno e Responsável)
   listarNotificacoes(
-    destinatario: PerfilEnvio,
+    destinatario: PerfilDestinatarioNotificacao,
     nomeAluno?: string | string[]
   ): Notificacao[] {
     return this.ler<Notificacao>(CHAVE_NOTIFICACOES).filter(n =>
@@ -365,8 +406,9 @@ export class JustificativaService {
     );
   }
 
+  // foi implementado isso aqui (permite contabilizar notificações não lidas de qualquer destinatário, incluindo o Professor)
   contarNaoLidas(
-    destinatario: PerfilEnvio,
+    destinatario: PerfilDestinatarioNotificacao,
     nomeAluno?: string | string[]
   ): number {
     return this.listarNotificacoes(destinatario, nomeAluno)
@@ -383,8 +425,9 @@ export class JustificativaService {
     }
   }
 
+  // foi implementado isso aqui (permite marcar todas as notificações do Professor como lidas sem alterar as caixas de Aluno e Responsável)
   marcarTodasComoLidas(
-    destinatario: PerfilEnvio,
+    destinatario: PerfilDestinatarioNotificacao,
     nomeAluno?: string | string[]
   ) {
     const lista = this.ler<Notificacao>(CHAVE_NOTIFICACOES);

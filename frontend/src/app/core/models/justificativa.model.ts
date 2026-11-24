@@ -1,5 +1,8 @@
+
 export type StatusJustificativa = 'pendente' | 'aceita' | 'rejeitada';
 export type PerfilEnvio = 'aluno' | 'responsavel';
+// foi implementado isso aqui (permite que notificações também sejam destinadas ao Professor, sem alterar os perfis que podem enviar justificativas)
+export type PerfilDestinatarioNotificacao = PerfilEnvio | 'professor';
 export type TipoNotificacao = 'analise' | 'aprovado' | 'rejeitado';
 
 export interface Justificativa {
@@ -21,7 +24,8 @@ export interface Justificativa {
 
 export interface Notificacao {
   id: string;
-  destinatario: PerfilEnvio;
+  // foi implementado isso aqui (utiliza o tipo específico de destinatário, que também contempla o Professor)
+  destinatario: PerfilDestinatarioNotificacao;
   nomeAluno: string;
   justificativaId: string;
   tipo: TipoNotificacao;
