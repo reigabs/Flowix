@@ -1,0 +1,129 @@
+
+<div class="conteudo">
+  <div class="conteudo-principal">
+    <div class="pagina-notificacoes">
+
+      <header class="cabecalho-notificacoes">
+        <div class="titulo-pagina">
+          <a routerLink="/professor/inicio" class="botao-voltar" aria-label="Voltar para o início">
+            <span>‹</span>
+          </a>
+
+          <div>
+            <h1>Notificações</h1>
+            <p>Acompanhe as atualizações das justificativas de faltas.</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="botao-marcar-todas"
+          (click)="marcarTodasComoLidas()"
+          [disabled]="!notificacoes.some(item => !item.lida)">
+          Marcar todas como lidas
+        </button>
+      </header>
+
+      <section class="area-notificacoes">
+
+        <div class="filtros-notificacoes">
+          <button
+            type="button"
+            [class.ativo]="filtroAtual === 'Todos'"
+            (click)="filtrar('Todos')">
+            Todos
+          </button>
+
+          <button
+            type="button"
+            [class.ativo]="filtroAtual === 'Não lidas'"
+            (click)="filtrar('Não lidas')">
+            Não lidas
+          </button>
+
+          <button
+            type="button"
+            [class.ativo]="filtroAtual === 'Lidas'"
+            (click)="filtrar('Lidas')">
+            Lidas
+          </button>
+        </div>
+
+        <div class="lista-notificacoes" *ngIf="notificacoesDaPagina.length > 0; else semNotificacoes">
+
+          <article
+            class="card-notificacao"
+            *ngFor="let item of notificacoesDaPagina"
+            [class.nao-lida]="!item.lida">
+
+            <div class="icone-notificacao">
+              {{ item.icone }}
+            </div>
+
+            <div class="conteudo-notificacao">
+              <p class="mensagem-notificacao">
+                {{ item.mensagem }}
+              </p>
+
+              <span class="tempo-notificacao">
+                {{ item.tempo }}
+              </span>
+            </div>
+
+            <div class="acao-notificacao">
+              <span class="indicador-nao-lida" *ngIf="!item.lida"></span>
+
+              <button
+                type="button"
+                class="botao-ver-relatorio"
+                (click)="verRelatorio(item)">
+                Ver relatório
+                <span>›</span>
+              </button>
+            </div>
+
+          </article>
+
+        </div>
+
+        <ng-template #semNotificacoes>
+          <div class="mensagem-vazia">
+            <span class="icone-vazio">🔔</span>
+            <h2>Nenhuma notificação encontrada.</h2>
+            <p>Quando a Secretaria analisar uma justificativa, a atualização aparecerá aqui.</p>
+          </div>
+        </ng-template>
+
+        <div class="paginacao" *ngIf="totalPaginas > 1">
+
+          <button
+            type="button"
+            class="botao-paginacao"
+            (click)="mudarPagina(paginaAtual - 1)"
+            [disabled]="paginaAtual === 1">
+            ‹
+          </button>
+
+          <button
+            type="button"
+            class="botao-paginacao"
+            *ngFor="let pagina of paginas"
+            [class.pagina-ativa]="paginaAtual === pagina"
+            (click)="mudarPagina(pagina)">
+            {{ pagina }}
+          </button>
+
+          <button
+            type="button"
+            class="botao-paginacao"
+            (click)="mudarPagina(paginaAtual + 1)"
+            [disabled]="paginaAtual === totalPaginas">
+            ›
+          </button>
+
+        </div>
+
+      </section>
+    </div>
+  </div>
+</div>
