@@ -1,3 +1,4 @@
+
 import { Component, signal, inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
@@ -77,6 +78,21 @@ export class Login {
         return;
       }
 
+      // foi implementado isso aqui: acesso fixo do Professor Rafael Carvalho
+      if (emailDigitado === 'professor@gmail.com' && senhaDigitada === 'professor2026') {
+        if (isPlatformBrowser(this.platformId)) {
+          const dadosProfessor = {
+            nome: 'Rafael Carvalho',
+            email: emailDigitado,
+            perfil: 'professor',
+            instituicao: 'Escola Central'
+          };
+          localStorage.setItem('usuario_cadastrado', JSON.stringify(dadosProfessor));
+        }
+        this.router.navigate(['/professor']);
+        return;
+      }
+
       if (isPlatformBrowser(this.platformId)) {
         const usuarioSalvoStr = localStorage.getItem('usuario_cadastrado');
 
@@ -92,6 +108,10 @@ export class Login {
               break;
             case 'responsavel':
               this.router.navigate(['/responsavel']);
+              break;
+            // foi implementado isso aqui: redirecionamento para a área do Professor
+            case 'professor':
+              this.router.navigate(['/professor']);
               break;
             default:
               this.router.navigate(['/']); 
